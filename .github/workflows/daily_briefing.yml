@@ -2,49 +2,41 @@ name: Daily Kakao Briefing
 
 on:
   schedule:
-    # KST 9:00 = UTC 00:00 (KST = UTC+9)
-    - cron: '0 0 * * *'   # 매일 KST 09:00
-    - cron: '0 4 * * *'   # 매일 KST 13:00 (선택)
-    - cron: '0 8 * * *'   # 매일 KST 17:00 (선택)
-  workflow_dispatch:      # 수동 실행 버튼 추가
+    - cron: '5 0 * * *'
+    - cron: '5 4 * * *'
+    - cron: '5 8 * * *'
+  workflow_dispatch:
 
 jobs:
   send-briefing:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-
     steps:
-      - name: 코드 가져오기
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Python 설정
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: 의존성 설치
+      - name: Install dependencies
         run: pip install requests
 
-      - name: 시간대별 라벨 결정
+      - name: Determine time label
         id: time_label
         run: |
           HOUR_KST=$(TZ='Asia/Seoul' date +%H)
           if [ "$HOUR_KST" -lt "12" ]; then
-            echo "label=오전" >> $GITHUB_OUTPUT
+            echo "label=morning" >> $GITHUB_OUTPUT
           elif [ "$HOUR_KST" -lt "16" ]; then
-            echo "label=오후" >> $GITHUB_OUTPUT
+            echo "label=afternoon" >> $GITHUB_OUTPUT
           else
-            echo "label=저녁" >> $GITHUB_OUTPUT
+            echo "label=evening" >> $GITHUB_OUTPUT
           fi
 
-      - name: 브리핑 발송
+      - name: Send briefing
         env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
         run: python kakao_daily_briefing_cloud.py ${{ steps.time_label.outputs.label }}
-
-      - name: 발송 결과 로그
-        if: always()
-        run: |
-          echo "발송 시각: $(TZ='Asia/Seoul' date)"
-          echo "결과: ${{ job.status }}"
