@@ -12,31 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: pip install requests
-
-      - name: Determine time label
-        id: time_label
-        run: |
-          HOUR_KST=$(TZ='Asia/Seoul' date +%H)
-          if [ "$HOUR_KST" -lt "12" ]; then
-            echo "label=morning" >> $GITHUB_OUTPUT
-          elif [ "$HOUR_KST" -lt "16" ]; then
-            echo "label=afternoon" >> $GITHUB_OUTPUT
-          else
-            echo "label=evening" >> $GITHUB_OUTPUT
-          fi
+      - run: pip install requests
 
       - name: Send briefing
         env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
-        run: python kakao_daily_briefing_cloud.py ${{ steps.time_label.outputs.label }}
+        run: python kakao_daily_briefing_cloud.py
