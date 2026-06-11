@@ -1,0 +1,20 @@
+name: Daily Kakao Briefing
+on:
+  schedule:
+    - cron: '5 0 * * *'
+    - cron: '5 4 * * *'
+    - cron: '5 8 * * *'
+  workflow_dispatch:
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+        run: python kakao_daily_briefing_cloud.py
