@@ -220,7 +220,7 @@ def fetch_market_movers():
     return movers
 
 # ===== 뉴스 RSS =====
-def fetch_rss(url, max_items=4):
+def fetch_rss(url, max_items=3):
     try:
         res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         root = ET.fromstring(res.content)
@@ -231,8 +231,8 @@ def fetch_rss(url, max_items=4):
             if title:
                 title = title.strip()
                 title = title.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
-                if len(title) > 45:
-                    title = title[:42] + "..."
+                if len(title) > 38:
+                    title = title[:35] + "..."
                 items.append(title)
             if len(items) >= max_items:
                 break
@@ -249,7 +249,7 @@ def collect_headlines():
         "국제": "https://rss.donga.com/international.xml",
         "IT": "https://rss.donga.com/science.xml",
     }
-    return {cat: fetch_rss(url, 4) for cat, url in sources.items()}
+    return {cat: fetch_rss(url, 3) for cat, url in sources.items()}
 
 # ===== 메시지 작성 =====
 def build_message(weather, headlines, indices, movers, slot_label=""):
@@ -372,6 +372,8 @@ def main():
 
     message = build_message(weather, headlines, indices, movers, slot_label)
     log(f"INFO: 메시지 길이 {len(message)}자")
+    if len(message) > 1900:
+        log(f"WARN: 메시지 길이 초과({len(message)}자) - 일부 내용 잘릴 수 있음")
 
     # 대시보드 URL은 환경변수에서 (선택)
     dashboard_url = os.environ.get("DASHBOARD_URL")
