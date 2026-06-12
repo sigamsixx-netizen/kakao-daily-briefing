@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-SK아카데미 일일 이슈 브리핑 v3 - GitHub Actions 클라우드 자동 발송
+SK아카데미 일일 이슈 브리핑 v5 - 분리 발송 (재구성)
 
-순서: 날씨 -> 주요 뉴스 -> 주식 정보
-- 날씨: 오늘 + 향후 3일 (서울 기준)
-- 뉴스: 5개 카테고리 (정치/경제/사회/국제/IT)
-- 주식: 시장 지표 + 상승 TOP3 + 하락 TOP3 + 거래량 TOP3
+카톡 2건으로 분리 발송:
+[1/2] 날씨 + 주식 정보
+[2/2] 주요 뉴스 (5개 카테고리)
 """
 
 import json
 import os
 import sys
+import time
 import requests
 from datetime import datetime, timezone, timedelta
 import xml.etree.ElementTree as ET
@@ -28,7 +28,7 @@ def get_credentials():
     api_key = os.environ.get("KAKAO_REST_API_KEY")
     refresh_token = os.environ.get("KAKAO_REFRESH_TOKEN")
     if not api_key or not refresh_token:
-        log("ERROR: KAKAO_REST_API_KEY 또는 KAKAO_REFRESH_TOKEN 환경 변수 없음")
+        log("ERROR: 환경 변수 없음")
         sys.exit(1)
     return api_key, refresh_token
 
@@ -55,12 +55,8 @@ def refresh_access_token(api_key, refresh_token):
         log("=" * 60)
     return new["access_token"]
 
-# ===== 날씨 (기상청 단기예보 - 무료) =====
+# ===== 날씨 =====
 def fetch_weather():
-    """
-    Open-Meteo API 사용 (무료, 키 불필요, 회사망 접근 가능 가능성 높음)
-    서울 좌표: 37.5665, 126.9780
-    """
     try:
         url = (
             "https://api.open-meteo.com/v1/forecast"
@@ -73,55 +69,34 @@ def fetch_weather():
         res = requests.get(url, timeout=10)
         data = res.json()
 
-        # 날씨 코드 -> 한글 변환 + 이모지
         wmo_map = {
-            0: ("☀️", "맑음"),
-            1: ("🌤️", "대체로 맑음"),
-            2: ("⛅", "구름 조금"),
-            3: ("☁️", "흐림"),
-            45: ("🌫️", "안개"),
-            48: ("🌫️", "짙은 안개"),
-            51: ("🌦️", "약한 이슬비"),
-            53: ("🌦️", "이슬비"),
-            55: ("🌦️", "강한 이슬비"),
-            61: ("🌧️", "약한 비"),
-            63: ("🌧️", "비"),
-            65: ("🌧️", "강한 비"),
-            71: ("🌨️", "약한 눈"),
-            73: ("🌨️", "눈"),
-            75: ("❄️", "강한 눈"),
-            80: ("🌦️", "소나기"),
-            81: ("🌧️", "강한 소나기"),
-            82: ("⛈️", "매우 강한 소나기"),
-            95: ("⛈️", "천둥번개"),
-            96: ("⛈️", "천둥번개+우박"),
-            99: ("⛈️", "강한 천둥번개"),
+            0: ("☀️", "맑음"), 1: ("🌤️", "대체로 맑음"), 2: ("⛅", "구름 조금"), 3: ("☁️", "흐림"),
+            45: ("🌫️", "안개"), 48: ("🌫️", "짙은 안개"),
+            51: ("🌦️", "약한 이슬비"), 53: ("🌦️", "이슬비"), 55: ("🌦️", "강한 이슬비"),
+            61: ("🌧️", "약한 비"), 63: ("🌧️", "비"), 65: ("🌧️", "강한 비"),
+            71: ("🌨️", "약한 눈"), 73: ("🌨️", "눈"), 75: ("❄️", "강한 눈"),
+            80: ("🌦️", "소나기"), 81: ("🌧️", "강한 소나기"), 82: ("⛈️", "매우 강한 소나기"),
+            95: ("⛈️", "천둥번개"), 96: ("⛈️", "천둥번개+우박"), 99: ("⛈️", "강한 천둥번개"),
         }
-
-        def desc(code):
-            return wmo_map.get(code, ("🌡️", f"코드 {code}"))
+        def desc(c):
+            return wmo_map.get(c, ("🌡️", f"코드 {c}"))
 
         result = {}
-
-        # 현재
         cur = data.get("current", {})
-        cur_code = cur.get("weather_code", 0)
-        icon, label = desc(cur_code)
+        icon, label = desc(cur.get("weather_code", 0))
         result["current"] = {
-            "icon": icon,
-            "label": label,
+            "icon": icon, "label": label,
             "temp": round(cur.get("temperature_2m", 0), 1),
             "humidity": cur.get("relative_humidity_2m", 0),
             "wind": round(cur.get("wind_speed_10m", 0), 1)
         }
 
-        # 일별 예보 (오늘 포함 4일 -> 오늘 + 3일치)
         daily = data.get("daily", {})
         dates = daily.get("time", [])
         codes = daily.get("weather_code", [])
-        max_temps = daily.get("temperature_2m_max", [])
-        min_temps = daily.get("temperature_2m_min", [])
-        rain_probs = daily.get("precipitation_probability_max", [])
+        max_t = daily.get("temperature_2m_max", [])
+        min_t = daily.get("temperature_2m_min", [])
+        rains = daily.get("precipitation_probability_max", [])
 
         days_kor = ["월", "화", "수", "목", "금", "토", "일"]
         result["daily"] = []
@@ -131,21 +106,18 @@ def fetch_weather():
             result["daily"].append({
                 "date": d.strftime("%m/%d"),
                 "weekday": days_kor[d.weekday()],
-                "icon": icon,
-                "label": label,
-                "max": round(max_temps[i], 0),
-                "min": round(min_temps[i], 0),
-                "rain": rain_probs[i] if i < len(rain_probs) else 0
+                "icon": icon, "label": label,
+                "max": round(max_t[i], 0),
+                "min": round(min_t[i], 0),
+                "rain": rains[i] if i < len(rains) else 0
             })
-
         return result
     except Exception as e:
         log(f"WARN: 날씨 수집 실패: {e}")
         return None
 
-# ===== 주식 시세 =====
+# ===== 주식 =====
 def fetch_market_indices():
-    """네이버 금융 코스피/코스닥/원달러"""
     indices = []
     try:
         url = "https://polling.finance.naver.com/api/realtime?query=SERVICE_INDEX:KOSPI,KOSDAQ,FX_USDKRW"
@@ -167,7 +139,7 @@ def fetch_market_indices():
                         "change": f"{sign}{abs(pct):.2f}%"
                     })
     except Exception as e:
-        log(f"WARN: 시장지표 수집 실패: {e}")
+        log(f"WARN: 시장지표 실패: {e}")
     return indices
 
 def fetch_stock_price(code):
@@ -184,7 +156,7 @@ def fetch_stock_price(code):
                         "change_pct": d.get("cr", 0)
                     }
     except Exception as e:
-        log(f"WARN: 종목 {code} 수집 실패: {e}")
+        log(f"WARN: 종목 {code}: {e}")
     return None
 
 def fetch_market_movers():
@@ -216,11 +188,11 @@ def fetch_market_movers():
                 if len(movers[category]) >= 3:
                     break
         except Exception as e:
-            log(f"WARN: {category} 수집 실패: {e}")
+            log(f"WARN: {category} 실패: {e}")
     return movers
 
-# ===== 뉴스 RSS =====
-def fetch_rss(url, max_items=3):
+# ===== 뉴스 =====
+def fetch_rss(url, max_items=4):
     try:
         res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
         root = ET.fromstring(res.content)
@@ -231,14 +203,14 @@ def fetch_rss(url, max_items=3):
             if title:
                 title = title.strip()
                 title = title.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
-                if len(title) > 38:
-                    title = title[:35] + "..."
+                if len(title) > 45:
+                    title = title[:42] + "..."
                 items.append(title)
             if len(items) >= max_items:
                 break
         return items
     except Exception as e:
-        log(f"WARN: RSS 실패 ({url}): {e}")
+        log(f"WARN: RSS ({url}): {e}")
         return []
 
 def collect_headlines():
@@ -249,10 +221,10 @@ def collect_headlines():
         "국제": "https://rss.donga.com/international.xml",
         "IT": "https://rss.donga.com/science.xml",
     }
-    return {cat: fetch_rss(url, 3) for cat, url in sources.items()}
+    return {cat: fetch_rss(url, 4) for cat, url in sources.items()}
 
-# ===== 메시지 작성 =====
-def build_message(weather, headlines, indices, movers, slot_label=""):
+# ===== 메시지 1: 날씨 + 주식 =====
+def build_message_1(weather, indices, movers, slot_label=""):
     now = now_kst()
     days = ["월","화","수","목","금","토","일"]
     date_str = f"{now.year}.{now.month:02d}.{now.day:02d} ({days[now.weekday()]})"
@@ -260,12 +232,12 @@ def build_message(weather, headlines, indices, movers, slot_label=""):
 
     P = []
     title_suffix = f" [{slot_label}]" if slot_label else ""
-    P.append(f"📰 일일 이슈 브리핑{title_suffix}")
+    P.append(f"📰 일일 이슈 브리핑{title_suffix} (1/2)")
     P.append("━━━━━━━━━━━━━━━")
     P.append(f"📅 {date_str} {time_str}")
     P.append("")
 
-    # === 1. 날씨 ===
+    # 날씨
     if weather:
         P.append("🌤️ 서울 날씨")
         cur = weather["current"]
@@ -279,19 +251,7 @@ def build_message(weather, headlines, indices, movers, slot_label=""):
             P.append(f"  {d['icon']} {tag:8s} {d['max']:.0f}°/{d['min']:.0f}°{rain}")
         P.append("")
 
-    # === 2. 주요 뉴스 ===
-    icon_map = {"정치": "🏛️", "경제": "💼", "사회": "👥", "국제": "🌏", "IT": "💻"}
-    P.append("━━━━━━━━━━━━━━━")
-    P.append("📰 주요 뉴스")
-    P.append("")
-    for cat, items in headlines.items():
-        if items:
-            P.append(f"{icon_map.get(cat, '📌')} {cat}")
-            for title in items:
-                P.append(f"  • {title}")
-            P.append("")
-
-    # === 3. 주식 ===
+    # 주식
     P.append("━━━━━━━━━━━━━━━")
     P.append("💹 주식 정보")
     P.append("")
@@ -324,13 +284,39 @@ def build_message(weather, headlines, indices, movers, slot_label=""):
     P.append("⚠️ 종목 정보는 단순 시세이며")
     P.append("   투자 판단의 근거가 아닙니다")
     P.append("")
+    P.append("📰 주요 뉴스는 잠시 후 도착")
+
+    return "\n".join(P)
+
+# ===== 메시지 2: 뉴스 =====
+def build_message_2(headlines, slot_label=""):
+    now = now_kst()
+    days = ["월","화","수","목","금","토","일"]
+    date_str = f"{now.year}.{now.month:02d}.{now.day:02d} ({days[now.weekday()]})"
+    time_str = f"{now.hour:02d}:{now.minute:02d}"
+
+    P = []
+    title_suffix = f" [{slot_label}]" if slot_label else ""
+    P.append(f"📰 주요 뉴스{title_suffix} (2/2)")
+    P.append("━━━━━━━━━━━━━━━")
+    P.append(f"📅 {date_str} {time_str}")
+    P.append("")
+
+    icon_map = {"정치": "🏛️", "경제": "💼", "사회": "👥", "국제": "🌏", "IT": "💻"}
+    for cat, items in headlines.items():
+        if items:
+            P.append(f"{icon_map.get(cat, '📌')} {cat}")
+            for title in items:
+                P.append(f"  • {title}")
+            P.append("")
+
+    P.append("━━━━━━━━━━━━━━━")
     P.append("※ Claude AI · GitHub Actions 자동 발송")
+
     return "\n".join(P)
 
 # ===== 발송 =====
-def send_to_me(access_token, message, dashboard_url=None):
-    link_url = dashboard_url or "https://finance.naver.com"
-    button_title = "대시보드 열기" if dashboard_url else "네이버 금융"
+def send_to_me(access_token, message, link_url, button_title):
     res = requests.post(
         "https://kapi.kakao.com/v2/api/talk/memo/default/send",
         headers={
@@ -356,36 +342,46 @@ def main():
     api_key, refresh_token = get_credentials()
     access_token = refresh_access_token(api_key, refresh_token)
 
-    log("INFO: 날씨 수집 중...")
+    log("INFO: 날씨 수집...")
     weather = fetch_weather()
-    if weather:
-        log(f"INFO: 날씨 OK - 현재 {weather['current']['temp']}°C, {len(weather['daily'])}일 예보")
-
-    log("INFO: 뉴스 헤드라인 수집 중...")
+    log("INFO: 뉴스 수집...")
     headlines = collect_headlines()
-    log(f"INFO: 헤드라인 {sum(len(v) for v in headlines.values())}건")
-
-    log("INFO: 주식 데이터 수집 중...")
+    log("INFO: 주식 데이터 수집...")
     indices = fetch_market_indices()
     movers = fetch_market_movers()
-    log(f"INFO: 지표 {len(indices)}, 상승 {len(movers['up'])}, 하락 {len(movers['down'])}, 거래량 {len(movers['volume'])}")
 
-    message = build_message(weather, headlines, indices, movers, slot_label)
-    log(f"INFO: 메시지 길이 {len(message)}자")
-    if len(message) > 1900:
-        log(f"WARN: 메시지 길이 초과({len(message)}자) - 일부 내용 잘릴 수 있음")
+    log(f"INFO: 데이터 - 지표 {len(indices)}, 상승 {len(movers['up'])}, 하락 {len(movers['down'])}, 거래량 {len(movers['volume'])}, 뉴스 {sum(len(v) for v in headlines.values())}")
 
-    # 대시보드 URL은 환경변수에서 (선택)
-    dashboard_url = os.environ.get("DASHBOARD_URL")
+    dashboard_url = os.environ.get("DASHBOARD_URL", "https://finance.naver.com")
 
-    status, body = send_to_me(access_token, message, dashboard_url)
-    if status == 200:
-        log("[OK] 발송 성공")
+    # 메시지 1: 날씨 + 주식
+    log("INFO: 메시지 1 (날씨+주식) 작성 중...")
+    msg1 = build_message_1(weather, indices, movers, slot_label)
+    log(f"INFO: 메시지 1 길이 {len(msg1)}자")
+
+    status1, body1 = send_to_me(access_token, msg1, dashboard_url, "대시보드 열기")
+    if status1 == 200:
+        log("[OK] 메시지 1 발송 성공")
     else:
-        log(f"[FAIL] {status}: {body}")
+        log(f"[FAIL] 메시지 1 실패 - {status1}: {body1}")
         sys.exit(1)
 
-    log("=== 종료 ===")
+    log("INFO: 5초 대기...")
+    time.sleep(5)
+
+    # 메시지 2: 뉴스
+    log("INFO: 메시지 2 (뉴스) 작성 중...")
+    msg2 = build_message_2(headlines, slot_label)
+    log(f"INFO: 메시지 2 길이 {len(msg2)}자")
+
+    status2, body2 = send_to_me(access_token, msg2, "https://news.naver.com", "네이버 뉴스")
+    if status2 == 200:
+        log("[OK] 메시지 2 발송 성공")
+    else:
+        log(f"[FAIL] 메시지 2 실패 - {status2}: {body2}")
+        sys.exit(1)
+
+    log("=== 전체 발송 완료 ===")
 
 if __name__ == "__main__":
     main()
