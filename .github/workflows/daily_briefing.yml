@@ -1,6 +1,8 @@
 name: Daily Kakao Briefing
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   send:
     runs-on: ubuntu-latest
@@ -10,8 +12,16 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install requests
-      - env:
+      - name: Run briefing
+        env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
           DASHBOARD_URL: ${{ secrets.DASHBOARD_URL }}
         run: python kakao_daily_briefing_cloud.py
+      - name: Commit data.json
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data.json
+          git diff --staged --quiet || git commit -m "Update data.json $(date +'%Y-%m-%d %H:%M KST')"
+          git push
