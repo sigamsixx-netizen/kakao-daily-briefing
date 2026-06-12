@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📰 SK아카데미 일일 이슈 대시보드</title>
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1a202c;
+    --text-sub: #4a5568;
+    --text-muted: #718096;
+    --border: #e2e8f0;
+    --accent: #3182ce;
+    --accent-hover: #2c5282;
+    --up: #e53e3e;
+    --down: #3182ce;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  [data-theme="dark"] {
+    --bg: #0f1419;
+    --card: #1a202c;
+    --text: #f7fafc;
+    --text-sub: #cbd5e0;
+    --text-muted: #a0aec0;
+    --border: #2d3748;
+    --accent: #63b3ed;
+    --accent-hover: #4299e1;
+    --up: #fc8181;
+    --down: #63b3ed;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* === 헤더 === */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .header-left .subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-sub);
+    box-shadow: var(--shadow);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #48bb78;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .icon-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .icon-btn:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  /* === 그리드 레이아웃 === */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+  }
+
+  .card-full {
+    grid-column: 1 / -1;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* === 날씨 === */
+  .weather-current {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .weather-icon {
+    font-size: 48px;
+  }
+
+  .weather-temp {
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  .weather-meta {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .weather-daily {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .weather-day {
+    text-align: center;
+    padding: 10px 4px;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+
+  .weather-day .day-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .weather-day .day-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .weather-day .day-temp {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .weather-day .day-rain {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  /* === 시장 지표 === */
+  .market-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .market-item {
+    text-align: center;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+
+  .market-item .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .market-item .value {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .market-item .change {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .up { color: var(--up); }
+  .down { color: var(--down); }
+  .flat { color: var(--text-muted); }
+
+  /* === 주식 TOP === */
+  .stock-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stock-tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .stock-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .stock-list {
+    list-style: none;
+  }
+
+  .stock-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .stock-item:last-child {
+    border-bottom: none;
+  }
+
+  .stock-rank {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  /* === 뉴스 === */
+  .news-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  .search-box:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .filter-chips {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease;
+    color: var(--text-sub);
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+  }
+
+  .chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+
+  .news-item {
+    padding: 14px;
+    background: var(--bg);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+  }
+
+  .news-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent);
+  }
+
+  .news-category {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--accent);
+    color: white;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .news-title {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text);
+  }
+
+  /* === 로딩 === */
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg) 0%, var(--border) 50%, var(--bg) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .skeleton-line {
+    height: 14px;
+    margin-bottom: 8px;
+  }
+
+  /* === 푸터 === */
+  footer {
+    margin-top: 32px;
+    padding: 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <h1>📰 SK아카데미 일일 이슈 대시보드</h1>
+      <div class="subtitle" id="subtitle">실시간 정보 업데이트 중...</div>
+    </div>
+    <div class="header-controls">
+      <span class="status-badge">
+        <span class="status-dot"></span>
+        <span id="last-update">대기 중</span>
+      </span>
+      <button class="icon-btn" id="refresh-btn">🔄 새로고침</button>
+      <button class="icon-btn" id="theme-toggle">🌙 다크</button>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- 1. 날씨 -->
+    <div class="card">
+      <div class="card-title">🌤️ 서울 날씨</div>
+      <div id="weather-content">
+        <div class="loading">날씨 정보 불러오는 중...</div>
+      </div>
+    </div>
+
+    <!-- 2. 시장 지표 + 주식 TOP -->
+    <div class="card">
+      <div class="card-title">💹 시장 지표</div>
+      <div id="market-content">
+        <div class="loading">시장 정보 불러오는 중...</div>
+      </div>
+    </div>
+
+    <!-- 3. 주식 TOP -->
+    <div class="card card-full">
+      <div class="card-title">📊 코스피 TOP 종목</div>
+      <div class="stock-tabs" id="stock-tabs">
+        <button class="stock-tab active" data-tab="up">🔺 상승률 TOP 3</button>
+        <button class="stock-tab" data-tab="down">🔻 하락률 TOP 3</button>
+        <button class="stock-tab" data-tab="volume">📈 거래량 TOP 3</button>
+      </div>
+      <ul class="stock-list" id="stock-list">
+        <li class="loading">불러오는 중...</li>
+      </ul>
+    </div>
+
+    <!-- 4. 뉴스 -->
+    <div class="card card-full">
+      <div class="card-title">📰 주요 뉴스</div>
+
+      <div class="news-controls">
+        <input type="text" id="news-search" class="search-box" placeholder="🔍 뉴스 검색 (제목으로 필터링)">
+      </div>
+
+      <div class="filter-chips" id="filter-chips">
+        <span class="chip active" data-cat="all">전체</span>
+        <span class="chip" data-cat="정치">🏛️ 정치</span>
+        <span class="chip" data-cat="경제">💼 경제</span>
+        <span class="chip" data-cat="사회">👥 사회</span>
+        <span class="chip" data-cat="국제">🌏 국제</span>
+        <span class="chip" data-cat="IT">💻 IT</span>
+      </div>
+
+      <div class="news-grid" id="news-grid">
+        <div class="loading">뉴스 불러오는 중...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div>📅 데이터 출처: Open-Meteo (날씨), 네이버 금융 (주식), 동아일보 RSS (뉴스)</div>
+    <div style="margin-top:6px">⚠️ 종목 정보는 단순 시세 데이터이며 투자 판단의 근거가 아닙니다</div>
+    <div style="margin-top:6px">🔄 매 5분마다 자동 새로고침</div>
+  </footer>
+
+</div>
+
+<script>
+// ========== 상태 관리 ==========
+const state = {
+  weather: null,
+  indices: [],
+  movers: { up: [], down: [], volume: [] },
+  headlines: {},
+  activeStockTab: 'up',
+  activeCategory: 'all',
+  searchQuery: '',
+  lastUpdate: null
+};
+
+// ========== 다크모드 ==========
+function initTheme() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeButton();
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeButton();
+}
+
+function updateThemeButton() {
+  const t = document.documentElement.getAttribute('data-theme');
+  document.getElementById('theme-toggle').textContent = t === 'dark' ? '☀️ 라이트' : '🌙 다크';
+}
+
+// ========== 날짜/시간 ==========
+function formatDateTime(d) {
+  const days = ['일','월','화','수','목','금','토'];
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} (${days[d.getDay()]}) ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function updateSubtitle() {
+  const now = new Date();
+  document.getElementById('subtitle').textContent = formatDateTime(now) + ' 기준';
+}
+
+// ========== 날씨 수집 ==========
+async function fetchWeather() {
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast'
+      + '?latitude=37.5665&longitude=126.9780'
+      + '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m'
+      + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+      + '&timezone=Asia%2FSeoul&forecast_days=4';
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const wmoMap = {
+      0: ['☀️','맑음'], 1: ['🌤️','대체로 맑음'], 2: ['⛅','구름 조금'], 3: ['☁️','흐림'],
+      45: ['🌫️','안개'], 48: ['🌫️','짙은 안개'],
+      51: ['🌦️','약한 이슬비'], 53: ['🌦️','이슬비'], 55: ['🌦️','강한 이슬비'],
+      61: ['🌧️','약한 비'], 63: ['🌧️','비'], 65: ['🌧️','강한 비'],
+      71: ['🌨️','약한 눈'], 73: ['🌨️','눈'], 75: ['❄️','강한 눈'],
+      80: ['🌦️','소나기'], 81: ['🌧️','강한 소나기'], 82: ['⛈️','매우 강한 소나기'],
+      95: ['⛈️','천둥번개'], 96: ['⛈️','천둥번개+우박'], 99: ['⛈️','강한 천둥번개']
+    };
+    const desc = c => wmoMap[c] || ['🌡️', `코드 ${c}`];
+    const daysKor = ['월','화','수','목','금','토','일'];
+
+    const cur = data.current;
+    const [curIcon, curLabel] = desc(cur.weather_code);
+    const daily = [];
+    for (let i = 0; i < 4 && i < data.daily.time.length; i++) {
+      const d = new Date(data.daily.time[i]);
+      const [icon, label] = desc(data.daily.weather_code[i]);
+      daily.push({
+        date: `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`,
+        weekday: daysKor[d.getDay() === 0 ? 6 : d.getDay() - 1],
+        icon, label,
+        max: Math.round(data.daily.temperature_2m_max[i]),
+        min: Math.round(data.daily.temperature_2m_min[i]),
+        rain: data.daily.precipitation_probability_max[i] || 0
+      });
+    }
+
+    state.weather = {
+      current: { icon: curIcon, label: curLabel, temp: cur.temperature_2m.toFixed(1), humidity: cur.relative_humidity_2m, wind: cur.wind_speed_10m.toFixed(1) },
+      daily
+    };
+    renderWeather();
+  } catch (e) {
+    document.getElementById('weather-content').innerHTML = '<div class="empty-state">날씨 정보를 불러올 수 없습니다</div>';
+    console.error('Weather error:', e);
+  }
+}
+
+function renderWeather() {
+  const w = state.weather;
+  if (!w) return;
+  let html = `
+    <div class="weather-current">
+      <div class="weather-icon">${w.current.icon}</div>
+      <div>
+        <div class="weather-temp">${w.current.temp}°C</div>
+        <div style="color: var(--text-sub); font-size: 14px;">${w.current.label}</div>
+        <div class="weather-meta">습도 ${w.current.humidity}% · 바람 ${w.current.wind}m/s</div>
+      </div>
+    </div>
+    <div class="weather-daily">
+  `;
+  w.daily.forEach((d, i) => {
+    const label = i === 0 ? '오늘' : `${d.date} (${d.weekday})`;
+    const rain = d.rain > 0 ? `<div class="day-rain">☔ ${d.rain}%</div>` : '';
+    html += `
+      <div class="weather-day">
+        <div class="day-label">${label}</div>
+        <div class="day-icon">${d.icon}</div>
+        <div class="day-temp">${d.max}° / ${d.min}°</div>
+        ${rain}
+      </div>
+    `;
+  });
+  html += '</div>';
+  document.getElementById('weather-content').innerHTML = html;
+}
+
+// ========== 주식 데이터 (외부 API 사용) ==========
+// 네이버 금융은 CORS 차단되어 브라우저에서 직접 호출 불가
+// 대안: 무료 한국 주식 API 또는 백엔드 프록시 필요
+// 임시: GitHub Actions가 생성한 JSON 파일을 읽거나, 비슷한 공개 API 사용
+
+async function fetchMarketData() {
+  // Yahoo Finance에서 코스피 지수 가져오기 (CORS 허용)
+  try {
+    // Yahoo Finance: ^KS11 = 코스피, ^KQ11 = 코스닥
+    // KRW=X = 원/달러
+    const symbols = ['^KS11', '^KQ11', 'KRW=X'];
+    const names = ['코스피', '코스닥', '원/달러'];
+    const indices = [];
+
+    for (let i = 0; i < symbols.length; i++) {
+      try {
+        const proxyUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${symbols[i]}?interval=1d&range=1d`;
+        const res = await fetch(proxyUrl);
+        const data = await res.json();
+        const result = data.chart.result[0];
+        const meta = result.meta;
+        const price = meta.regularMarketPrice;
+        const prev = meta.chartPreviousClose || meta.previousClose;
+        const change = price - prev;
+        const pct = (change / prev) * 100;
+        const sign = change > 0 ? '▲' : (change < 0 ? '▼' : '─');
+        const cls = change > 0 ? 'up' : (change < 0 ? 'down' : 'flat');
+
+        const decimals = symbols[i] === 'KRW=X' ? 2 : 2;
+        indices.push({
+          name: names[i],
+          value: price.toLocaleString('ko-KR', {maximumFractionDigits: decimals, minimumFractionDigits: decimals}),
+          change: `${sign}${Math.abs(pct).toFixed(2)}%`,
+          changeClass: cls
+        });
+      } catch (e) {
+        console.error(`${symbols[i]} 실패:`, e);
+      }
+    }
+
+    state.indices = indices;
+    renderMarket();
+  } catch (e) {
+    document.getElementById('market-content').innerHTML = '<div class="empty-state">시장 데이터를 불러올 수 없습니다<br><small style="color:var(--text-muted)">브라우저 CORS 정책상 일부 데이터가 제한됩니다</small></div>';
+    console.error('Market error:', e);
+  }
+}
+
+function renderMarket() {
+  if (state.indices.length === 0) {
+    document.getElementById('market-content').innerHTML = '<div class="empty-state">시장 데이터 없음</div>';
+    return;
+  }
+  let html = '<div class="market-grid">';
+  state.indices.forEach(i => {
+    html += `
+      <div class="market-item">
+        <div class="label">${i.name}</div>
+        <div class="value">${i.value}</div>
+        <div class="change ${i.changeClass}">${i.change}</div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  document.getElementById('market-content').innerHTML = html;
+}
+
+// 주식 TOP은 브라우저 CORS로 인해 외부 API 호출이 어려움
+// 안내 메시지 표시
+function renderStockTopPlaceholder() {
+  document.getElementById('stock-list').innerHTML = `
+    <li class="empty-state">
+      💡 코스피 상승/하락/거래량 TOP 종목은<br>
+      <a href="https://finance.naver.com/sise/sise_${state.activeStockTab === 'up' ? 'rise' : state.activeStockTab === 'down' ? 'fall' : 'quant'}.naver?sosok=0" target="_blank" style="color: var(--accent);">네이버 금융에서 직접 확인</a>해주세요
+      <br><small style="margin-top:8px; display:block; color:var(--text-muted);">(브라우저 CORS 정책상 실시간 호출 제한)</small>
+    </li>
+  `;
+}
+
+// ========== 뉴스 (RSS to JSON 서비스 활용) ==========
+async function fetchNews() {
+  const sources = {
+    "정치": "https://rss.donga.com/politics.xml",
+    "경제": "https://rss.donga.com/economy.xml",
+    "사회": "https://rss.donga.com/national.xml",
+    "국제": "https://rss.donga.com/international.xml",
+    "IT": "https://rss.donga.com/science.xml"
+  };
+
+  const headlines = {};
+  // rss2json.com 무료 API 사용
+  for (const [cat, url] of Object.entries(sources)) {
+    try {
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=6`;
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      if (data.status === 'ok') {
+        headlines[cat] = data.items.slice(0, 6).map(item => ({
+          title: item.title,
+          link: item.link,
+          pubDate: item.pubDate
+        }));
+      } else {
+        headlines[cat] = [];
+      }
+    } catch (e) {
+      console.error(`뉴스 수집 실패 (${cat}):`, e);
+      headlines[cat] = [];
+    }
+  }
+
+  state.headlines = headlines;
+  renderNews();
+}
+
+function renderNews() {
+  const grid = document.getElementById('news-grid');
+  const allItems = [];
+
+  Object.entries(state.headlines).forEach(([cat, items]) => {
+    items.forEach(item => {
+      allItems.push({ ...item, category: cat });
+    });
+  });
+
+  // 필터링
+  let filtered = allItems;
+  if (state.activeCategory !== 'all') {
+    filtered = filtered.filter(item => item.category === state.activeCategory);
+  }
+  if (state.searchQuery) {
+    const q = state.searchQuery.toLowerCase();
+    filtered = filtered.filter(item => item.title.toLowerCase().includes(q));
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty-state">조건에 맞는 뉴스가 없습니다</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(item => `
+    <a href="${item.link}" target="_blank" rel="noopener" class="news-item">
+      <span class="news-category">${item.category}</span>
+      <div class="news-title">${escapeHtml(item.title)}</div>
+    </a>
+  `).join('');
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ========== 새로고침 ==========
+async function refreshAll() {
+  document.getElementById('last-update').textContent = '업데이트 중...';
+
+  await Promise.all([
+    fetchWeather(),
+    fetchMarketData(),
+    fetchNews()
+  ]);
+
+  renderStockTopPlaceholder();
+
+  const now = new Date();
+  state.lastUpdate = now;
+  document.getElementById('last-update').textContent = `최종: ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  updateSubtitle();
+}
+
+// ========== 이벤트 핸들러 ==========
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+
+document.getElementById('news-search').addEventListener('input', (e) => {
+  state.searchQuery = e.target.value;
+  renderNews();
+});
+
+document.getElementById('filter-chips').addEventListener('click', (e) => {
+  if (e.target.classList.contains('chip')) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    state.activeCategory = e.target.dataset.cat;
+    renderNews();
+  }
+});
+
+document.getElementById('stock-tabs').addEventListener('click', (e) => {
+  if (e.target.classList.contains('stock-tab')) {
+    document.querySelectorAll('.stock-tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    state.activeStockTab = e.target.dataset.tab;
+    renderStockTopPlaceholder();
+  }
+});
+
+// ========== 초기화 + 자동 새로고침 ==========
+initTheme();
+refreshAll();
+
+// 5분마다 자동 새로고침
+setInterval(refreshAll, 5 * 60 * 1000);
+
+// 1분마다 시간 업데이트
+setInterval(updateSubtitle, 60 * 1000);
+</script>
+
+</body>
+</html>
