@@ -335,6 +335,23 @@ def send_to_me(access_token, message, link_url, button_title):
     )
     return res.status_code, res.text
 
+def save_dashboard_json(weather, indices, movers, headlines):
+    """대시보드용 JSON 파일 저장 (GitHub Pages에서 읽기 위함)"""
+    dashboard_data = {
+        "updated_at": now_kst().isoformat(),
+        "updated_at_display": now_kst().strftime("%Y-%m-%d %H:%M:%S KST"),
+        "weather": weather,
+        "indices": indices,
+        "movers": movers,
+        "headlines": headlines
+    }
+    try:
+        with open("data.json", "w", encoding="utf-8") as f:
+            json.dump(dashboard_data, f, ensure_ascii=False, indent=2)
+        log(f"INFO: data.json 저장 완료")
+    except Exception as e:
+        log(f"WARN: data.json 저장 실패: {e}")
+
 def main():
     slot_label = sys.argv[1] if len(sys.argv) > 1 else ""
     log(f"=== 발송 시작 ({slot_label or '수동'}) ===")
@@ -351,6 +368,9 @@ def main():
     movers = fetch_market_movers()
 
     log(f"INFO: 데이터 - 지표 {len(indices)}, 상승 {len(movers['up'])}, 하락 {len(movers['down'])}, 거래량 {len(movers['volume'])}, 뉴스 {sum(len(v) for v in headlines.values())}")
+
+    # 대시보드용 JSON 파일 저장
+    save_dashboard_json(weather, indices, movers, headlines)
 
     dashboard_url = os.environ.get("DASHBOARD_URL", "https://finance.naver.com")
 
