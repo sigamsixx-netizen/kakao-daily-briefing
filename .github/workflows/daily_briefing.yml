@@ -13,4 +13,5 @@ jobs:
       - env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          DASHBOARD_URL: ${{ secrets.DASHBOARD_URL }}
         run: python kakao_daily_briefing_cloud.py
