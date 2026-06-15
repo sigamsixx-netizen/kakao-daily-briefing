@@ -233,16 +233,28 @@
 
   <div class="grid">
 
-    <!-- 1. 날씨 -->
+    <!-- 1. 서울 날씨 -->
     <div class="card">
       <div class="card-title">🌤️ 서울 날씨</div>
       <div id="weather-content"><div class="loading">로딩 중...</div></div>
     </div>
 
-    <!-- 2. 시장 지표 -->
+    <!-- 1-2. 성남(분당) 날씨 -->
     <div class="card">
-      <div class="card-title">💹 시장 지표</div>
+      <div class="card-title">🌤️ 성남(분당) 날씨</div>
+      <div id="weather-bundang-content"><div class="loading">로딩 중...</div></div>
+    </div>
+
+    <!-- 2. 국내 시장 지표 -->
+    <div class="card">
+      <div class="card-title">💹 국내 시장 지표</div>
       <div id="market-content"><div class="loading">로딩 중...</div></div>
+    </div>
+
+    <!-- 2-2. 미국 시장 지표 -->
+    <div class="card">
+      <div class="card-title">🇺🇸 미국 시장 지표 <span style="font-size:11px;color:var(--text-muted);font-weight:400">(전일 종가)</span></div>
+      <div id="us-market-content"><div class="loading">로딩 중...</div></div>
     </div>
 
     <!-- 3. 주식 TOP -->
@@ -330,7 +342,9 @@ async function loadData() {
     console.error('데이터 로드 실패:', e);
     document.getElementById('subtitle').textContent = '⚠️ 데이터 로드 실패 — 아직 첫 업데이트 전일 수 있어요';
     document.getElementById('weather-content').innerHTML = '<div class="empty-state">데이터 없음<br><small>매일 9시/13시/18시에 자동 업데이트됩니다</small></div>';
+    document.getElementById('weather-bundang-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
     document.getElementById('market-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
+    document.getElementById('us-market-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
     document.getElementById('stock-list').innerHTML = '<li class="empty-state">데이터 없음</li>';
     document.getElementById('news-grid').innerHTML = '<div class="empty-state">데이터 없음</div>';
   }
@@ -345,19 +359,20 @@ function renderAll() {
   document.getElementById('last-update').textContent = `최종: ${updated.split(' ')[1] || ''}`;
 
   renderWeather();
+  renderWeatherBundang();
   renderMarket();
+  renderUsMarket();
   renderStockTop();
   renderNews();
 }
 
-// ========== 날씨 ==========
-function renderWeather() {
-  const w = state.data.weather;
+// ========== 날씨 (공통) ==========
+function renderWeatherInto(w, elId, region) {
+  const el = document.getElementById(elId);
   if (!w) {
-    document.getElementById('weather-content').innerHTML = '<div class="empty-state">날씨 데이터 없음</div>';
+    el.innerHTML = '<div class="empty-state">날씨 데이터 없음</div>';
     return;
   }
-
   let html = `
     <div class="weather-current">
       <div class="weather-icon">${w.current.icon}</div>
@@ -382,7 +397,39 @@ function renderWeather() {
     `;
   });
   html += '</div>';
-  document.getElementById('weather-content').innerHTML = html;
+  el.innerHTML = html;
+}
+
+// ========== 날씨 ==========
+function renderWeather() {
+  renderWeatherInto(state.data.weather_seoul || state.data.weather, 'weather-content', '서울');
+}
+
+function renderWeatherBundang() {
+  renderWeatherInto(state.data.weather_bundang, 'weather-bundang-content', '성남(분당)');
+}
+
+// ========== 미국 시장 지표 ==========
+function renderUsMarket() {
+  const indices = state.data.us_indices || [];
+  const el = document.getElementById('us-market-content');
+  if (indices.length === 0) {
+    el.innerHTML = '<div class="empty-state">미국 시장 데이터 없음</div>';
+    return;
+  }
+  let html = '<div class="market-grid">';
+  indices.forEach(i => {
+    const cls = i.change.startsWith('▲') ? 'up' : (i.change.startsWith('▼') ? 'down' : 'flat');
+    html += `
+      <div class="market-item">
+        <div class="label">${i.name}</div>
+        <div class="value">${i.value}</div>
+        <div class="change ${cls}">${i.change}</div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  el.innerHTML = html;
 }
 
 // ========== 시장 지표 ==========
