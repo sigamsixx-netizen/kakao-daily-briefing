@@ -56,11 +56,11 @@ def refresh_access_token(api_key, refresh_token):
     return new["access_token"]
 
 # ===== 날씨 =====
-def fetch_weather():
+def fetch_weather(lat=37.5665, lon=126.9780):
     try:
         url = (
             "https://api.open-meteo.com/v1/forecast"
-            "?latitude=37.5665&longitude=126.9780"
+            f"?latitude={lat}&longitude={lon}"
             "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m"
             "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max"
             "&timezone=Asia%2FSeoul"
@@ -141,6 +141,98 @@ def fetch_market_indices():
     except Exception as e:
         log(f"WARN: 시장지표 실패: {e}")
     return indices
+
+# ===== 미국 시장지표 (다우/S&P/나스닥) =====
+def _us_from_naver():
+    """1차: 네이버 글로벌 지수"""
+    indices = []
+    code_map = {".DJI": "다우존스", ".INX": "S&P500", ".IXIC": "나스닥"}
+    query = ",".join(f"SERVICE_WORLD_INDEX:{c}" for c in code_map)
+    url = f"https://polling.finance.naver.com/api/realtime?query={query}"
+    res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+    data = res.json()
+    order = list(code_map.values())
+    tmp = {}
+    for area in data.get("result", {}).get("areas", []):
+        for d in area.get("datas", []):
+            code = d.get("cd", "")
+            if code in code_map:
+                raw_nv = d.get("nv", 0)
+                raw_cr = d.get("cr", 0)
+                val = raw_nv / 100 if raw_nv > 100000 else raw_nv
+                pct = raw_cr
+                chg = d.get("cv", 0)
+                sign = "▲" if chg > 0 else ("▼" if chg < 0 else "─")
+                tmp[code_map[code]] = {
+                    "name": code_map[code],
+                    "value": f"{val:,.2f}",
+                    "change": f"{sign}{abs(pct):.2f}%"
+                }
+    # 이름 순서 유지
+    for name in order:
+        if name in tmp:
+            indices.append(tmp[name])
+    return indices
+
+def _us_from_stooq():
+    """2차 백업: Stooq CSV (키 불필요)"""
+    indices = []
+    sym_map = [("^dji", "다우존스"), ("^spx", "S&P500"), ("^ndq", "나스닥")]
+    for sym, name in sym_map:
+        try:
+            url = f"https://stooq.com/q/l/?s={sym}&f=sd2t2ohlcvp&h&e=csv"
+            res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+            lines = res.text.strip().split("\n")
+            if len(lines) < 2:
+                continue
+            header = [h.strip().lower() for h in lines[0].split(",")]
+            row = lines[1].split(",")
+            rec = dict(zip(header, row))
+            close = rec.get("close")
+            open_ = rec.get("open")
+            if not close or close in ("N/D", ""):
+                continue
+            close_f = float(close)
+            # 등락률: 전일 대비를 모르면 당일 시가 대비로 근사 (Stooq 무료는 전일종가 미제공)
+            pct = 0.0
+            if open_ and open_ not in ("N/D", ""):
+                try:
+                    open_f = float(open_)
+                    if open_f > 0:
+                        pct = (close_f - open_f) / open_f * 100
+                except ValueError:
+                    pass
+            sign = "▲" if pct > 0 else ("▼" if pct < 0 else "─")
+            indices.append({
+                "name": name,
+                "value": f"{close_f:,.2f}",
+                "change": f"{sign}{abs(pct):.2f}%"
+            })
+        except Exception as e:
+            log(f"WARN: Stooq {sym} 실패: {e}")
+    return indices
+
+def fetch_us_indices():
+    """네이버 1차 시도 → 실패/빈 결과 시 Stooq 백업으로 자동 전환"""
+    # 1차: 네이버
+    try:
+        result = _us_from_naver()
+        if result:
+            log(f"INFO: 미국지표 - 네이버 성공 ({len(result)}건)")
+            return result
+        log("WARN: 미국지표 - 네이버 결과 없음, Stooq 백업 시도")
+    except Exception as e:
+        log(f"WARN: 미국지표 - 네이버 실패({e}), Stooq 백업 시도")
+    # 2차: Stooq
+    try:
+        result = _us_from_stooq()
+        if result:
+            log(f"INFO: 미국지표 - Stooq 백업 성공 ({len(result)}건)")
+            return result
+        log("WARN: 미국지표 - Stooq도 결과 없음")
+    except Exception as e:
+        log(f"WARN: 미국지표 - Stooq 실패: {e}")
+    return []
 
 def fetch_stock_price(code):
     try:
@@ -224,7 +316,7 @@ def collect_headlines():
     return {cat: fetch_rss(url, 4) for cat, url in sources.items()}
 
 # ===== 메시지 1: 날씨 + 주식 =====
-def build_message_1(weather, indices, movers, slot_label=""):
+def build_message_1(weather_seoul, weather_bundang, indices, us_indices, movers, slot_label=""):
     now = now_kst()
     days = ["월","화","수","목","금","토","일"]
     date_str = f"{now.year}.{now.month:02d}.{now.day:02d} ({days[now.weekday()]})"
@@ -237,15 +329,34 @@ def build_message_1(weather, indices, movers, slot_label=""):
     P.append(f"📅 {date_str} {time_str}")
     P.append("")
 
-    # 날씨
-    if weather:
-        P.append("🌤️ 서울 날씨")
-        cur = weather["current"]
-        P.append(f"  {cur['icon']} 현재: {cur['temp']}°C  {cur['label']}")
-        P.append(f"     습도 {cur['humidity']}%  바람 {cur['wind']}m/s")
+    # 날씨 (서울 + 분당)
+    def weather_block(w, region):
+        lines = []
+        if w:
+            cur = w["current"]
+            lines.append(f"🌤️ {region} 날씨")
+            lines.append(f"  {cur['icon']} 현재: {cur['temp']}°C  {cur['label']}")
+            lines.append(f"     습도 {cur['humidity']}%  바람 {cur['wind']}m/s")
+            # 오늘 최고/최저 + 강수
+            if w.get("daily"):
+                today = w["daily"][0]
+                rain = f" ☔{today['rain']:.0f}%" if today['rain'] > 0 else ""
+                lines.append(f"     오늘 {today['max']:.0f}°/{today['min']:.0f}°{rain}")
+        return lines
+
+    sb = weather_block(weather_seoul, "서울")
+    bb = weather_block(weather_bundang, "성남(분당)")
+    if sb:
+        P.extend(sb)
         P.append("")
-        P.append("  📅 주간 예보")
-        for i, d in enumerate(weather["daily"][:4]):
+    if bb:
+        P.extend(bb)
+        P.append("")
+
+    # 서울 주간 예보 (대표로 서울만)
+    if weather_seoul and weather_seoul.get("daily"):
+        P.append("  📅 서울 주간 예보")
+        for i, d in enumerate(weather_seoul["daily"][:4]):
             tag = "오늘" if i == 0 else f"{d['date']}({d['weekday']})"
             rain = f" ☔{d['rain']:.0f}%" if d['rain'] > 0 else ""
             P.append(f"  {d['icon']} {tag:8s} {d['max']:.0f}°/{d['min']:.0f}°{rain}")
@@ -257,9 +368,15 @@ def build_message_1(weather, indices, movers, slot_label=""):
     P.append("")
 
     if indices:
-        P.append("📊 시장 지표")
+        P.append("📊 국내 시장 지표")
         for idx in indices:
             P.append(f"  ▶ {idx['name']:6s} {idx['value']:>12s}  {idx['change']}")
+        P.append("")
+
+    if us_indices:
+        P.append("🇺🇸 미국 증시 (전일 종가)")
+        for idx in us_indices:
+            P.append(f"  ▶ {idx['name']:8s} {idx['value']:>12s}  {idx['change']}")
         P.append("")
 
     if movers.get("up"):
@@ -284,6 +401,7 @@ def build_message_1(weather, indices, movers, slot_label=""):
     P.append("⚠️ 종목 정보는 단순 시세이며")
     P.append("   투자 판단의 근거가 아닙니다")
     P.append("")
+    P.append("📊 자세한 내용은 아래 [대시보드 열기]")
     P.append("📰 주요 뉴스는 잠시 후 도착")
 
     return "\n".join(P)
@@ -335,13 +453,16 @@ def send_to_me(access_token, message, link_url, button_title):
     )
     return res.status_code, res.text
 
-def save_dashboard_json(weather, indices, movers, headlines):
+def save_dashboard_json(weather_seoul, weather_bundang, indices, us_indices, movers, headlines):
     """대시보드용 JSON 파일 저장 (GitHub Pages에서 읽기 위함)"""
     dashboard_data = {
         "updated_at": now_kst().isoformat(),
         "updated_at_display": now_kst().strftime("%Y-%m-%d %H:%M:%S KST"),
-        "weather": weather,
+        "weather": weather_seoul,          # 하위호환: 기존 키 유지(서울)
+        "weather_seoul": weather_seoul,
+        "weather_bundang": weather_bundang,
         "indices": indices,
+        "us_indices": us_indices,
         "movers": movers,
         "headlines": headlines
     }
@@ -360,26 +481,28 @@ def main():
     access_token = refresh_access_token(api_key, refresh_token)
 
     log("INFO: 날씨 수집...")
-    weather = fetch_weather()
+    weather_seoul = fetch_weather(37.5665, 126.9780)      # 서울시청
+    weather_bundang = fetch_weather(37.3595, 127.1052)    # 성남 분당구청
     log("INFO: 뉴스 수집...")
     headlines = collect_headlines()
     log("INFO: 주식 데이터 수집...")
     indices = fetch_market_indices()
+    us_indices = fetch_us_indices()
     movers = fetch_market_movers()
 
-    log(f"INFO: 데이터 - 지표 {len(indices)}, 상승 {len(movers['up'])}, 하락 {len(movers['down'])}, 거래량 {len(movers['volume'])}, 뉴스 {sum(len(v) for v in headlines.values())}")
+    log(f"INFO: 데이터 - 국내지표 {len(indices)}, 미국지표 {len(us_indices)}, 상승 {len(movers['up'])}, 하락 {len(movers['down'])}, 거래량 {len(movers['volume'])}, 뉴스 {sum(len(v) for v in headlines.values())}")
 
     # 대시보드용 JSON 파일 저장
-    save_dashboard_json(weather, indices, movers, headlines)
+    save_dashboard_json(weather_seoul, weather_bundang, indices, us_indices, movers, headlines)
 
     dashboard_url = os.environ.get("DASHBOARD_URL", "https://finance.naver.com")
 
     # 메시지 1: 날씨 + 주식
     log("INFO: 메시지 1 (날씨+주식) 작성 중...")
-    msg1 = build_message_1(weather, indices, movers, slot_label)
+    msg1 = build_message_1(weather_seoul, weather_bundang, indices, us_indices, movers, slot_label)
     log(f"INFO: 메시지 1 길이 {len(msg1)}자")
 
-    status1, body1 = send_to_me(access_token, msg1, dashboard_url, "대시보드 열기")
+    status1, body1 = send_to_me(access_token, msg1, dashboard_url, "📊 대시보드 열기")
     if status1 == 200:
         log("[OK] 메시지 1 발송 성공")
     else:
@@ -394,7 +517,7 @@ def main():
     msg2 = build_message_2(headlines, slot_label)
     log(f"INFO: 메시지 2 길이 {len(msg2)}자")
 
-    status2, body2 = send_to_me(access_token, msg2, "https://news.naver.com", "네이버 뉴스")
+    status2, body2 = send_to_me(access_token, msg2, dashboard_url, "📊 대시보드에서 전체 기사 보기")
     if status2 == 200:
         log("[OK] 메시지 2 발송 성공")
     else:
