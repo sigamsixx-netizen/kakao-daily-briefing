@@ -143,15 +143,41 @@ def fetch_market_indices():
     return indices
 
 # ===== 미국 시장지표 (다우/S&P/나스닥) =====
-def _us_from_naver():
-    """1차: 네이버 글로벌 지수"""
+def _us_from_naver_stock_api():
+    """1차: 네이버 종목 API (api.stock.naver.com) - 가장 안정적"""
+    indices = []
+    sym_map = [(".DJI", "다우존스"), (".INX", "S&P500"), (".IXIC", "나스닥")]
+    for sym, name in sym_map:
+        try:
+            url = f"https://api.stock.naver.com/index/{sym}/basic"
+            res = requests.get(url, timeout=10, headers={
+                "User-Agent": "Mozilla/5.0",
+                "Referer": "https://m.stock.naver.com/"
+            })
+            d = res.json()
+            close = float(str(d.get("closePrice", "0")).replace(",", ""))
+            pct = float(str(d.get("fluctuationsRatio", "0")).replace(",", ""))
+            if close <= 0:
+                continue
+            sign = "▲" if pct > 0 else ("▼" if pct < 0 else "─")
+            indices.append({
+                "name": name,
+                "value": f"{close:,.2f}",
+                "change": f"{sign}{abs(pct):.2f}%"
+            })
+        except Exception as e:
+            log(f"WARN: 네이버종목API {sym} 실패: {e}")
+    return indices
+
+def _us_from_naver_polling():
+    """2차: 네이버 polling 글로벌 지수"""
     indices = []
     code_map = {".DJI": "다우존스", ".INX": "S&P500", ".IXIC": "나스닥"}
+    order = list(code_map.values())
     query = ",".join(f"SERVICE_WORLD_INDEX:{c}" for c in code_map)
     url = f"https://polling.finance.naver.com/api/realtime?query={query}"
     res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
     data = res.json()
-    order = list(code_map.values())
     tmp = {}
     for area in data.get("result", {}).get("areas", []):
         for d in area.get("datas", []):
@@ -160,22 +186,20 @@ def _us_from_naver():
                 raw_nv = d.get("nv", 0)
                 raw_cr = d.get("cr", 0)
                 val = raw_nv / 100 if raw_nv > 100000 else raw_nv
-                pct = raw_cr
                 chg = d.get("cv", 0)
                 sign = "▲" if chg > 0 else ("▼" if chg < 0 else "─")
                 tmp[code_map[code]] = {
                     "name": code_map[code],
                     "value": f"{val:,.2f}",
-                    "change": f"{sign}{abs(pct):.2f}%"
+                    "change": f"{sign}{abs(raw_cr):.2f}%"
                 }
-    # 이름 순서 유지
     for name in order:
         if name in tmp:
             indices.append(tmp[name])
     return indices
 
 def _us_from_stooq():
-    """2차 백업: Stooq CSV (키 불필요)"""
+    """3차 백업: Stooq CSV (키 불필요)"""
     indices = []
     sym_map = [("^dji", "다우존스"), ("^spx", "S&P500"), ("^ndq", "나스닥")]
     for sym, name in sym_map:
@@ -186,14 +210,12 @@ def _us_from_stooq():
             if len(lines) < 2:
                 continue
             header = [h.strip().lower() for h in lines[0].split(",")]
-            row = lines[1].split(",")
-            rec = dict(zip(header, row))
+            rec = dict(zip(header, lines[1].split(",")))
             close = rec.get("close")
             open_ = rec.get("open")
             if not close or close in ("N/D", ""):
                 continue
             close_f = float(close)
-            # 등락률: 전일 대비를 모르면 당일 시가 대비로 근사 (Stooq 무료는 전일종가 미제공)
             pct = 0.0
             if open_ and open_ not in ("N/D", ""):
                 try:
@@ -213,25 +235,22 @@ def _us_from_stooq():
     return indices
 
 def fetch_us_indices():
-    """네이버 1차 시도 → 실패/빈 결과 시 Stooq 백업으로 자동 전환"""
-    # 1차: 네이버
-    try:
-        result = _us_from_naver()
-        if result:
-            log(f"INFO: 미국지표 - 네이버 성공 ({len(result)}건)")
-            return result
-        log("WARN: 미국지표 - 네이버 결과 없음, Stooq 백업 시도")
-    except Exception as e:
-        log(f"WARN: 미국지표 - 네이버 실패({e}), Stooq 백업 시도")
-    # 2차: Stooq
-    try:
-        result = _us_from_stooq()
-        if result:
-            log(f"INFO: 미국지표 - Stooq 백업 성공 ({len(result)}건)")
-            return result
-        log("WARN: 미국지표 - Stooq도 결과 없음")
-    except Exception as e:
-        log(f"WARN: 미국지표 - Stooq 실패: {e}")
+    """3개 소스 순차 시도. 각 단계 로그로 어느 소스가 됐는지 추적 가능."""
+    sources = [
+        ("네이버종목API", _us_from_naver_stock_api),
+        ("네이버polling", _us_from_naver_polling),
+        ("Stooq백업", _us_from_stooq),
+    ]
+    for label, fn in sources:
+        try:
+            result = fn()
+            if result and len(result) >= 1:
+                log(f"INFO: 미국지표 - {label} 성공 ({len(result)}건)")
+                return result
+            log(f"WARN: 미국지표 - {label} 결과 없음, 다음 소스 시도")
+        except Exception as e:
+            log(f"WARN: 미국지표 - {label} 예외({e}), 다음 소스 시도")
+    log("ERROR: 미국지표 - 모든 소스 실패")
     return []
 
 def fetch_stock_price(code):
@@ -495,7 +514,12 @@ def main():
     # 대시보드용 JSON 파일 저장
     save_dashboard_json(weather_seoul, weather_bundang, indices, us_indices, movers, headlines)
 
-    dashboard_url = os.environ.get("DASHBOARD_URL", "https://finance.naver.com")
+    dashboard_url = os.environ.get("DASHBOARD_URL", "").strip()
+    if not dashboard_url:
+        dashboard_url = "https://finance.naver.com"
+        log("WARN: DASHBOARD_URL Secret이 비어있음 → 기본값(네이버금융) 사용. 대시보드 버튼을 쓰려면 Secret 등록 필요")
+    else:
+        log(f"INFO: 대시보드 버튼 URL = {dashboard_url}")
 
     # 메시지 1: 날씨 + 주식
     log("INFO: 메시지 1 (날씨+주식) 작성 중...")
