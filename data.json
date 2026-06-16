@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-06-16T09:55:12.812351+09:00",
-  "updated_at_display": "2026-06-16 09:55:12 KST",
+  "updated_at": "2026-06-16T09:56:09.788776+09:00",
+  "updated_at_display": "2026-06-16 09:56:09 KST",
   "weather": {
     "current": {
       "icon": "🌤️",
@@ -145,13 +145,13 @@
   "indices": [
     {
       "name": "코스피",
-      "value": "8,625.08",
-      "change": "▲0.93%"
+      "value": "8,644.51",
+      "change": "▲1.15%"
     },
     {
       "name": "코스닥",
-      "value": "1,017.57",
-      "change": "▼1.59%"
+      "value": "1,018.73",
+      "change": "▼1.48%"
     }
   ],
   "us_indices": [
@@ -207,11 +207,11 @@
       },
       {
         "name": "KODEX 인버스",
-        "change": "▲1.18%"
+        "change": "▲1.29%"
       },
       {
         "name": "대우건설",
-        "change": "▲20.09%"
+        "change": "▲20.74%"
       }
     ]
   },
