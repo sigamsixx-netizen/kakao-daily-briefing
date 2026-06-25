@@ -89,6 +89,16 @@
     box-shadow: var(--shadow-hover); transform: translateY(-1px);
   }
 
+  .nav-link {
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+    color: var(--text-sub); font-size: 14px; font-weight: 500;
+    background: var(--card); border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .nav-link:hover { box-shadow: var(--shadow-hover); }
+  .nav-link.active { background: var(--accent); color: white; border-color: var(--accent); }
+
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
@@ -128,7 +138,13 @@
 
   /* 시장 */
   .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .market-item { text-align: center; padding: 12px; background: var(--bg); border-radius: 8px; }
+  .market-item {
+    text-align: center; padding: 12px; background: var(--bg);
+    border-radius: 8px; transition: all 0.15s ease;
+  }
+  .market-item:hover {
+    transform: translateY(-2px); box-shadow: var(--shadow-hover);
+  }
   .market-item .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
   .market-item .value { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
   .market-item .change { font-size: 13px; font-weight: 600; }
@@ -152,10 +168,19 @@
 
   .stock-list { list-style: none; }
   .stock-item {
-    display: flex; justify-content: space-between;
+    display: flex; justify-content: space-between; align-items: center;
     padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px;
+    text-decoration: none; color: var(--text);
+    transition: all 0.15s ease;
+  }
+  .stock-item:hover {
+    background: var(--bg); padding-left: 8px; padding-right: 8px;
+    border-radius: 6px;
   }
   .stock-item:last-child { border-bottom: none; }
+  .stock-item .ext-icon {
+    font-size: 11px; color: var(--text-muted); margin-left: 6px;
+  }
 
   .stock-rank {
     display: inline-block; width: 24px; height: 24px;
@@ -217,9 +242,15 @@
 <div class="container">
 
   <header>
-    <div class="header-left">
-      <h1>📰 SK아카데미 일일 이슈 대시보드</h1>
-      <div class="subtitle" id="subtitle">데이터 로딩 중...</div>
+    <div>
+      <div class="header-left">
+        <h1>📰 SK아카데미 일일 이슈 대시보드</h1>
+        <div class="subtitle" id="subtitle">데이터 로딩 중...</div>
+      </div>
+      <div class="nav" style="margin-top:12px; display:flex; gap:8px;">
+        <a href="dashboard.html" class="nav-link active">📰 대시보드</a>
+        <a href="study.html" class="nav-link">📚 자기 발전</a>
+      </div>
     </div>
     <div class="header-controls">
       <span class="status-badge">
@@ -233,28 +264,16 @@
 
   <div class="grid">
 
-    <!-- 1. 서울 날씨 -->
+    <!-- 1. 날씨 -->
     <div class="card">
       <div class="card-title">🌤️ 서울 날씨</div>
       <div id="weather-content"><div class="loading">로딩 중...</div></div>
     </div>
 
-    <!-- 1-2. 성남(분당) 날씨 -->
+    <!-- 2. 시장 지표 -->
     <div class="card">
-      <div class="card-title">🌤️ 성남(분당) 날씨</div>
-      <div id="weather-bundang-content"><div class="loading">로딩 중...</div></div>
-    </div>
-
-    <!-- 2. 국내 시장 지표 -->
-    <div class="card">
-      <div class="card-title">💹 국내 시장 지표</div>
+      <div class="card-title">💹 시장 지표</div>
       <div id="market-content"><div class="loading">로딩 중...</div></div>
-    </div>
-
-    <!-- 2-2. 미국 시장 지표 -->
-    <div class="card">
-      <div class="card-title">🇺🇸 미국 시장 지표 <span style="font-size:11px;color:var(--text-muted);font-weight:400">(전일 종가)</span></div>
-      <div id="us-market-content"><div class="loading">로딩 중...</div></div>
     </div>
 
     <!-- 3. 주식 TOP -->
@@ -342,9 +361,7 @@ async function loadData() {
     console.error('데이터 로드 실패:', e);
     document.getElementById('subtitle').textContent = '⚠️ 데이터 로드 실패 — 아직 첫 업데이트 전일 수 있어요';
     document.getElementById('weather-content').innerHTML = '<div class="empty-state">데이터 없음<br><small>매일 9시/13시/18시에 자동 업데이트됩니다</small></div>';
-    document.getElementById('weather-bundang-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
     document.getElementById('market-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
-    document.getElementById('us-market-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
     document.getElementById('stock-list').innerHTML = '<li class="empty-state">데이터 없음</li>';
     document.getElementById('news-grid').innerHTML = '<div class="empty-state">데이터 없음</div>';
   }
@@ -359,20 +376,19 @@ function renderAll() {
   document.getElementById('last-update').textContent = `최종: ${updated.split(' ')[1] || ''}`;
 
   renderWeather();
-  renderWeatherBundang();
   renderMarket();
-  renderUsMarket();
   renderStockTop();
   renderNews();
 }
 
-// ========== 날씨 (공통) ==========
-function renderWeatherInto(w, elId, region) {
-  const el = document.getElementById(elId);
+// ========== 날씨 ==========
+function renderWeather() {
+  const w = state.data.weather;
   if (!w) {
-    el.innerHTML = '<div class="empty-state">날씨 데이터 없음</div>';
+    document.getElementById('weather-content').innerHTML = '<div class="empty-state">날씨 데이터 없음</div>';
     return;
   }
+
   let html = `
     <div class="weather-current">
       <div class="weather-icon">${w.current.icon}</div>
@@ -397,39 +413,7 @@ function renderWeatherInto(w, elId, region) {
     `;
   });
   html += '</div>';
-  el.innerHTML = html;
-}
-
-// ========== 날씨 ==========
-function renderWeather() {
-  renderWeatherInto(state.data.weather_seoul || state.data.weather, 'weather-content', '서울');
-}
-
-function renderWeatherBundang() {
-  renderWeatherInto(state.data.weather_bundang, 'weather-bundang-content', '성남(분당)');
-}
-
-// ========== 미국 시장 지표 ==========
-function renderUsMarket() {
-  const indices = state.data.us_indices || [];
-  const el = document.getElementById('us-market-content');
-  if (indices.length === 0) {
-    el.innerHTML = '<div class="empty-state">미국 시장 데이터 없음</div>';
-    return;
-  }
-  let html = '<div class="market-grid">';
-  indices.forEach(i => {
-    const cls = i.change.startsWith('▲') ? 'up' : (i.change.startsWith('▼') ? 'down' : 'flat');
-    html += `
-      <div class="market-item">
-        <div class="label">${i.name}</div>
-        <div class="value">${i.value}</div>
-        <div class="change ${cls}">${i.change}</div>
-      </div>
-    `;
-  });
-  html += '</div>';
-  el.innerHTML = html;
+  document.getElementById('weather-content').innerHTML = html;
 }
 
 // ========== 시장 지표 ==========
@@ -439,15 +423,22 @@ function renderMarket() {
     document.getElementById('market-content').innerHTML = '<div class="empty-state">시장 데이터 없음</div>';
     return;
   }
+  // 시장 지표별 네이버 금융 URL
+  const urlMap = {
+    "코스피": "https://finance.naver.com/sise/sise_index.naver?code=KOSPI",
+    "코스닥": "https://finance.naver.com/sise/sise_index.naver?code=KOSDAQ",
+    "원/달러": "https://finance.naver.com/marketindex/exchangeDetail.naver?marketindexCd=FX_USDKRW"
+  };
   let html = '<div class="market-grid">';
   indices.forEach(i => {
     const cls = i.change.startsWith('▲') ? 'up' : (i.change.startsWith('▼') ? 'down' : 'flat');
+    const url = urlMap[i.name] || `https://finance.naver.com/search/search.naver?query=${encodeURIComponent(i.name)}`;
     html += `
-      <div class="market-item">
-        <div class="label">${i.name}</div>
+      <a href="${url}" target="_blank" rel="noopener" class="market-item" style="text-decoration:none; color:inherit; display:block;" title="네이버 금융에서 ${escapeHtml(i.name)} 상세 보기">
+        <div class="label">${i.name} <span style="font-size:10px;color:var(--text-muted);">↗</span></div>
         <div class="value">${i.value}</div>
         <div class="change ${cls}">${i.change}</div>
-      </div>
+      </a>
     `;
   });
   html += '</div>';
@@ -467,14 +458,19 @@ function renderStockTop() {
   let html = '';
   items.forEach((item, i) => {
     const cls = item.change.startsWith('▲') ? 'up' : (item.change.startsWith('▼') ? 'down' : 'flat');
+    // 네이버 금융 URL (종목코드 있으면 사용, 없으면 검색)
+    const naverUrl = item.code
+      ? `https://finance.naver.com/item/main.naver?code=${item.code}`
+      : `https://finance.naver.com/search/search.naver?query=${encodeURIComponent(item.name)}`;
     html += `
-      <li class="stock-item">
+      <a href="${naverUrl}" target="_blank" rel="noopener" class="stock-item" title="네이버 금융에서 ${escapeHtml(item.name)} 상세 보기">
         <div>
           <span class="stock-rank">${i + 1}</span>
           ${escapeHtml(item.name)}
+          <span class="ext-icon">↗</span>
         </div>
         <div class="${cls}" style="font-weight: 600;">${item.change}</div>
-      </li>
+      </a>
     `;
   });
   document.getElementById('stock-list').innerHTML = html;
