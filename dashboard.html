@@ -39,10 +39,7 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.5;
-    min-height: 100vh;
+    background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh;
     transition: background 0.3s ease, color 0.3s ease;
   }
 
@@ -52,13 +49,10 @@
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
   }
-
   .header-left h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   .header-left .subtitle { color: var(--text-muted); font-size: 14px; }
 
-  .header-controls {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  }
+  .header-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
   .status-badge {
     display: inline-flex; align-items: center; gap: 6px;
@@ -66,16 +60,11 @@
     border: 1px solid var(--border); border-radius: 20px;
     font-size: 13px; color: var(--text-sub); box-shadow: var(--shadow);
   }
-
   .status-dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: #48bb78; animation: pulse 2s ease-in-out infinite;
   }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
   .icon-btn {
     background: var(--card); border: 1px solid var(--border);
@@ -84,17 +73,13 @@
     box-shadow: var(--shadow); transition: all 0.2s ease;
     display: inline-flex; align-items: center; gap: 6px;
   }
-
-  .icon-btn:hover {
-    box-shadow: var(--shadow-hover); transform: translateY(-1px);
-  }
+  .icon-btn:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
 
   .nav-link {
     padding: 8px 14px; border-radius: 8px; text-decoration: none;
     color: var(--text-sub); font-size: 14px; font-weight: 500;
     background: var(--card); border: 1px solid var(--border);
-    transition: all 0.2s ease;
-    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
   }
   .nav-link:hover { box-shadow: var(--shadow-hover); }
   .nav-link.active { background: var(--accent); color: white; border-color: var(--accent); }
@@ -107,7 +92,6 @@
     box-shadow: var(--shadow); border: 1px solid var(--border);
     transition: all 0.2s ease;
   }
-
   .card-full { grid-column: 1 / -1; }
 
   .card-title {
@@ -178,9 +162,7 @@
     border-radius: 6px;
   }
   .stock-item:last-child { border-bottom: none; }
-  .stock-item .ext-icon {
-    font-size: 11px; color: var(--text-muted); margin-left: 6px;
-  }
+  .stock-item .ext-icon { font-size: 11px; color: var(--text-muted); margin-left: 6px; }
 
   .stock-rank {
     display: inline-block; width: 24px; height: 24px;
@@ -210,7 +192,6 @@
   .news-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;
   }
-
   .news-item {
     padding: 14px; background: var(--bg); border-radius: 8px;
     border: 1px solid var(--border); transition: all 0.2s ease;
@@ -227,11 +208,18 @@
   }
   .news-title { font-size: 14px; font-weight: 500; line-height: 1.4; color: var(--text); }
 
-  /* 로딩 */
   .loading { text-align: center; padding: 40px; color: var(--text-muted); }
   .empty-state { text-align: center; padding: 24px; color: var(--text-muted); font-size: 14px; }
 
-  /* 푸터 */
+  /* 세계 지표 카드 헤더 */
+  .section-label {
+    display: inline-block; padding: 3px 10px;
+    background: var(--accent); color: white;
+    border-radius: 12px; font-size: 11px; font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .section-label.global { background: #38a169; }
+
   footer {
     margin-top: 32px; padding: 20px; text-align: center;
     color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border);
@@ -264,19 +252,31 @@
 
   <div class="grid">
 
-    <!-- 1. 날씨 -->
+    <!-- 1. 서울 날씨 -->
     <div class="card">
       <div class="card-title">🌤️ 서울 날씨</div>
-      <div id="weather-content"><div class="loading">로딩 중...</div></div>
+      <div id="weather-seoul"><div class="loading">로딩 중...</div></div>
     </div>
 
-    <!-- 2. 시장 지표 -->
+    <!-- 2. 분당 날씨 -->
     <div class="card">
-      <div class="card-title">💹 시장 지표</div>
+      <div class="card-title">🌤️ 분당(성남) 날씨</div>
+      <div id="weather-bundang"><div class="loading">로딩 중...</div></div>
+    </div>
+
+    <!-- 3. 한국 시장 지표 -->
+    <div class="card">
+      <div class="card-title">💹 한국 시장 지표</div>
       <div id="market-content"><div class="loading">로딩 중...</div></div>
     </div>
 
-    <!-- 3. 주식 TOP -->
+    <!-- 4. 세계 시장 지표 -->
+    <div class="card">
+      <div class="card-title">🌏 세계 시장 지표</div>
+      <div id="global-market-content"><div class="loading">로딩 중...</div></div>
+    </div>
+
+    <!-- 5. 주식 TOP -->
     <div class="card card-full">
       <div class="card-title">📊 코스피 TOP 종목</div>
       <div class="stock-tabs" id="stock-tabs">
@@ -289,7 +289,7 @@
       </ul>
     </div>
 
-    <!-- 4. 뉴스 -->
+    <!-- 6. 뉴스 -->
     <div class="card card-full">
       <div class="card-title">📰 주요 뉴스</div>
 
@@ -314,7 +314,7 @@
   </div>
 
   <footer>
-    <div>📅 데이터 출처: Open-Meteo (날씨), 네이버 금융 (주식), 동아일보 RSS (뉴스)</div>
+    <div>📅 데이터 출처: Open-Meteo (날씨), 네이버 금융 (한국주식), Yahoo Finance (세계지표), 동아일보 RSS (뉴스)</div>
     <div style="margin-top:6px">⚠️ 종목 정보는 단순 시세 데이터이며 투자 판단의 근거가 아닙니다</div>
     <div style="margin-top:6px">🔄 데이터는 매일 9시/13시/18시 자동 업데이트</div>
   </footer>
@@ -329,13 +329,11 @@ const state = {
   searchQuery: ''
 };
 
-// ========== 다크모드 ==========
 function initTheme() {
   const saved = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   updateThemeButton();
 }
-
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
   const next = current === 'dark' ? 'light' : 'dark';
@@ -343,16 +341,13 @@ function toggleTheme() {
   localStorage.setItem('theme', next);
   updateThemeButton();
 }
-
 function updateThemeButton() {
   const t = document.documentElement.getAttribute('data-theme');
   document.getElementById('theme-toggle').textContent = t === 'dark' ? '☀️ 라이트' : '🌙 다크';
 }
 
-// ========== 데이터 로드 ==========
 async function loadData() {
   try {
-    // 캐시 방지를 위한 timestamp 쿼리
     const res = await fetch(`data.json?t=${Date.now()}`);
     if (!res.ok) throw new Error('data.json 없음');
     state.data = await res.json();
@@ -360,8 +355,9 @@ async function loadData() {
   } catch (e) {
     console.error('데이터 로드 실패:', e);
     document.getElementById('subtitle').textContent = '⚠️ 데이터 로드 실패 — 아직 첫 업데이트 전일 수 있어요';
-    document.getElementById('weather-content').innerHTML = '<div class="empty-state">데이터 없음<br><small>매일 9시/13시/18시에 자동 업데이트됩니다</small></div>';
-    document.getElementById('market-content').innerHTML = '<div class="empty-state">데이터 없음</div>';
+    ['weather-seoul', 'weather-bundang', 'market-content', 'global-market-content'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="empty-state">데이터 없음<br><small>매일 9/13/18시 자동 업데이트</small></div>';
+    });
     document.getElementById('stock-list').innerHTML = '<li class="empty-state">데이터 없음</li>';
     document.getElementById('news-grid').innerHTML = '<div class="empty-state">데이터 없음</div>';
   }
@@ -369,26 +365,24 @@ async function loadData() {
 
 function renderAll() {
   if (!state.data) return;
-
-  // 업데이트 시각
   const updated = state.data.updated_at_display || '';
   document.getElementById('subtitle').textContent = `최종 업데이트: ${updated}`;
   document.getElementById('last-update').textContent = `최종: ${updated.split(' ')[1] || ''}`;
 
-  renderWeather();
+  renderWeather('weather-seoul', state.data.weather_seoul || state.data.weather);
+  renderWeather('weather-bundang', state.data.weather_bundang);
   renderMarket();
+  renderGlobalMarket();
   renderStockTop();
   renderNews();
 }
 
-// ========== 날씨 ==========
-function renderWeather() {
-  const w = state.data.weather;
+function renderWeather(targetId, w) {
+  const el = document.getElementById(targetId);
   if (!w) {
-    document.getElementById('weather-content').innerHTML = '<div class="empty-state">날씨 데이터 없음</div>';
+    el.innerHTML = '<div class="empty-state">날씨 데이터 없음</div>';
     return;
   }
-
   let html = `
     <div class="weather-current">
       <div class="weather-icon">${w.current.icon}</div>
@@ -413,17 +407,15 @@ function renderWeather() {
     `;
   });
   html += '</div>';
-  document.getElementById('weather-content').innerHTML = html;
+  el.innerHTML = html;
 }
 
-// ========== 시장 지표 ==========
 function renderMarket() {
   const indices = state.data.indices || [];
   if (indices.length === 0) {
     document.getElementById('market-content').innerHTML = '<div class="empty-state">시장 데이터 없음</div>';
     return;
   }
-  // 시장 지표별 네이버 금융 URL
   const urlMap = {
     "코스피": "https://finance.naver.com/sise/sise_index.naver?code=KOSPI",
     "코스닥": "https://finance.naver.com/sise/sise_index.naver?code=KOSDAQ",
@@ -432,20 +424,67 @@ function renderMarket() {
   let html = '<div class="market-grid">';
   indices.forEach(i => {
     const cls = i.change.startsWith('▲') ? 'up' : (i.change.startsWith('▼') ? 'down' : 'flat');
-    const url = urlMap[i.name] || `https://finance.naver.com/search/search.naver?query=${encodeURIComponent(i.name)}`;
-    html += `
-      <a href="${url}" target="_blank" rel="noopener" class="market-item" style="text-decoration:none; color:inherit; display:block;" title="네이버 금융에서 ${escapeHtml(i.name)} 상세 보기">
-        <div class="label">${i.name} <span style="font-size:10px;color:var(--text-muted);">↗</span></div>
-        <div class="value">${i.value}</div>
-        <div class="change ${cls}">${i.change}</div>
-      </a>
-    `;
+    const url = urlMap[i.name];
+    if (url) {
+      html += `
+        <a href="${url}" target="_blank" rel="noopener" class="market-item" style="text-decoration:none; color:inherit; display:block;">
+          <div class="label">${escapeHtml(i.name)} <span style="font-size:10px;color:var(--text-muted);">↗</span></div>
+          <div class="value">${i.value}</div>
+          <div class="change ${cls}">${i.change}</div>
+        </a>
+      `;
+    } else {
+      html += `
+        <div class="market-item">
+          <div class="label">${escapeHtml(i.name)}</div>
+          <div class="value">${i.value}</div>
+          <div class="change ${cls}">${i.change}</div>
+        </div>
+      `;
+    }
   });
   html += '</div>';
   document.getElementById('market-content').innerHTML = html;
 }
 
-// ========== 주식 TOP ==========
+function renderGlobalMarket() {
+  const indices = state.data.global_indices || [];
+  if (indices.length === 0) {
+    document.getElementById('global-market-content').innerHTML = '<div class="empty-state">세계 시장 데이터 없음<br><small>(다음 업데이트에 표시됩니다)</small></div>';
+    return;
+  }
+  // 야후 파이낸스 URL 매핑
+  const urlMap = {
+    "다우존스": "https://finance.yahoo.com/quote/%5EDJI",
+    "나스닥": "https://finance.yahoo.com/quote/%5EIXIC",
+    "S&P 500": "https://finance.yahoo.com/quote/%5EGSPC"
+  };
+  let html = '<div class="market-grid">';
+  indices.forEach(i => {
+    const cls = i.change.startsWith('▲') ? 'up' : (i.change.startsWith('▼') ? 'down' : 'flat');
+    const url = urlMap[i.name];
+    if (url) {
+      html += `
+        <a href="${url}" target="_blank" rel="noopener" class="market-item" style="text-decoration:none; color:inherit; display:block;">
+          <div class="label">${escapeHtml(i.name)} <span style="font-size:10px;color:var(--text-muted);">↗</span></div>
+          <div class="value">${i.value}</div>
+          <div class="change ${cls}">${i.change}</div>
+        </a>
+      `;
+    } else {
+      html += `
+        <div class="market-item">
+          <div class="label">${escapeHtml(i.name)}</div>
+          <div class="value">${i.value}</div>
+          <div class="change ${cls}">${i.change}</div>
+        </div>
+      `;
+    }
+  });
+  html += '</div>';
+  document.getElementById('global-market-content').innerHTML = html;
+}
+
 function renderStockTop() {
   const movers = state.data.movers || {};
   const items = movers[state.activeStockTab] || [];
@@ -458,25 +497,34 @@ function renderStockTop() {
   let html = '';
   items.forEach((item, i) => {
     const cls = item.change.startsWith('▲') ? 'up' : (item.change.startsWith('▼') ? 'down' : 'flat');
-    // 네이버 금융 URL (종목코드 있으면 사용, 없으면 검색)
-    const naverUrl = item.code
-      ? `https://finance.naver.com/item/main.naver?code=${item.code}`
-      : `https://finance.naver.com/search/search.naver?query=${encodeURIComponent(item.name)}`;
-    html += `
-      <a href="${naverUrl}" target="_blank" rel="noopener" class="stock-item" title="네이버 금융에서 ${escapeHtml(item.name)} 상세 보기">
-        <div>
-          <span class="stock-rank">${i + 1}</span>
-          ${escapeHtml(item.name)}
-          <span class="ext-icon">↗</span>
-        </div>
-        <div class="${cls}" style="font-weight: 600;">${item.change}</div>
-      </a>
-    `;
+    // code가 있을 때만 직접 종목 페이지로, 없으면 클릭 불가 표시
+    if (item.code) {
+      const naverUrl = `https://finance.naver.com/item/main.naver?code=${item.code}`;
+      html += `
+        <a href="${naverUrl}" target="_blank" rel="noopener" class="stock-item" title="네이버 금융에서 ${escapeHtml(item.name)} 상세 보기">
+          <div>
+            <span class="stock-rank">${i + 1}</span>
+            ${escapeHtml(item.name)}
+            <span class="ext-icon">↗</span>
+          </div>
+          <div class="${cls}" style="font-weight: 600;">${item.change}</div>
+        </a>
+      `;
+    } else {
+      html += `
+        <li class="stock-item" style="cursor:default;">
+          <div>
+            <span class="stock-rank">${i + 1}</span>
+            ${escapeHtml(item.name)}
+          </div>
+          <div class="${cls}" style="font-weight: 600;">${item.change}</div>
+        </li>
+      `;
+    }
   });
   document.getElementById('stock-list').innerHTML = html;
 }
 
-// ========== 뉴스 ==========
 function renderNews() {
   const headlines = state.data.headlines || {};
   const grid = document.getElementById('news-grid');
@@ -484,8 +532,6 @@ function renderNews() {
 
   Object.entries(headlines).forEach(([cat, items]) => {
     items.forEach(title => {
-      // 뉴스는 title만 있음 (link는 없음)
-      // 검색을 위해 네이버 뉴스 검색으로 연결
       const searchUrl = `https://search.naver.com/search.naver?where=news&query=${encodeURIComponent(title)}`;
       allItems.push({ title, link: searchUrl, category: cat });
     });
@@ -519,7 +565,6 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// ========== 이벤트 ==========
 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 document.getElementById('refresh-btn').addEventListener('click', loadData);
 
@@ -546,11 +591,8 @@ document.getElementById('stock-tabs').addEventListener('click', (e) => {
   }
 });
 
-// ========== 초기화 + 자동 새로고침 ==========
 initTheme();
 loadData();
-
-// 5분마다 자동 새로고침
 setInterval(loadData, 5 * 60 * 1000);
 </script>
 
