@@ -453,11 +453,11 @@ function renderGlobalMarket() {
     document.getElementById('global-market-content').innerHTML = '<div class="empty-state">세계 시장 데이터 없음<br><small>(다음 업데이트에 표시됩니다)</small></div>';
     return;
   }
-  // 야후 파이낸스 URL 매핑
+  // 네이버 금융 해외 지수 페이지로 이동
   const urlMap = {
-    "다우존스": "https://finance.yahoo.com/quote/%5EDJI",
-    "나스닥": "https://finance.yahoo.com/quote/%5EIXIC",
-    "S&P 500": "https://finance.yahoo.com/quote/%5EGSPC"
+    "다우존스": "https://finance.naver.com/world/sise.naver?symbol=DJI@DJI",
+    "나스닥": "https://finance.naver.com/world/sise.naver?symbol=NAS@IXIC",
+    "S&P 500": "https://finance.naver.com/world/sise.naver?symbol=SPI@SPX"
   };
   let html = '<div class="market-grid">';
   indices.forEach(i => {
@@ -497,30 +497,20 @@ function renderStockTop() {
   let html = '';
   items.forEach((item, i) => {
     const cls = item.change.startsWith('▲') ? 'up' : (item.change.startsWith('▼') ? 'down' : 'flat');
-    // code가 있을 때만 직접 종목 페이지로, 없으면 클릭 불가 표시
-    if (item.code) {
-      const naverUrl = `https://finance.naver.com/item/main.naver?code=${item.code}`;
-      html += `
-        <a href="${naverUrl}" target="_blank" rel="noopener" class="stock-item" title="네이버 금융에서 ${escapeHtml(item.name)} 상세 보기">
-          <div>
-            <span class="stock-rank">${i + 1}</span>
-            ${escapeHtml(item.name)}
-            <span class="ext-icon">↗</span>
-          </div>
-          <div class="${cls}" style="font-weight: 600;">${item.change}</div>
-        </a>
-      `;
-    } else {
-      html += `
-        <li class="stock-item" style="cursor:default;">
-          <div>
-            <span class="stock-rank">${i + 1}</span>
-            ${escapeHtml(item.name)}
-          </div>
-          <div class="${cls}" style="font-weight: 600;">${item.change}</div>
-        </li>
-      `;
-    }
+    // code가 있으면 종목 상세 페이지로, 없으면 종목명으로 검색
+    const naverUrl = item.code
+      ? `https://finance.naver.com/item/main.naver?code=${item.code}`
+      : `https://finance.naver.com/search/search.naver?query=${encodeURIComponent(item.name)}`;
+    html += `
+      <a href="${naverUrl}" target="_blank" rel="noopener" class="stock-item" title="네이버 금융에서 ${escapeHtml(item.name)} 상세 보기">
+        <div>
+          <span class="stock-rank">${i + 1}</span>
+          ${escapeHtml(item.name)}
+          <span class="ext-icon">↗</span>
+        </div>
+        <div class="${cls}" style="font-weight: 600;">${item.change}</div>
+      </a>
+    `;
   });
   document.getElementById('stock-list').innerHTML = html;
 }
