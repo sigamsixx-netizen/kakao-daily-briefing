@@ -147,35 +147,67 @@ def fetch_market_indices():
         log(f"WARN: 시장지표 실패: {e}")
     return indices
 
-# ===== 세계 시장 지표 (다우/나스닥/S&P) =====
+# ===== 세계 시장 지표 (네이버 금융 해외 지수 사용) =====
 def fetch_global_indices():
+    """네이버 금융 해외 지수 polling API 사용 (Yahoo Finance 대신 더 안정적)"""
     indices = []
-    symbols = [
-        ("^DJI", "다우존스", 2),
-        ("^IXIC", "나스닥", 2),
-        ("^GSPC", "S&P 500", 2),
-    ]
-    for symbol, name, decimals in symbols:
-        try:
-            url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=1d"
-            res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
-            data = res.json()
-            result = data["chart"]["result"][0]
-            meta = result["meta"]
-            price = meta.get("regularMarketPrice")
-            prev = meta.get("chartPreviousClose") or meta.get("previousClose")
-            if price is None or prev is None:
-                continue
-            chg = price - prev
-            pct = (chg / prev) * 100
-            sign = "▲" if chg > 0 else ("▼" if chg < 0 else "─")
-            indices.append({
-                "name": name,
-                "value": f"{price:,.{decimals}f}",
-                "change": f"{sign}{abs(pct):.2f}%"
-            })
-        except Exception as e:
-            log(f"WARN: 글로벌 지표 {name} 실패: {e}")
+    try:
+        url = "https://polling.finance.naver.com/api/realtime?query=SERVICE_INDEX:DJI@DJI,NAS@IXIC,SPI@SPX"
+        res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+        data = res.json()
+        name_map = {
+            "DJI@DJI": ("다우존스", 2),
+            "NAS@IXIC": ("나스닥", 2),
+            "SPI@SPX": ("S&P 500", 2)
+        }
+        for area in data.get("result", {}).get("areas", []):
+            for d in area.get("datas", []):
+                code = d.get("cd", "")
+                if code in name_map:
+                    name, decimals = name_map[code]
+                    val = d.get("nv", 0) / 100
+                    chg = d.get("cv", 0) / 100
+                    pct = d.get("cr", 0)
+                    sign = "▲" if chg > 0 else ("▼" if chg < 0 else "─")
+                    indices.append({
+                        "name": name,
+                        "value": f"{val:,.{decimals}f}",
+                        "change": f"{sign}{abs(pct):.2f}%"
+                    })
+        log(f"INFO: 네이버 금융 해외 지수 {len(indices)}개 수집")
+    except Exception as e:
+        log(f"WARN: 네이버 해외 지수 실패: {e}")
+
+    # 백업: Yahoo Finance 시도
+    if len(indices) == 0:
+        log("INFO: Yahoo Finance로 재시도...")
+        symbols = [
+            ("^DJI", "다우존스", 2),
+            ("^IXIC", "나스닥", 2),
+            ("^GSPC", "S&P 500", 2),
+        ]
+        for symbol, name, decimals in symbols:
+            try:
+                url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=1d"
+                res = requests.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+                data = res.json()
+                result = data["chart"]["result"][0]
+                meta = result["meta"]
+                price = meta.get("regularMarketPrice")
+                prev = meta.get("chartPreviousClose") or meta.get("previousClose")
+                if price is None or prev is None:
+                    continue
+                chg = price - prev
+                pct = (chg / prev) * 100
+                sign = "▲" if chg > 0 else ("▼" if chg < 0 else "─")
+                indices.append({
+                    "name": name,
+                    "value": f"{price:,.{decimals}f}",
+                    "change": f"{sign}{abs(pct):.2f}%"
+                })
+            except Exception as e:
+                log(f"WARN: Yahoo {name} 실패: {e}")
+
     return indices
 
 def fetch_stock_price(code):
