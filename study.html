@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 자기 발전 - SK아카데미</title>
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1a202c;
+    --text-sub: #4a5568;
+    --text-muted: #718096;
+    --border: #e2e8f0;
+    --accent: #3182ce;
+    --accent-hover: #2c5282;
+    --success: #38a169;
+    --danger: #e53e3e;
+    --warning: #d69e2e;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  [data-theme="dark"] {
+    --bg: #0f1419;
+    --card: #1a202c;
+    --text: #f7fafc;
+    --text-sub: #cbd5e0;
+    --text-muted: #a0aec0;
+    --border: #2d3748;
+    --accent: #63b3ed;
+    --accent-hover: #4299e1;
+    --success: #68d391;
+    --danger: #fc8181;
+    --warning: #f6ad55;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
+  }
+
+  .nav { display: flex; gap: 8px; }
+  .nav a {
+    padding: 8px 14px; border-radius: 8px; text-decoration: none;
+    color: var(--text-sub); font-size: 14px; font-weight: 500;
+    background: var(--card); border: 1px solid var(--border);
+    transition: all 0.2s ease;
+  }
+  .nav a:hover { box-shadow: var(--shadow-hover); }
+  .nav a.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .header-left h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .header-left .subtitle { color: var(--text-muted); font-size: 14px; }
+
+  .icon-btn {
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--text); padding: 8px 14px; border-radius: 8px;
+    cursor: pointer; font-size: 14px; font-weight: 500;
+    box-shadow: var(--shadow);
+  }
+  .icon-btn:hover { box-shadow: var(--shadow-hover); }
+
+  /* 통계 카드 */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 20px;
+  }
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-card {
+    background: var(--card); padding: 14px;
+    border-radius: 10px; border: 1px solid var(--border);
+    text-align: center;
+  }
+  .stat-value { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* 탭 */
+  .tabs {
+    display: flex; gap: 4px; margin-bottom: 20px;
+    background: var(--card); padding: 6px;
+    border-radius: 10px; border: 1px solid var(--border);
+  }
+  .tab {
+    flex: 1; padding: 10px 16px; cursor: pointer;
+    background: transparent; border: none; color: var(--text-sub);
+    font-size: 14px; font-weight: 500; border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  .tab.active { background: var(--accent); color: white; }
+
+  /* 카드 */
+  .card {
+    background: var(--card); border-radius: 12px; padding: 20px;
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 16px; font-weight: 600; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+
+  /* 학습 카드 */
+  .lesson-card {
+    background: var(--card); border-radius: 12px; padding: 24px;
+    border: 1px solid var(--border); margin-bottom: 12px;
+    transition: all 0.2s ease;
+  }
+  .lesson-card.wrong-marked { border-color: var(--warning); border-width: 2px; }
+
+  .lesson-num {
+    display: inline-block; padding: 4px 12px;
+    background: var(--accent); color: white;
+    border-radius: 12px; font-size: 12px; font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .lesson-num.wrong { background: var(--warning); }
+  .lesson-cat {
+    display: inline-block; margin-left: 8px;
+    padding: 4px 10px; background: var(--bg);
+    border-radius: 12px; font-size: 12px; color: var(--text-sub);
+  }
+
+  .lesson-ko {
+    font-size: 18px; font-weight: 600; margin-bottom: 8px; line-height: 1.4;
+  }
+  .lesson-en {
+    font-size: 17px; color: var(--text-sub); margin-bottom: 16px;
+    padding: 12px; background: var(--bg); border-radius: 8px;
+    font-style: italic; display: none;
+  }
+  .lesson-en.show { display: block; }
+
+  .lesson-actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 8px 16px; border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 500; border: none;
+    transition: all 0.2s ease;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary {
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { box-shadow: var(--shadow-hover); }
+  .btn-success { background: var(--success); color: white; }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-small { padding: 6px 12px; font-size: 13px; }
+
+  /* 퀴즈 */
+  .quiz-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-bottom: 16px; }
+  .quiz-question { font-size: 16px; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+  .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .quiz-option {
+    padding: 12px 16px; background: var(--bg);
+    border: 2px solid var(--border); border-radius: 8px;
+    cursor: pointer; transition: all 0.2s ease; font-size: 14px;
+  }
+  .quiz-option:hover { border-color: var(--accent); }
+  .quiz-option.selected { border-color: var(--accent); background: var(--accent); color: white; }
+  .quiz-option.correct { border-color: var(--success); background: var(--success); color: white; }
+  .quiz-option.wrong { border-color: var(--danger); background: var(--danger); color: white; }
+  .quiz-option.disabled { cursor: not-allowed; opacity: 0.6; }
+
+  .quiz-explanation {
+    background: var(--bg); padding: 14px; border-radius: 8px;
+    margin-top: 12px; font-size: 14px; color: var(--text-sub);
+    line-height: 1.5; display: none;
+  }
+  .quiz-explanation.show { display: block; }
+  .quiz-explanation strong { color: var(--text); }
+
+  /* 영어 퀴즈 입력 */
+  .english-quiz-input {
+    width: 100%; padding: 12px; font-size: 16px;
+    border: 2px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text);
+    margin-bottom: 12px;
+  }
+  .english-quiz-input:focus { outline: none; border-color: var(--accent); }
+
+  /* 빈 상태 */
+  .empty-state {
+    text-align: center; padding: 40px;
+    color: var(--text-muted);
+  }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+
+  /* 모드 토글 */
+  .mode-toggle {
+    display: flex; gap: 4px; margin-bottom: 16px;
+    background: var(--card); padding: 4px;
+    border-radius: 8px; border: 1px solid var(--border);
+  }
+  .mode-btn {
+    flex: 1; padding: 8px; cursor: pointer; background: transparent;
+    border: none; color: var(--text-sub); font-size: 13px;
+    border-radius: 6px;
+  }
+  .mode-btn.active { background: var(--accent); color: white; }
+
+  /* 통계 페이지 */
+  .progress-bar {
+    width: 100%; height: 8px; background: var(--bg);
+    border-radius: 4px; overflow: hidden; margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  /* 백업/복원 */
+  .backup-section {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .backup-section input[type="file"] { display: none; }
+
+  /* 알림 */
+  .toast {
+    position: fixed; top: 24px; right: 24px;
+    background: var(--card); border: 1px solid var(--border);
+    padding: 14px 20px; border-radius: 8px; box-shadow: var(--shadow-hover);
+    font-size: 14px; z-index: 1000; opacity: 0;
+    transform: translateX(20px); transition: all 0.3s ease;
+  }
+  .toast.show { opacity: 1; transform: translateX(0); }
+  .toast.success { border-color: var(--success); }
+  .toast.error { border-color: var(--danger); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div>
+      <div class="header-left">
+        <h1>📚 자기 발전</h1>
+        <div class="subtitle">매일 조금씩 꾸준히</div>
+      </div>
+      <div class="nav" style="margin-top:12px;">
+        <a href="dashboard.html">📰 대시보드</a>
+        <a href="study.html" class="active">📚 자기 발전</a>
+      </div>
+    </div>
+    <button class="icon-btn" id="theme-toggle">🌙 다크</button>
+  </header>
+
+  <!-- 통계 -->
+  <div class="stats-grid" id="stats-grid">
+    <!-- JS 동적 생성 -->
+  </div>
+
+  <!-- 메인 탭 -->
+  <div class="tabs">
+    <button class="tab active" data-tab="english">🌏 여행 영어</button>
+    <button class="tab" data-tab="piping">🔧 배관기능사</button>
+    <button class="tab" data-tab="backup">💾 백업/복원</button>
+  </div>
+
+  <!-- 영어 탭 -->
+  <div id="tab-english" class="tab-content">
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-mode="learn">📖 학습</button>
+      <button class="mode-btn" data-mode="quiz">✍️ 퀴즈</button>
+      <button class="mode-btn" data-mode="review">🔄 복습 (틀린 문장)</button>
+    </div>
+    <div id="english-content"></div>
+  </div>
+
+  <!-- 배관 탭 -->
+  <div id="tab-piping" class="tab-content" style="display:none;">
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-pmode="today">📝 오늘의 5문제</button>
+      <button class="mode-btn" data-pmode="review">🔄 복습 (틀린 문제)</button>
+    </div>
+    <div id="piping-content"></div>
+  </div>
+
+  <!-- 백업 탭 -->
+  <div id="tab-backup" class="tab-content" style="display:none;">
+    <div class="card">
+      <div class="card-title">💾 학습 기록 백업</div>
+      <p style="color:var(--text-sub); font-size:14px; margin-bottom:16px;">
+        학습 기록은 브라우저에 자동 저장되지만, PC 변경이나 백업을 위해 JSON 파일로 다운로드 후 구글 드라이브에 보관할 수 있습니다.
+      </p>
+      <div class="backup-section">
+        <button class="btn btn-primary" id="btn-download">📥 JSON 다운로드</button>
+        <button class="btn btn-secondary" id="btn-upload-trigger">📤 JSON 복원</button>
+        <input type="file" id="file-upload" accept="application/json">
+        <button class="btn btn-danger" id="btn-reset">🗑️ 전체 초기화</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 학습 진행 상황</div>
+      <div id="progress-detail"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== 데이터 ==========
+let englishData = [];
+let pipingData = [];
+
+// ========== 상태 ==========
+const state = {
+  activeTab: 'english',
+  englishMode: 'learn',
+  pipingMode: 'today',
+  todayEnglish: [],
+  todayPiping: [],
+  currentQuiz: null,
+  quizAnswered: {}
+};
+
+// ========== 다크모드 ==========
+function initTheme() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeButton();
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  updateThemeButton();
+}
+function updateThemeButton() {
+  const t = document.documentElement.getAttribute('data-theme');
+  document.getElementById('theme-toggle').textContent = t === 'dark' ? '☀️ 라이트' : '🌙 다크';
+}
+
+// ========== Storage ==========
+const STORAGE_KEY = 'sk_study_data_v1';
+
+function loadStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultStorage();
+    return JSON.parse(raw);
+  } catch (e) {
+    return defaultStorage();
+  }
+}
+
+function saveStorage(data) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+    showToast('저장 실패: ' + e.message, 'error');
+  }
+}
+
+function defaultStorage() {
+  return {
+    english: {
+      studied: {},        // {date: [id1, id2, ...]}
+      wrong: [],          // [id1, id2, ...]
+      mastered: [],       // [id1, id2, ...]
+      total_quizzes: 0,
+      total_correct: 0
+    },
+    piping: {
+      studied: {},
+      wrong: [],
+      mastered: [],
+      total_quizzes: 0,
+      total_correct: 0
+    },
+    streak: {
+      last_date: null,
+      count: 0
+    }
+  };
+}
+
+// ========== 날짜 ==========
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function updateStreak() {
+  const data = loadStorage();
+  const today = todayStr();
+  const yesterday = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  })();
+
+  if (data.streak.last_date === today) return data.streak.count;
+
+  if (data.streak.last_date === yesterday) {
+    data.streak.count += 1;
+  } else if (data.streak.last_date !== today) {
+    data.streak.count = 1;
+  }
+  data.streak.last_date = today;
+  saveStorage(data);
+  return data.streak.count;
+}
+
+// ========== 오늘의 학습 선정 ==========
+function pickTodaysItems(category, items, count = 5) {
+  const data = loadStorage();
+  const today = todayStr();
+
+  // 오늘 이미 선정한 게 있으면 그대로 사용
+  if (data[category].studied[today]) {
+    return data[category].studied[today].map(id => items.find(i => i.id === id)).filter(Boolean);
+  }
+
+  // 새로 선정
+  const wrong = data[category].wrong;
+  const mastered = data[category].mastered;
+  const wrongItems = items.filter(i => wrong.includes(i.id));
+  const newItems = items.filter(i => !wrong.includes(i.id) && !mastered.includes(i.id));
+
+  // 우선순위: 틀린 문제 → 안 본 문제 → 마스터한 문제
+  let selected = [];
+  selected = selected.concat(shuffle([...wrongItems]).slice(0, Math.min(2, wrongItems.length)));
+  const need = count - selected.length;
+  if (need > 0) {
+    selected = selected.concat(shuffle([...newItems]).slice(0, need));
+  }
+  if (selected.length < count) {
+    // 새 문제 부족 → 마스터한 것 중에서
+    const masteredItems = items.filter(i => mastered.includes(i.id));
+    selected = selected.concat(shuffle([...masteredItems]).slice(0, count - selected.length));
+  }
+
+  // 저장
+  data[category].studied[today] = selected.map(i => i.id);
+  saveStorage(data);
+
+  return selected;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ========== TTS (발음) ==========
+function speak(text, lang = 'en-US') {
+  if (!('speechSynthesis' in window)) {
+    showToast('이 브라우저는 음성 합성을 지원하지 않습니다', 'error');
+    return;
+  }
+  // 진행 중인 음성 취소
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang;
+  utter.rate = 0.9;
+  utter.pitch = 1.0;
+  window.speechSynthesis.speak(utter);
+}
+
+// ========== 통계 ==========
+function renderStats() {
+  const data = loadStorage();
+  const streak = updateStreak();
+  const today = todayStr();
+
+  const engStudiedToday = (data.english.studied[today] || []).length;
+  const pipStudiedToday = (data.piping.studied[today] || []).length;
+
+  const engTotalStudied = Object.values(data.english.studied).flat().length;
+  const pipTotalStudied = Object.values(data.piping.studied).flat().length;
+
+  const engAccuracy = data.english.total_quizzes > 0
+    ? Math.round((data.english.total_correct / data.english.total_quizzes) * 100)
+    : 0;
+  const pipAccuracy = data.piping.total_quizzes > 0
+    ? Math.round((data.piping.total_correct / data.piping.total_quizzes) * 100)
+    : 0;
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-value">🔥 ${streak}</div>
+      <div class="stat-label">연속 학습일</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${engStudiedToday + pipStudiedToday}</div>
+      <div class="stat-label">오늘 학습</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${engTotalStudied + pipTotalStudied}</div>
+      <div class="stat-label">누적 학습</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">${data.english.wrong.length + data.piping.wrong.length}</div>
+      <div class="stat-label">복습 대기</div>
+    </div>
+  `;
+}
+
+// ========== 영어 학습 ==========
+function renderEnglish() {
+  const container = document.getElementById('english-content');
+  const data = loadStorage();
+
+  if (state.englishMode === 'learn') {
+    const items = pickTodaysItems('english', englishData, 5);
+    if (items.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 학습할 문장이 없습니다!</div>';
+      return;
+    }
+    container.innerHTML = items.map((item, idx) => renderEnglishCard(item, idx + 1, false)).join('');
+    attachEnglishHandlers();
+  }
+  else if (state.englishMode === 'quiz') {
+    const items = pickTodaysItems('english', englishData, 5);
+    if (items.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 퀴즈가 없습니다!</div>';
+      return;
+    }
+    container.innerHTML = items.map((item, idx) => renderEnglishQuiz(item, idx + 1)).join('');
+    attachEnglishQuizHandlers();
+  }
+  else if (state.englishMode === 'review') {
+    const wrongIds = data.english.wrong;
+    if (wrongIds.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문장이 없습니다!<br><small style="color:var(--text-muted);">계속 정답률을 유지해보세요</small></div>';
+      return;
+    }
+    const items = wrongIds.map(id => englishData.find(i => i.id === id)).filter(Boolean);
+    container.innerHTML = items.map((item, idx) => renderEnglishCard(item, idx + 1, true)).join('');
+    attachEnglishHandlers();
+  }
+}
+
+function renderEnglishCard(item, num, isReview) {
+  return `
+    <div class="lesson-card ${isReview ? 'wrong-marked' : ''}">
+      <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+      <span class="lesson-cat">${item.cat}</span>
+      <div class="lesson-ko">${escapeHtml(item.ko)}</div>
+      <div class="lesson-en" id="en-${item.id}">${escapeHtml(item.en)}</div>
+      <div class="lesson-actions">
+        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('${item.id}')">👁️ 영어 보기</button>
+        <button class="btn btn-primary btn-small" onclick="speak('${item.en.replace(/'/g, "\\'")}')">🔊 발음 듣기</button>
+        ${isReview ? `<button class="btn btn-success btn-small" onclick="markMastered('english', '${item.id}')">✅ 외웠어요</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function toggleAnswer(id) {
+  document.getElementById('en-' + id).classList.toggle('show');
+}
+
+function renderEnglishQuiz(item, num) {
+  return `
+    <div class="quiz-card" data-quiz-id="${item.id}">
+      <span class="lesson-num">#${num}</span>
+      <span class="lesson-cat">${item.cat}</span>
+      <div class="quiz-question">${escapeHtml(item.ko)}</div>
+      <input type="text" class="english-quiz-input" placeholder="영어로 입력하세요..." data-id="${item.id}">
+      <div class="lesson-actions">
+        <button class="btn btn-primary btn-small" onclick="checkEnglishQuiz('${item.id}')">✓ 확인</button>
+        <button class="btn btn-secondary btn-small" onclick="showEnglishAnswer('${item.id}')">💡 정답 보기</button>
+        <button class="btn btn-secondary btn-small" onclick="speak('${item.en.replace(/'/g, "\\'")}')">🔊 발음 듣기</button>
+      </div>
+      <div class="quiz-explanation" id="quiz-result-${item.id}"></div>
+    </div>
+  `;
+}
+
+function checkEnglishQuiz(id) {
+  const item = englishData.find(i => i.id === id);
+  const inputEl = document.querySelector(`input[data-id="${id}"]`);
+  const userAnswer = inputEl.value.trim().toLowerCase().replace(/[.,!?'"]/g, '');
+  const correctAnswer = item.en.toLowerCase().replace(/[.,!?'"]/g, '');
+  const resultEl = document.getElementById('quiz-result-' + id);
+
+  const data = loadStorage();
+  data.english.total_quizzes += 1;
+
+  const isCorrect = userAnswer === correctAnswer;
+  if (isCorrect) {
+    data.english.total_correct += 1;
+    resultEl.innerHTML = `<strong style="color:var(--success);">✅ 정답!</strong><br>${escapeHtml(item.en)}`;
+    resultEl.classList.add('show');
+    // 틀린 목록에 있다면 제거
+    const idx = data.english.wrong.indexOf(id);
+    if (idx > -1) data.english.wrong.splice(idx, 1);
+    showToast('정답입니다!', 'success');
+  } else {
+    resultEl.innerHTML = `<strong style="color:var(--danger);">❌ 오답</strong><br>입력: ${escapeHtml(inputEl.value)}<br>정답: <strong>${escapeHtml(item.en)}</strong>`;
+    resultEl.classList.add('show');
+    // 틀린 목록에 추가
+    if (!data.english.wrong.includes(id)) data.english.wrong.push(id);
+    showToast('다시 도전해보세요', 'error');
+  }
+  saveStorage(data);
+  renderStats();
+}
+
+function showEnglishAnswer(id) {
+  const item = englishData.find(i => i.id === id);
+  const resultEl = document.getElementById('quiz-result-' + id);
+  resultEl.innerHTML = `<strong>정답:</strong> ${escapeHtml(item.en)}`;
+  resultEl.classList.add('show');
+}
+
+function markMastered(category, id) {
+  const data = loadStorage();
+  // wrong에서 제거
+  const idx = data[category].wrong.indexOf(id);
+  if (idx > -1) data[category].wrong.splice(idx, 1);
+  // mastered에 추가
+  if (!data[category].mastered.includes(id)) data[category].mastered.push(id);
+  saveStorage(data);
+  showToast('마스터 완료! 👏', 'success');
+  if (category === 'english') renderEnglish();
+  else renderPiping();
+  renderStats();
+}
+
+function attachEnglishHandlers() {}
+function attachEnglishQuizHandlers() {}
+
+// ========== 배관기능사 ==========
+function renderPiping() {
+  const container = document.getElementById('piping-content');
+  const data = loadStorage();
+
+  if (state.pipingMode === 'today') {
+    const items = pickTodaysItems('piping', pipingData, 5);
+    if (items.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 문제가 없습니다!</div>';
+      return;
+    }
+    container.innerHTML = items.map((item, idx) => renderPipingQuiz(item, idx + 1, false)).join('');
+  }
+  else if (state.pipingMode === 'review') {
+    const wrongIds = data.piping.wrong;
+    if (wrongIds.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문제가 없습니다!</div>';
+      return;
+    }
+    const items = wrongIds.map(id => pipingData.find(i => i.id === id)).filter(Boolean);
+    container.innerHTML = items.map((item, idx) => renderPipingQuiz(item, idx + 1, true)).join('');
+  }
+}
+
+function renderPipingQuiz(item, num, isReview) {
+  const optionsHtml = item.opts.map((opt, i) =>
+    `<div class="quiz-option" data-quiz="${item.id}" data-idx="${i}" onclick="answerPiping('${item.id}', ${i})">${i+1}. ${escapeHtml(opt)}</div>`
+  ).join('');
+
+  return `
+    <div class="quiz-card">
+      <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+      <div class="quiz-question">${escapeHtml(item.q)}</div>
+      <div class="quiz-options" id="opts-${item.id}">${optionsHtml}</div>
+      <div class="quiz-explanation" id="exp-${item.id}"></div>
+      ${isReview ? `<div class="lesson-actions" style="margin-top:12px;"><button class="btn btn-success btn-small" onclick="markMastered('piping', '${item.id}')">✅ 이해했어요</button></div>` : ''}
+    </div>
+  `;
+}
+
+function answerPiping(id, selectedIdx) {
+  const item = pipingData.find(i => i.id === id);
+  const data = loadStorage();
+  data.piping.total_quizzes += 1;
+
+  const opts = document.querySelectorAll(`[data-quiz="${id}"]`);
+  const isCorrect = selectedIdx === item.a;
+
+  // 모든 옵션 비활성화
+  opts.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    opt.onclick = null;
+    if (i === item.a) opt.classList.add('correct');
+    else if (i === selectedIdx) opt.classList.add('wrong');
+  });
+
+  // 해설 표시
+  const expEl = document.getElementById('exp-' + id);
+  expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>${escapeHtml(item.exp)}`;
+  expEl.classList.add('show');
+
+  if (isCorrect) {
+    data.piping.total_correct += 1;
+    const idx = data.piping.wrong.indexOf(id);
+    if (idx > -1) data.piping.wrong.splice(idx, 1);
+    showToast('정답입니다!', 'success');
+  } else {
+    if (!data.piping.wrong.includes(id)) data.piping.wrong.push(id);
+    showToast('다시 풀어보세요', 'error');
+  }
+  saveStorage(data);
+  renderStats();
+}
+
+// ========== 백업/복원 ==========
+function downloadBackup() {
+  const data = loadStorage();
+  data._exported_at = new Date().toISOString();
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `sk_study_backup_${todayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('백업 파일이 다운로드되었습니다', 'success');
+}
+
+function uploadBackup(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.english || !data.piping) throw new Error('유효하지 않은 백업 파일');
+      saveStorage(data);
+      showToast('복원 완료!', 'success');
+      renderStats();
+      renderBackupProgress();
+    } catch (err) {
+      showToast('복원 실패: ' + err.message, 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetAll() {
+  if (!confirm('정말로 모든 학습 기록을 삭제하시겠어요? 이 작업은 되돌릴 수 없습니다.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  showToast('초기화 완료', 'success');
+  renderStats();
+  renderBackupProgress();
+  renderEnglish();
+  renderPiping();
+}
+
+function renderBackupProgress() {
+  const data = loadStorage();
+  const engTotal = englishData.length;
+  const pipTotal = pipingData.length;
+  const engMastered = data.english.mastered.length;
+  const pipMastered = data.piping.mastered.length;
+  const engWrong = data.english.wrong.length;
+  const pipWrong = data.piping.wrong.length;
+
+  const engPct = engTotal > 0 ? Math.round((engMastered / engTotal) * 100) : 0;
+  const pipPct = pipTotal > 0 ? Math.round((pipMastered / pipTotal) * 100) : 0;
+
+  document.getElementById('progress-detail').innerHTML = `
+    <div style="margin-bottom:16px;">
+      <strong>🌏 여행 영어</strong>
+      <div style="font-size:13px;color:var(--text-muted);margin:4px 0;">
+        마스터 ${engMastered}개 / 전체 ${engTotal}개 · 복습 대기 ${engWrong}개
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${engPct}%"></div></div>
+      <div style="font-size:12px;color:var(--text-muted);text-align:right;">${engPct}%</div>
+    </div>
+    <div style="margin-bottom:16px;">
+      <strong>🔧 배관기능사</strong>
+      <div style="font-size:13px;color:var(--text-muted);margin:4px 0;">
+        마스터 ${pipMastered}개 / 전체 ${pipTotal}개 · 복습 대기 ${pipWrong}개
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pipPct}%"></div></div>
+      <div style="font-size:12px;color:var(--text-muted);text-align:right;">${pipPct}%</div>
+    </div>
+    <div style="padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-sub);">
+      <strong>💡 학습 기록 저장 위치:</strong> 이 브라우저의 localStorage<br>
+      다른 PC나 브라우저에서 보려면 JSON 다운로드 → 구글 드라이브 보관 → 다른 곳에서 복원하세요.
+    </div>
+  `;
+}
+
+// ========== 토스트 ==========
+function showToast(msg, type = 'info') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ========== 유틸 ==========
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ========== 이벤트 ==========
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+// 메인 탭
+document.querySelectorAll('.tabs .tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tabs .tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    state.activeTab = t.dataset.tab;
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.getElementById('tab-' + t.dataset.tab).style.display = '';
+    if (t.dataset.tab === 'backup') renderBackupProgress();
+  });
+});
+
+// 영어 모드
+document.querySelectorAll('[data-mode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.englishMode = btn.dataset.mode;
+    renderEnglish();
+  });
+});
+
+// 배관 모드
+document.querySelectorAll('[data-pmode]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-pmode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.pipingMode = btn.dataset.pmode;
+    renderPiping();
+  });
+});
+
+// 백업 버튼
+document.getElementById('btn-download').addEventListener('click', downloadBackup);
+document.getElementById('btn-upload-trigger').addEventListener('click', () => document.getElementById('file-upload').click());
+document.getElementById('file-upload').addEventListener('change', (e) => {
+  if (e.target.files[0]) uploadBackup(e.target.files[0]);
+});
+document.getElementById('btn-reset').addEventListener('click', resetAll);
+
+// ========== 초기화 ==========
+async function init() {
+  initTheme();
+  try {
+    const [engRes, pipRes] = await Promise.all([
+      fetch('english.json'),
+      fetch('piping.json')
+    ]);
+    englishData = await engRes.json();
+    pipingData = await pipRes.json();
+  } catch (e) {
+    showToast('데이터 로드 실패: ' + e.message, 'error');
+    return;
+  }
+  renderStats();
+  renderEnglish();
+  renderPiping();
+}
+
+init();
+</script>
+
+</body>
+</html>
