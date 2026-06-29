@@ -21,199 +21,69 @@
     --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
   .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-
-  header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
-  }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
   .nav { display: flex; gap: 8px; }
-  .nav a {
-    padding: 8px 14px; border-radius: 8px; text-decoration: none;
-    color: var(--text-sub); font-size: 14px; font-weight: 500;
-    background: var(--card); border: 1px solid var(--border);
-    transition: all 0.2s ease;
-  }
-  .nav a:hover { box-shadow: var(--shadow-hover); }
+  .nav a { padding: 8px 14px; border-radius: 8px; text-decoration: none; color: var(--text-sub); font-size: 14px; font-weight: 500; background: var(--card); border: 1px solid var(--border); }
   .nav a.active { background: var(--accent); color: white; border-color: var(--accent); }
-
   .header-left h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   .header-left .subtitle { color: var(--text-muted); font-size: 14px; }
-
-  .icon-btn {
-    background: var(--card); border: 1px solid var(--border);
-    color: var(--text); padding: 8px 14px; border-radius: 8px;
-    cursor: pointer; font-size: 14px; font-weight: 500;
-    box-shadow: var(--shadow);
-  }
-  .icon-btn:hover { box-shadow: var(--shadow-hover); }
-
-  .stats-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 12px; margin-bottom: 20px;
-  }
+  .icon-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; box-shadow: var(--shadow); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
   @media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-  .stat-card {
-    background: var(--card); padding: 14px;
-    border-radius: 10px; border: 1px solid var(--border);
-    text-align: center;
-  }
+  .stat-card { background: var(--card); padding: 14px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
   .stat-value { font-size: 22px; font-weight: 700; color: var(--accent); }
   .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-
-  .tabs {
-    display: flex; gap: 4px; margin-bottom: 20px;
-    background: var(--card); padding: 6px;
-    border-radius: 10px; border: 1px solid var(--border);
-  }
-  .tab {
-    flex: 1; padding: 10px 16px; cursor: pointer;
-    background: transparent; border: none; color: var(--text-sub);
-    font-size: 14px; font-weight: 500; border-radius: 6px;
-    transition: all 0.2s ease;
-  }
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--card); padding: 6px; border-radius: 10px; border: 1px solid var(--border); overflow-x: auto; flex-wrap: wrap; }
+  .tab { flex: 1; min-width: 90px; padding: 10px 8px; cursor: pointer; background: transparent; border: none; color: var(--text-sub); font-size: 13px; font-weight: 500; border-radius: 6px; white-space: nowrap; }
   .tab.active { background: var(--accent); color: white; }
-
-  .card {
-    background: var(--card); border-radius: 12px; padding: 20px;
-    box-shadow: var(--shadow); border: 1px solid var(--border);
-    margin-bottom: 16px;
-  }
-  .card-title {
-    font-size: 16px; font-weight: 600; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 8px;
-    padding-bottom: 12px; border-bottom: 1px solid var(--border);
-  }
-
-  .lesson-card {
-    background: var(--card); border-radius: 12px; padding: 24px;
-    border: 1px solid var(--border); margin-bottom: 12px;
-    transition: all 0.2s ease;
-  }
+  .card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 16px; }
+  .card-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .lesson-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-bottom: 12px; }
   .lesson-card.wrong-marked { border-color: var(--warning); border-width: 2px; }
-
-  .lesson-num {
-    display: inline-block; padding: 4px 12px;
-    background: var(--accent); color: white;
-    border-radius: 12px; font-size: 12px; font-weight: 600;
-    margin-bottom: 12px;
-  }
+  .lesson-num { display: inline-block; padding: 4px 12px; background: var(--accent); color: white; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
   .lesson-num.wrong { background: var(--warning); }
-  .lesson-cat {
-    display: inline-block; margin-left: 8px;
-    padding: 4px 10px; background: var(--bg);
-    border-radius: 12px; font-size: 12px; color: var(--text-sub);
-  }
-
+  .lesson-cat { display: inline-block; margin-left: 8px; padding: 4px 10px; background: var(--bg); border-radius: 12px; font-size: 12px; color: var(--text-sub); }
   .lesson-ko { font-size: 18px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
-  .lesson-en {
-    font-size: 17px; color: var(--text-sub); margin-bottom: 16px;
-    padding: 12px; background: var(--bg); border-radius: 8px;
-    font-style: italic; display: none;
-  }
+  .lesson-en { font-size: 17px; color: var(--text-sub); margin-bottom: 8px; padding: 12px; background: var(--bg); border-radius: 8px; font-style: italic; display: none; }
   .lesson-en.show { display: block; }
-
-  .lesson-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .btn {
-    padding: 8px 16px; border-radius: 8px; cursor: pointer;
-    font-size: 14px; font-weight: 500; border: none;
-    transition: all 0.2s ease;
-  }
+  .lesson-romaji { font-size: 13px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
+  .lesson-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .btn { padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; border: none; }
   .btn-primary { background: var(--accent); color: white; }
-  .btn-primary:hover { background: var(--accent-hover); }
-  .btn-secondary {
-    background: var(--card); color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-secondary:hover { box-shadow: var(--shadow-hover); }
+  .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
   .btn-success { background: var(--success); color: white; }
   .btn-danger { background: var(--danger); color: white; }
   .btn-small { padding: 6px 12px; font-size: 13px; }
-
   .quiz-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-bottom: 16px; }
   .quiz-question { font-size: 17px; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
   .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-  .quiz-option {
-    padding: 14px 16px; background: var(--bg);
-    border: 2px solid var(--border); border-radius: 8px;
-    cursor: pointer; transition: all 0.2s ease; font-size: 14px;
-    line-height: 1.4;
-  }
+  .quiz-option { padding: 14px 16px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 14px; line-height: 1.4; }
   .quiz-option:hover { border-color: var(--accent); transform: translateX(4px); }
-  .quiz-option.selected { border-color: var(--accent); background: var(--accent); color: white; }
   .quiz-option.correct { border-color: var(--success); background: var(--success); color: white; }
   .quiz-option.wrong { border-color: var(--danger); background: var(--danger); color: white; }
   .quiz-option.disabled { cursor: not-allowed; }
   .quiz-option.disabled:hover { transform: none; }
-
-  .quiz-explanation {
-    background: var(--bg); padding: 14px; border-radius: 8px;
-    margin-top: 12px; font-size: 14px; color: var(--text-sub);
-    line-height: 1.5; display: none;
-  }
+  .quiz-explanation { background: var(--bg); padding: 14px; border-radius: 8px; margin-top: 12px; font-size: 14px; color: var(--text-sub); line-height: 1.5; display: none; }
   .quiz-explanation.show { display: block; }
   .quiz-explanation strong { color: var(--text); }
-
-  .english-quiz-input {
-    width: 100%; padding: 12px; font-size: 16px;
-    border: 2px solid var(--border); border-radius: 8px;
-    background: var(--bg); color: var(--text);
-    margin-bottom: 12px;
-  }
-  .english-quiz-input:focus { outline: none; border-color: var(--accent); }
-
+  .lang-quiz-input { width: 100%; padding: 12px; font-size: 16px; border: 2px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); margin-bottom: 12px; }
   .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
   .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
-
-  .mode-toggle {
-    display: flex; gap: 4px; margin-bottom: 16px;
-    background: var(--card); padding: 4px;
-    border-radius: 8px; border: 1px solid var(--border);
-    flex-wrap: wrap;
-  }
-  .mode-btn {
-    flex: 1; min-width: 90px; padding: 8px; cursor: pointer; background: transparent;
-    border: none; color: var(--text-sub); font-size: 13px;
-    border-radius: 6px;
-  }
+  .mode-toggle { display: flex; gap: 4px; margin-bottom: 16px; background: var(--card); padding: 4px; border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap; }
+  .mode-btn { flex: 1; min-width: 80px; padding: 8px; cursor: pointer; background: transparent; border: none; color: var(--text-sub); font-size: 13px; border-radius: 6px; }
   .mode-btn.active { background: var(--accent); color: white; }
-
-  .progress-bar {
-    width: 100%; height: 8px; background: var(--bg);
-    border-radius: 4px; overflow: hidden; margin: 8px 0;
-  }
+  .progress-bar { width: 100%; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin: 8px 0; }
   .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; }
-
-  .backup-section {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-top: 16px;
-  }
+  .backup-section { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
   .backup-section input[type="file"] { display: none; }
-
-  .toast {
-    position: fixed; top: 24px; right: 24px;
-    background: var(--card); border: 1px solid var(--border);
-    padding: 14px 20px; border-radius: 8px; box-shadow: var(--shadow-hover);
-    font-size: 14px; z-index: 1000; opacity: 0;
-    transform: translateX(20px); transition: all 0.3s ease;
-  }
+  .toast { position: fixed; top: 24px; right: 24px; background: var(--card); border: 1px solid var(--border); padding: 14px 20px; border-radius: 8px; box-shadow: var(--shadow-hover); font-size: 14px; z-index: 1000; opacity: 0; transform: translateX(20px); transition: all 0.3s ease; }
   .toast.show { opacity: 1; transform: translateX(0); }
   .toast.success { border-color: var(--success); }
   .toast.error { border-color: var(--danger); }
-
-  .mode-info {
-    background: var(--bg); padding: 10px 14px;
-    border-radius: 8px; margin-bottom: 12px;
-    font-size: 13px; color: var(--text-sub);
-  }
+  .mode-info { background: var(--bg); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; color: var(--text-sub); }
 </style>
 </head>
 <body>
@@ -236,34 +106,53 @@
   <div class="stats-grid" id="stats-grid"></div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="english">🌏 여행 영어</button>
+    <button class="tab active" data-tab="english">🌏 영어</button>
+    <button class="tab" data-tab="japanese">🇯🇵 일본어</button>
     <button class="tab" data-tab="piping">🔧 배관기능사</button>
-    <button class="tab" data-tab="backup">💾 백업/복원</button>
+    <button class="tab" data-tab="safety">⛑️ 산업안전</button>
+    <button class="tab" data-tab="backup">💾 백업</button>
   </div>
 
   <div id="tab-english" class="tab-content">
     <div class="mode-toggle">
-      <button class="mode-btn active" data-mode="learn">📖 학습</button>
-      <button class="mode-btn" data-mode="quiz_easy">🎯 4지선다 (초보)</button>
-      <button class="mode-btn" data-mode="quiz_hard">✍️ 직접입력 (도전)</button>
-      <button class="mode-btn" data-mode="review">🔄 복습</button>
+      <button class="mode-btn active" data-mode-english="learn">📖 학습</button>
+      <button class="mode-btn" data-mode-english="quiz_easy">🎯 4지선다</button>
+      <button class="mode-btn" data-mode-english="quiz_hard">✍️ 입력</button>
+      <button class="mode-btn" data-mode-english="review">🔄 복습</button>
     </div>
     <div id="english-content"></div>
   </div>
 
+  <div id="tab-japanese" class="tab-content" style="display:none;">
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-mode-japanese="learn">📖 학습</button>
+      <button class="mode-btn" data-mode-japanese="quiz_easy">🎯 4지선다</button>
+      <button class="mode-btn" data-mode-japanese="review">🔄 복습</button>
+    </div>
+    <div id="japanese-content"></div>
+  </div>
+
   <div id="tab-piping" class="tab-content" style="display:none;">
     <div class="mode-toggle">
-      <button class="mode-btn active" data-pmode="today">📝 오늘의 5문제</button>
-      <button class="mode-btn" data-pmode="review">🔄 복습 (틀린 문제)</button>
+      <button class="mode-btn active" data-mode-piping="today">📝 오늘의 문제</button>
+      <button class="mode-btn" data-mode-piping="review">🔄 복습</button>
     </div>
     <div id="piping-content"></div>
+  </div>
+
+  <div id="tab-safety" class="tab-content" style="display:none;">
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-mode-safety="today">📝 오늘의 문제</button>
+      <button class="mode-btn" data-mode-safety="review">🔄 복습</button>
+    </div>
+    <div id="safety-content"></div>
   </div>
 
   <div id="tab-backup" class="tab-content" style="display:none;">
     <div class="card">
       <div class="card-title">💾 학습 기록 백업</div>
       <p style="color:var(--text-sub); font-size:14px; margin-bottom:16px;">
-        학습 기록은 브라우저에 자동 저장되지만, PC 변경이나 백업을 위해 JSON 파일로 다운로드 후 구글 드라이브에 보관할 수 있습니다.
+        브라우저에 자동 저장되지만, PC 변경 시 JSON으로 다운로드 → 구글 드라이브에 보관 가능합니다.
       </p>
       <div class="backup-section">
         <button class="btn btn-primary" id="btn-download">📥 JSON 다운로드</button>
@@ -272,7 +161,6 @@
         <button class="btn btn-danger" id="btn-reset">🗑️ 전체 초기화</button>
       </div>
     </div>
-
     <div class="card">
       <div class="card-title">📊 학습 진행 상황</div>
       <div id="progress-detail"></div>
@@ -284,14 +172,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
-let englishData = [];
-let pipingData = [];
-
-const state = {
-  activeTab: 'english',
-  englishMode: 'learn',
-  pipingMode: 'today'
-};
+let englishData = [], japaneseData = [], pipingData = [], safetyData = [];
+const state = { activeTab: 'english', englishMode: 'learn', japaneseMode: 'learn', pipingMode: 'today', safetyMode: 'today' };
+const STORAGE_KEY = 'sk_study_data_v2';
 
 function initTheme() {
   const saved = localStorage.getItem('theme') || 'light';
@@ -310,23 +193,38 @@ function updateThemeButton() {
   document.getElementById('theme-toggle').textContent = t === 'dark' ? '☀️ 라이트' : '🌙 다크';
 }
 
-const STORAGE_KEY = 'sk_study_data_v1';
-
 function loadStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultStorage();
-    return JSON.parse(raw);
+    if (!raw) {
+      const v1 = localStorage.getItem('sk_study_data_v1');
+      if (v1) {
+        const oldData = JSON.parse(v1);
+        const newData = defaultStorage();
+        if (oldData.english) newData.english = oldData.english;
+        if (oldData.piping) newData.piping = oldData.piping;
+        if (oldData.streak) newData.streak = oldData.streak;
+        saveStorage(newData);
+        return newData;
+      }
+      return defaultStorage();
+    }
+    const data = JSON.parse(raw);
+    if (!data.japanese) data.japanese = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
+    if (!data.safety) data.safety = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
+    return data;
   } catch (e) { return defaultStorage(); }
 }
 function saveStorage(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-  catch (e) { showToast('저장 실패: ' + e.message, 'error'); }
+  catch (e) { showToast('저장 실패', 'error'); }
 }
 function defaultStorage() {
   return {
     english: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
+    japanese: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
     piping: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
+    safety: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
     streak: { last_date: null, count: 0 }
   };
 }
@@ -340,8 +238,7 @@ function updateStreak() {
   const data = loadStorage();
   const today = todayStr();
   const yesterday = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() - 1);
+    const d = new Date(); d.setDate(d.getDate() - 1);
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   })();
   if (data.streak.last_date === today) return data.streak.count;
@@ -384,15 +281,10 @@ function shuffle(arr) {
 }
 
 function speak(text, lang = 'en-US') {
-  if (!('speechSynthesis' in window)) {
-    showToast('이 브라우저는 음성 합성을 지원하지 않습니다', 'error');
-    return;
-  }
+  if (!('speechSynthesis' in window)) { showToast('음성 합성 미지원', 'error'); return; }
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = lang;
-  utter.rate = 0.9;
-  utter.pitch = 1.0;
+  utter.lang = lang; utter.rate = 0.9; utter.pitch = 1.0;
   window.speechSynthesis.speak(utter);
 }
 
@@ -400,80 +292,41 @@ function renderStats() {
   const data = loadStorage();
   const streak = updateStreak();
   const today = todayStr();
-  const engToday = (data.english.studied[today] || []).length;
-  const pipToday = (data.piping.studied[today] || []).length;
-  const engTotal = Object.values(data.english.studied).flat().length;
-  const pipTotal = Object.values(data.piping.studied).flat().length;
-
+  const todayCount = (data.english.studied[today]||[]).length + (data.japanese.studied[today]||[]).length + (data.piping.studied[today]||[]).length + (data.safety.studied[today]||[]).length;
+  const totalCount = Object.values(data.english.studied).flat().length + Object.values(data.japanese.studied).flat().length + Object.values(data.piping.studied).flat().length + Object.values(data.safety.studied).flat().length;
+  const wrongCount = data.english.wrong.length + data.japanese.wrong.length + data.piping.wrong.length + data.safety.wrong.length;
   document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-value">🔥 ${streak}</div>
-      <div class="stat-label">연속 학습일</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">${engToday + pipToday}</div>
-      <div class="stat-label">오늘 학습</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">${engTotal + pipTotal}</div>
-      <div class="stat-label">누적 학습</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value">${data.english.wrong.length + data.piping.wrong.length}</div>
-      <div class="stat-label">복습 대기</div>
-    </div>
+    <div class="stat-card"><div class="stat-value">🔥 ${streak}</div><div class="stat-label">연속 학습일</div></div>
+    <div class="stat-card"><div class="stat-value">${todayCount}</div><div class="stat-label">오늘 학습</div></div>
+    <div class="stat-card"><div class="stat-value">${totalCount}</div><div class="stat-label">누적 학습</div></div>
+    <div class="stat-card"><div class="stat-value">${wrongCount}</div><div class="stat-label">복습 대기</div></div>
   `;
 }
 
-// ========== 영어 ==========
+// 영어
 function renderEnglish() {
   const container = document.getElementById('english-content');
   const data = loadStorage();
-
   if (state.englishMode === 'learn') {
     const items = pickTodaysItems('english', englishData, 5);
-    if (items.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 학습할 문장이 없습니다!</div>';
-      return;
-    }
-    container.innerHTML = `
-      <div class="mode-info">📖 한글 문장을 보고 영어를 추측한 뒤, "영어 보기" 버튼으로 정답을 확인하고 발음을 들어보세요</div>
-      ${items.map((item, idx) => renderEnglishCard(item, idx + 1, false)).join('')}
-    `;
+    if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>학습할 문장이 없습니다</div>'; return; }
+    container.innerHTML = `<div class="mode-info">📖 한글 → 영어 추측 → 정답 확인 → 발음 듣기</div>${items.map((item, idx) => renderEnglishCard(item, idx + 1, false)).join('')}`;
   }
   else if (state.englishMode === 'quiz_easy') {
     const items = pickTodaysItems('english', englishData, 5);
-    if (items.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 퀴즈가 없습니다!</div>';
-      return;
-    }
-    container.innerHTML = `
-      <div class="mode-info">🎯 한글 문장을 보고 알맞은 영어 문장을 4개 중에서 선택하세요 (초보자 추천)</div>
-      ${items.map((item, idx) => renderEnglishQuizEasy(item, idx + 1)).join('')}
-    `;
+    if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>퀴즈가 없습니다</div>'; return; }
+    container.innerHTML = `<div class="mode-info">🎯 한글 보고 영어 4개 중 선택 (초보자 추천)</div>${items.map((item, idx) => renderLangQuizEasy('english', item, idx + 1, englishData, 'en', 'en-US')).join('')}`;
   }
   else if (state.englishMode === 'quiz_hard') {
     const items = pickTodaysItems('english', englishData, 5);
-    if (items.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 퀴즈가 없습니다!</div>';
-      return;
-    }
-    container.innerHTML = `
-      <div class="mode-info">✍️ 한글 문장을 보고 영어로 직접 입력하세요 (대소문자, 구두점은 무시됩니다)</div>
-      ${items.map((item, idx) => renderEnglishQuizHard(item, idx + 1)).join('')}
-    `;
+    if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>퀴즈가 없습니다</div>'; return; }
+    container.innerHTML = `<div class="mode-info">✍️ 한글 보고 영어로 직접 입력 (대소문자/구두점 무시)</div>${items.map((item, idx) => renderEnglishQuizHard(item, idx + 1)).join('')}`;
   }
   else if (state.englishMode === 'review') {
     const wrongIds = data.english.wrong;
-    if (wrongIds.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문장이 없습니다!</div>';
-      return;
-    }
+    if (wrongIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문장이 없습니다</div>'; return; }
     const items = wrongIds.map(id => englishData.find(i => i.id === id)).filter(Boolean);
-    container.innerHTML = `
-      <div class="mode-info">🔄 이전에 틀린 문장들을 다시 학습합니다. "외웠어요" 버튼을 누르면 복습 목록에서 제거됩니다</div>
-      ${items.map((item, idx) => renderEnglishCard(item, idx + 1, true)).join('')}
-    `;
+    container.innerHTML = `<div class="mode-info">🔄 이전에 틀린 문장 복습</div>${items.map((item, idx) => renderEnglishCard(item, idx + 1, true)).join('')}`;
   }
 }
 
@@ -485,134 +338,152 @@ function renderEnglishCard(item, num, isReview) {
       <div class="lesson-ko">${escapeHtml(item.ko)}</div>
       <div class="lesson-en" id="en-${item.id}">${escapeHtml(item.en)}</div>
       <div class="lesson-actions">
-        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('${item.id}')">👁️ 영어 보기</button>
-        <button class="btn btn-primary btn-small" onclick="speak(${JSON.stringify(item.en)})">🔊 발음 듣기</button>
+        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('en-${item.id}')">👁️ 영어 보기</button>
+        <button class="btn btn-primary btn-small" onclick="speak(${JSON.stringify(item.en)}, 'en-US')">🔊 발음</button>
         ${isReview ? `<button class="btn btn-success btn-small" onclick="markMastered('english', '${item.id}')">✅ 외웠어요</button>` : ''}
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function toggleAnswer(id) {
-  document.getElementById('en-' + id).classList.toggle('show');
+  document.getElementById(id).classList.toggle('show');
 }
 
-// 4지선다 (초보자) - 같은 카테고리에서 오답 추출 (난이도 적당)
-function renderEnglishQuizEasy(item, num) {
-  // 같은 카테고리의 다른 문장 3개를 오답으로
-  const sameCat = englishData.filter(i => i.cat === item.cat && i.id !== item.id);
-  const wrongs = shuffle([...sameCat]).slice(0, 3);
-  // 부족하면 다른 카테고리에서 보충
-  if (wrongs.length < 3) {
-    const others = englishData.filter(i => i.cat !== item.cat && i.id !== item.id);
-    wrongs.push(...shuffle([...others]).slice(0, 3 - wrongs.length));
-  }
-  const allOptions = shuffle([item, ...wrongs]);
-
-  const optionsHtml = allOptions.map((opt, i) =>
-    `<div class="quiz-option" data-quiz="${item.id}" onclick="answerEnglishEasy('${item.id}', '${opt.id}')">${i+1}. ${escapeHtml(opt.en)}</div>`
-  ).join('');
-
+function renderEnglishQuizHard(item, num) {
   return `
     <div class="quiz-card">
       <span class="lesson-num">#${num}</span>
       <span class="lesson-cat">${item.cat}</span>
       <div class="quiz-question">${escapeHtml(item.ko)}</div>
-      <div class="quiz-options" id="opts-eng-${item.id}">${optionsHtml}</div>
-      <div class="lesson-actions" style="margin-top:8px;">
-        <button class="btn btn-secondary btn-small" onclick="speak(${JSON.stringify(item.en)})">🔊 발음 듣기</button>
-      </div>
-      <div class="quiz-explanation" id="exp-eng-${item.id}"></div>
-    </div>
-  `;
-}
-
-function answerEnglishEasy(itemId, selectedId) {
-  const item = englishData.find(i => i.id === itemId);
-  const data = loadStorage();
-  data.english.total_quizzes += 1;
-
-  const opts = document.querySelectorAll(`[data-quiz="${itemId}"]`);
-  const isCorrect = itemId === selectedId;
-
-  opts.forEach(opt => {
-    opt.classList.add('disabled');
-    opt.onclick = null;
-    // 정답 옵션 찾기 (텍스트로)
-    const optText = opt.textContent.replace(/^\d+\.\s*/, '');
-    if (optText === item.en) opt.classList.add('correct');
-    else if (!isCorrect && opt.textContent.includes(englishData.find(i => i.id === selectedId)?.en || '')) {
-      opt.classList.add('wrong');
-    }
-  });
-
-  const expEl = document.getElementById('exp-eng-' + itemId);
-  expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>정답: <strong>${escapeHtml(item.en)}</strong>`;
-  expEl.classList.add('show');
-
-  if (isCorrect) {
-    data.english.total_correct += 1;
-    const idx = data.english.wrong.indexOf(itemId);
-    if (idx > -1) data.english.wrong.splice(idx, 1);
-    showToast('정답입니다!', 'success');
-  } else {
-    if (!data.english.wrong.includes(itemId)) data.english.wrong.push(itemId);
-    showToast('다시 도전해보세요', 'error');
-  }
-  saveStorage(data);
-  renderStats();
-}
-
-// 직접 입력 (도전)
-function renderEnglishQuizHard(item, num) {
-  return `
-    <div class="quiz-card" data-quiz-id="${item.id}">
-      <span class="lesson-num">#${num}</span>
-      <span class="lesson-cat">${item.cat}</span>
-      <div class="quiz-question">${escapeHtml(item.ko)}</div>
-      <input type="text" class="english-quiz-input" placeholder="영어로 입력하세요..." data-id="${item.id}">
+      <input type="text" class="lang-quiz-input" placeholder="영어로 입력..." data-id="${item.id}">
       <div class="lesson-actions">
         <button class="btn btn-primary btn-small" onclick="checkEnglishHard('${item.id}')">✓ 확인</button>
-        <button class="btn btn-secondary btn-small" onclick="showEnglishAnswerHard('${item.id}')">💡 정답 보기</button>
-        <button class="btn btn-secondary btn-small" onclick="speak(${JSON.stringify(item.en)})">🔊 발음 듣기</button>
+        <button class="btn btn-secondary btn-small" onclick="speak(${JSON.stringify(item.en)}, 'en-US')">🔊 발음</button>
       </div>
       <div class="quiz-explanation" id="quiz-result-${item.id}"></div>
-    </div>
-  `;
+    </div>`;
 }
 
 function checkEnglishHard(id) {
   const item = englishData.find(i => i.id === id);
-  const inputEl = document.querySelector(`input[data-id="${id}"]`);
+  const inputEl = document.querySelector(`#tab-english input[data-id="${id}"]`);
   const userAnswer = inputEl.value.trim().toLowerCase().replace(/[.,!?'"]/g, '');
   const correctAnswer = item.en.toLowerCase().replace(/[.,!?'"]/g, '');
   const resultEl = document.getElementById('quiz-result-' + id);
-
   const data = loadStorage();
   data.english.total_quizzes += 1;
-
   const isCorrect = userAnswer === correctAnswer;
   if (isCorrect) {
     data.english.total_correct += 1;
     resultEl.innerHTML = `<strong style="color:var(--success);">✅ 정답!</strong><br>${escapeHtml(item.en)}`;
     const idx = data.english.wrong.indexOf(id);
     if (idx > -1) data.english.wrong.splice(idx, 1);
-    showToast('정답입니다!', 'success');
+    showToast('정답!', 'success');
   } else {
     resultEl.innerHTML = `<strong style="color:var(--danger);">❌ 오답</strong><br>입력: ${escapeHtml(inputEl.value)}<br>정답: <strong>${escapeHtml(item.en)}</strong>`;
     if (!data.english.wrong.includes(id)) data.english.wrong.push(id);
-    showToast('다시 도전해보세요', 'error');
+    showToast('다시 도전!', 'error');
   }
   resultEl.classList.add('show');
   saveStorage(data);
   renderStats();
 }
 
-function showEnglishAnswerHard(id) {
-  const item = englishData.find(i => i.id === id);
-  const resultEl = document.getElementById('quiz-result-' + id);
-  resultEl.innerHTML = `<strong>정답:</strong> ${escapeHtml(item.en)}`;
-  resultEl.classList.add('show');
+// 일본어
+function renderJapanese() {
+  const container = document.getElementById('japanese-content');
+  const data = loadStorage();
+  if (state.japaneseMode === 'learn') {
+    const items = pickTodaysItems('japanese', japaneseData, 5);
+    if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>학습할 문장이 없습니다</div>'; return; }
+    container.innerHTML = `<div class="mode-info">📖 한글 → 일본어 추측 → 정답 확인 (히라가나+로마자)</div>${items.map((item, idx) => renderJapaneseCard(item, idx + 1, false)).join('')}`;
+  }
+  else if (state.japaneseMode === 'quiz_easy') {
+    const items = pickTodaysItems('japanese', japaneseData, 5);
+    if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>퀴즈가 없습니다</div>'; return; }
+    container.innerHTML = `<div class="mode-info">🎯 한글 보고 일본어 4개 중 선택</div>${items.map((item, idx) => renderLangQuizEasy('japanese', item, idx + 1, japaneseData, 'jp', 'ja-JP')).join('')}`;
+  }
+  else if (state.japaneseMode === 'review') {
+    const wrongIds = data.japanese.wrong;
+    if (wrongIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문장이 없습니다</div>'; return; }
+    const items = wrongIds.map(id => japaneseData.find(i => i.id === id)).filter(Boolean);
+    container.innerHTML = `<div class="mode-info">🔄 이전에 틀린 문장 복습</div>${items.map((item, idx) => renderJapaneseCard(item, idx + 1, true)).join('')}`;
+  }
+}
+
+function renderJapaneseCard(item, num, isReview) {
+  return `
+    <div class="lesson-card ${isReview ? 'wrong-marked' : ''}">
+      <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+      <span class="lesson-cat">${item.cat}</span>
+      <div class="lesson-ko">${escapeHtml(item.ko)}</div>
+      <div class="lesson-en" id="jp-${item.id}">
+        ${escapeHtml(item.jp)}
+        <div class="lesson-romaji">[${escapeHtml(item.romaji)}]</div>
+      </div>
+      <div class="lesson-actions">
+        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('jp-${item.id}')">👁️ 일본어 보기</button>
+        <button class="btn btn-primary btn-small" onclick="speak(${JSON.stringify(item.jp)}, 'ja-JP')">🔊 발음</button>
+        ${isReview ? `<button class="btn btn-success btn-small" onclick="markMastered('japanese', '${item.id}')">✅ 외웠어요</button>` : ''}
+      </div>
+    </div>`;
+}
+
+// 공용 4지선다
+function renderLangQuizEasy(category, item, num, allData, fieldKey, lang) {
+  const sameCat = allData.filter(i => i.cat === item.cat && i.id !== item.id);
+  const wrongs = shuffle([...sameCat]).slice(0, 3);
+  if (wrongs.length < 3) {
+    const others = allData.filter(i => i.cat !== item.cat && i.id !== item.id);
+    wrongs.push(...shuffle([...others]).slice(0, 3 - wrongs.length));
+  }
+  const allOptions = shuffle([item, ...wrongs]);
+  const optionsHtml = allOptions.map((opt, i) =>
+    `<div class="quiz-option" data-quiz="${category}-${item.id}" onclick="answerLangEasy('${category}', '${item.id}', '${opt.id}', '${fieldKey}')">${i+1}. ${escapeHtml(opt[fieldKey])}</div>`
+  ).join('');
+  return `
+    <div class="quiz-card">
+      <span class="lesson-num">#${num}</span>
+      <span class="lesson-cat">${item.cat}</span>
+      <div class="quiz-question">${escapeHtml(item.ko)}</div>
+      <div class="quiz-options" id="opts-${category}-${item.id}">${optionsHtml}</div>
+      <div class="lesson-actions" style="margin-top:8px;">
+        <button class="btn btn-secondary btn-small" onclick="speak(${JSON.stringify(item[fieldKey])}, '${lang}')">🔊 발음</button>
+      </div>
+      <div class="quiz-explanation" id="exp-${category}-${item.id}"></div>
+    </div>`;
+}
+
+function answerLangEasy(category, itemId, selectedId, fieldKey) {
+  let allData = category === 'english' ? englishData : japaneseData;
+  const item = allData.find(i => i.id === itemId);
+  const data = loadStorage();
+  data[category].total_quizzes += 1;
+  const opts = document.querySelectorAll(`[data-quiz="${category}-${itemId}"]`);
+  const isCorrect = itemId === selectedId;
+  const correctText = item[fieldKey];
+  const selectedItem = allData.find(i => i.id === selectedId);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    opt.onclick = null;
+    const optText = opt.textContent.replace(/^\d+\.\s*/, '').trim();
+    if (optText === correctText) opt.classList.add('correct');
+    else if (!isCorrect && selectedItem && optText === selectedItem[fieldKey]) opt.classList.add('wrong');
+  });
+  const expEl = document.getElementById('exp-' + category + '-' + itemId);
+  expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>정답: <strong>${escapeHtml(correctText)}</strong>${item.romaji ? '<br><span style="color:var(--text-muted);font-size:13px;">['+escapeHtml(item.romaji)+']</span>' : ''}`;
+  expEl.classList.add('show');
+  if (isCorrect) {
+    data[category].total_correct += 1;
+    const idx = data[category].wrong.indexOf(itemId);
+    if (idx > -1) data[category].wrong.splice(idx, 1);
+    showToast('정답!', 'success');
+  } else {
+    if (!data[category].wrong.includes(itemId)) data[category].wrong.push(itemId);
+    showToast('다시 도전!', 'error');
+  }
+  saveStorage(data);
+  renderStats();
 }
 
 function markMastered(category, id) {
@@ -623,54 +494,53 @@ function markMastered(category, id) {
   saveStorage(data);
   showToast('마스터 완료! 👏', 'success');
   if (category === 'english') renderEnglish();
-  else renderPiping();
+  else if (category === 'japanese') renderJapanese();
+  else if (category === 'piping') renderPiping();
+  else if (category === 'safety') renderSafety();
   renderStats();
 }
 
-// ========== 배관 ==========
-function renderPiping() {
-  const container = document.getElementById('piping-content');
-  const data = loadStorage();
+// 배관 & 산업안전
+function renderPiping() { renderQuizCategory('piping', pipingData, 'piping-content', state.pipingMode); }
+function renderSafety() { renderQuizCategory('safety', safetyData, 'safety-content', state.safetyMode); }
 
-  if (state.pipingMode === 'today') {
-    const items = pickTodaysItems('piping', pipingData, 5);
-    if (items.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 문제가 없습니다!</div>';
-      return;
-    }
-    container.innerHTML = items.map((item, idx) => renderPipingQuiz(item, idx + 1, false)).join('');
-  }
-  else if (state.pipingMode === 'review') {
-    const wrongIds = data.piping.wrong;
-    if (wrongIds.length === 0) {
-      container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문제가 없습니다!</div>';
-      return;
-    }
-    const items = wrongIds.map(id => pipingData.find(i => i.id === id)).filter(Boolean);
-    container.innerHTML = items.map((item, idx) => renderPipingQuiz(item, idx + 1, true)).join('');
+function renderQuizCategory(category, items, containerId, mode) {
+  const container = document.getElementById(containerId);
+  const data = loadStorage();
+  if (mode === 'today') {
+    const todayItems = pickTodaysItems(category, items, 5);
+    if (todayItems.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 문제가 없습니다</div>'; return; }
+    container.innerHTML = todayItems.map((item, idx) => renderCertQuiz(category, item, idx + 1, false)).join('');
+  } else {
+    const wrongIds = data[category].wrong;
+    if (wrongIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문제가 없습니다</div>'; return; }
+    const wrongItems = wrongIds.map(id => items.find(i => i.id === id)).filter(Boolean);
+    container.innerHTML = wrongItems.map((item, idx) => renderCertQuiz(category, item, idx + 1, true)).join('');
   }
 }
 
-function renderPipingQuiz(item, num, isReview) {
+function renderCertQuiz(category, item, num, isReview) {
   const optionsHtml = item.opts.map((opt, i) =>
-    `<div class="quiz-option" data-quiz="${item.id}" data-idx="${i}" onclick="answerPiping('${item.id}', ${i})">${i+1}. ${escapeHtml(opt)}</div>`
+    `<div class="quiz-option" data-quiz="${category}-${item.id}" data-idx="${i}" onclick="answerCert('${category}', '${item.id}', ${i})">${i+1}. ${escapeHtml(opt)}</div>`
   ).join('');
+  const catLabel = item.cat ? `<span class="lesson-cat">${item.cat}</span>` : '';
   return `
     <div class="quiz-card">
       <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+      ${catLabel}
       <div class="quiz-question">${escapeHtml(item.q)}</div>
-      <div class="quiz-options" id="opts-${item.id}">${optionsHtml}</div>
-      <div class="quiz-explanation" id="exp-${item.id}"></div>
-      ${isReview ? `<div class="lesson-actions" style="margin-top:12px;"><button class="btn btn-success btn-small" onclick="markMastered('piping', '${item.id}')">✅ 이해했어요</button></div>` : ''}
-    </div>
-  `;
+      <div class="quiz-options" id="opts-${category}-${item.id}">${optionsHtml}</div>
+      <div class="quiz-explanation" id="exp-${category}-${item.id}"></div>
+      ${isReview ? `<div class="lesson-actions" style="margin-top:12px;"><button class="btn btn-success btn-small" onclick="markMastered('${category}', '${item.id}')">✅ 이해했어요</button></div>` : ''}
+    </div>`;
 }
 
-function answerPiping(id, selectedIdx) {
-  const item = pipingData.find(i => i.id === id);
+function answerCert(category, id, selectedIdx) {
+  const items = category === 'piping' ? pipingData : safetyData;
+  const item = items.find(i => i.id === id);
   const data = loadStorage();
-  data.piping.total_quizzes += 1;
-  const opts = document.querySelectorAll(`[data-quiz="${id}"]`);
+  data[category].total_quizzes += 1;
+  const opts = document.querySelectorAll(`[data-quiz="${category}-${id}"]`);
   const isCorrect = selectedIdx === item.a;
   opts.forEach((opt, i) => {
     opt.classList.add('disabled');
@@ -678,91 +548,86 @@ function answerPiping(id, selectedIdx) {
     if (i === item.a) opt.classList.add('correct');
     else if (i === selectedIdx) opt.classList.add('wrong');
   });
-  const expEl = document.getElementById('exp-' + id);
+  const expEl = document.getElementById('exp-' + category + '-' + id);
   expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>${escapeHtml(item.exp)}`;
   expEl.classList.add('show');
   if (isCorrect) {
-    data.piping.total_correct += 1;
-    const idx = data.piping.wrong.indexOf(id);
-    if (idx > -1) data.piping.wrong.splice(idx, 1);
-    showToast('정답입니다!', 'success');
+    data[category].total_correct += 1;
+    const idx = data[category].wrong.indexOf(id);
+    if (idx > -1) data[category].wrong.splice(idx, 1);
+    showToast('정답!', 'success');
   } else {
-    if (!data.piping.wrong.includes(id)) data.piping.wrong.push(id);
+    if (!data[category].wrong.includes(id)) data[category].wrong.push(id);
     showToast('다시 풀어보세요', 'error');
   }
   saveStorage(data);
   renderStats();
 }
 
-// ========== 백업 ==========
+// 백업
 function downloadBackup() {
   const data = loadStorage();
   data._exported_at = new Date().toISOString();
   const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `sk_study_backup_${todayStr()}.json`;
+  a.href = url; a.download = `sk_study_backup_${todayStr()}.json`;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('백업 파일이 다운로드되었습니다', 'success');
+  showToast('백업 다운로드 완료', 'success');
 }
 function uploadBackup(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.english || !data.piping) throw new Error('유효하지 않은 백업 파일');
+      if (!data.english) throw new Error('유효하지 않은 백업');
+      if (!data.japanese) data.japanese = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
+      if (!data.safety) data.safety = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
       saveStorage(data);
-      showToast('복원 완료!', 'success');
-      renderStats();
-      renderBackupProgress();
+      showToast('복원 완료', 'success');
+      renderStats(); renderBackupProgress();
     } catch (err) { showToast('복원 실패: ' + err.message, 'error'); }
   };
   reader.readAsText(file);
 }
 function resetAll() {
-  if (!confirm('정말로 모든 학습 기록을 삭제하시겠어요? 이 작업은 되돌릴 수 없습니다.')) return;
+  if (!confirm('모든 학습 기록을 삭제할까요?\n되돌릴 수 없습니다.')) return;
   localStorage.removeItem(STORAGE_KEY);
   showToast('초기화 완료', 'success');
-  renderStats();
-  renderBackupProgress();
-  renderEnglish();
-  renderPiping();
+  renderStats(); renderBackupProgress();
+  renderEnglish(); renderJapanese(); renderPiping(); renderSafety();
 }
+
 function renderBackupProgress() {
   const data = loadStorage();
-  const engTotal = englishData.length;
-  const pipTotal = pipingData.length;
-  const engMastered = data.english.mastered.length;
-  const pipMastered = data.piping.mastered.length;
-  const engWrong = data.english.wrong.length;
-  const pipWrong = data.piping.wrong.length;
-  const engPct = engTotal > 0 ? Math.round((engMastered / engTotal) * 100) : 0;
-  const pipPct = pipTotal > 0 ? Math.round((pipMastered / pipTotal) * 100) : 0;
-
-  document.getElementById('progress-detail').innerHTML = `
-    <div style="margin-bottom:16px;">
-      <strong>🌏 여행 영어</strong>
-      <div style="font-size:13px;color:var(--text-muted);margin:4px 0;">
-        마스터 ${engMastered}개 / 전체 ${engTotal}개 · 복습 대기 ${engWrong}개
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${engPct}%"></div></div>
-      <div style="font-size:12px;color:var(--text-muted);text-align:right;">${engPct}%</div>
-    </div>
-    <div style="margin-bottom:16px;">
-      <strong>🔧 배관기능사</strong>
-      <div style="font-size:13px;color:var(--text-muted);margin:4px 0;">
-        마스터 ${pipMastered}개 / 전체 ${pipTotal}개 · 복습 대기 ${pipWrong}개
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pipPct}%"></div></div>
-      <div style="font-size:12px;color:var(--text-muted);text-align:right;">${pipPct}%</div>
-    </div>
-    <div style="padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-sub);">
-      <strong>💡 학습 기록 저장 위치:</strong> 이 브라우저의 localStorage<br>
-      다른 PC나 브라우저에서 보려면 JSON 다운로드 → 구글 드라이브 보관 → 다른 곳에서 복원하세요.
-    </div>
-  `;
+  const items = [
+    { key: 'english', label: '🌏 영어', total: englishData.length },
+    { key: 'japanese', label: '🇯🇵 일본어', total: japaneseData.length },
+    { key: 'piping', label: '🔧 배관기능사', total: pipingData.length },
+    { key: 'safety', label: '⛑️ 산업안전보건기사', total: safetyData.length }
+  ];
+  let html = '';
+  items.forEach(it => {
+    const cat = data[it.key];
+    const m = cat.mastered.length;
+    const w = cat.wrong.length;
+    const pct = it.total > 0 ? Math.round((m / it.total) * 100) : 0;
+    html += `
+      <div style="margin-bottom:16px;">
+        <strong>${it.label}</strong>
+        <div style="font-size:13px;color:var(--text-muted);margin:4px 0;">
+          마스터 ${m}개 / 전체 ${it.total}개 · 복습 ${w}개
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div style="font-size:12px;color:var(--text-muted);text-align:right;">${pct}%</div>
+      </div>`;
+  });
+  html += `<div style="padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-sub);">
+    <strong>💡 저장 위치:</strong> 브라우저 localStorage<br>
+    다른 PC에서 이어가려면: JSON 다운로드 → 구글 드라이브 → 다른 곳에서 복원
+  </div>`;
+  document.getElementById('progress-detail').innerHTML = html;
 }
 
 function showToast(msg, type = 'info') {
@@ -791,21 +656,36 @@ document.querySelectorAll('.tabs .tab').forEach(t => {
   });
 });
 
-document.querySelectorAll('[data-mode]').forEach(btn => {
+document.querySelectorAll('[data-mode-english]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('[data-mode-english]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    state.englishMode = btn.dataset.mode;
+    state.englishMode = btn.dataset.modeEnglish;
     renderEnglish();
   });
 });
-
-document.querySelectorAll('[data-pmode]').forEach(btn => {
+document.querySelectorAll('[data-mode-japanese]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-pmode]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('[data-mode-japanese]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    state.pipingMode = btn.dataset.pmode;
+    state.japaneseMode = btn.dataset.modeJapanese;
+    renderJapanese();
+  });
+});
+document.querySelectorAll('[data-mode-piping]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-mode-piping]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.pipingMode = btn.dataset.modePiping;
     renderPiping();
+  });
+});
+document.querySelectorAll('[data-mode-safety]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-mode-safety]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.safetyMode = btn.dataset.modeSafety;
+    renderSafety();
   });
 });
 
@@ -819,19 +699,25 @@ document.getElementById('btn-reset').addEventListener('click', resetAll);
 async function init() {
   initTheme();
   try {
-    const [engRes, pipRes] = await Promise.all([
+    const [engRes, jpRes, pipRes, safRes] = await Promise.all([
       fetch('english.json'),
-      fetch('piping.json')
+      fetch('japanese.json'),
+      fetch('piping.json'),
+      fetch('safety.json')
     ]);
     englishData = await engRes.json();
+    japaneseData = await jpRes.json();
     pipingData = await pipRes.json();
+    safetyData = await safRes.json();
   } catch (e) {
-    showToast('데이터 로드 실패: ' + e.message, 'error');
+    showToast('데이터 로드 실패', 'error');
     return;
   }
   renderStats();
   renderEnglish();
+  renderJapanese();
   renderPiping();
+  renderSafety();
 }
 
 init();
