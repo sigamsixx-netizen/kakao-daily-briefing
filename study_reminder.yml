@@ -1,0 +1,23 @@
+name: 학습 리마인더 카톡
+
+on:
+  workflow_dispatch:  # 수동 실행
+  # 또는 외부 트리거 (cron-job.org) 권장. GitHub Actions의 cron은 시간이 부정확함.
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python study_reminder.py
+        env:
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          STUDY_URL: https://sigamsixx-netizen.github.io/kakao-daily-briefing/study.html
