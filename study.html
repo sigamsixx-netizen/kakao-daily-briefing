@@ -10,6 +10,7 @@
     --text-sub: #4a5568; --text-muted: #718096;
     --border: #e2e8f0; --accent: #3182ce; --accent-hover: #2c5282;
     --success: #38a169; --danger: #e53e3e; --warning: #d69e2e;
+    --gold: #f6ad55; --purple: #805ad5;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
   }
@@ -18,45 +19,82 @@
     --text-sub: #cbd5e0; --text-muted: #a0aec0;
     --border: #2d3748; --accent: #63b3ed; --accent-hover: #4299e1;
     --success: #68d391; --danger: #fc8181; --warning: #f6ad55;
+    --gold: #fbd38d; --purple: #b794f4;
     --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; }
   .container { max-width: 900px; margin: 0 auto; padding: 24px; }
-  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 16px; }
   .nav { display: flex; gap: 8px; }
   .nav a { padding: 8px 14px; border-radius: 8px; text-decoration: none; color: var(--text-sub); font-size: 14px; font-weight: 500; background: var(--card); border: 1px solid var(--border); }
   .nav a.active { background: var(--accent); color: white; border-color: var(--accent); }
   .header-left h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
   .header-left .subtitle { color: var(--text-muted); font-size: 14px; }
   .icon-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; box-shadow: var(--shadow); }
-  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+
+  .tip-banner { background: linear-gradient(135deg, var(--accent), var(--purple)); color: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 16px; cursor: pointer; position: relative; box-shadow: var(--shadow-hover); }
+  .tip-banner .tip-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; opacity: 0.9; }
+  .tip-banner .tip-content { font-size: 15px; line-height: 1.5; }
+  .tip-banner .tip-nav { position: absolute; top: 16px; right: 16px; font-size: 12px; opacity: 0.7; }
+
+  .coin-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--gold), #ed8936); color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow); }
+  .combo-badge { display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #f56565, var(--gold)); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; animation: comboFlash 0.5s ease; }
+  @keyframes comboFlash { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
   @media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
   .stat-card { background: var(--card); padding: 14px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
   .stat-value { font-size: 22px; font-weight: 700; color: var(--accent); }
   .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .cert-value-card { background: linear-gradient(135deg, var(--success), #2f855a); color: white; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
+  .cert-value-card .cv-title { font-size: 14px; font-weight: 600; opacity: 0.9; margin-bottom: 6px; }
+  .cert-value-card .cv-amount { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .cert-value-card .cv-desc { font-size: 13px; opacity: 0.9; line-height: 1.4; }
+  .cert-value-card .cv-countdown { background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-size: 13px; }
+
   .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--card); padding: 6px; border-radius: 10px; border: 1px solid var(--border); overflow-x: auto; flex-wrap: wrap; }
-  .tab { flex: 1; min-width: 90px; padding: 10px 8px; cursor: pointer; background: transparent; border: none; color: var(--text-sub); font-size: 13px; font-weight: 500; border-radius: 6px; white-space: nowrap; }
+  .tab { flex: 1; min-width: 75px; padding: 10px 6px; cursor: pointer; background: transparent; border: none; color: var(--text-sub); font-size: 12px; font-weight: 500; border-radius: 6px; white-space: nowrap; }
   .tab.active { background: var(--accent); color: white; }
+  .tab.locked { background: #fef5e7; color: #c05621; }
+  [data-theme="dark"] .tab.locked { background: rgba(246, 173, 85, 0.2); color: var(--gold); }
+
   .card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 16px; }
   .card-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
   .lesson-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-bottom: 12px; }
   .lesson-card.wrong-marked { border-color: var(--warning); border-width: 2px; }
+  .lesson-card.review-due { border-color: var(--purple); border-width: 2px; }
   .lesson-num { display: inline-block; padding: 4px 12px; background: var(--accent); color: white; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 12px; }
   .lesson-num.wrong { background: var(--warning); }
+  .lesson-num.review { background: var(--purple); }
   .lesson-cat { display: inline-block; margin-left: 8px; padding: 4px 10px; background: var(--bg); border-radius: 12px; font-size: 12px; color: var(--text-sub); }
+  .srs-badge { display: inline-block; margin-left: 6px; padding: 3px 8px; background: var(--purple); color: white; border-radius: 8px; font-size: 11px; }
+
   .lesson-ko { font-size: 18px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
-  .lesson-en { font-size: 17px; color: var(--text-sub); margin-bottom: 8px; padding: 12px; background: var(--bg); border-radius: 8px; font-style: italic; display: none; }
+  .lesson-en { font-size: 17px; color: var(--text-sub); margin-bottom: 8px; padding: 12px; background: var(--bg); border-radius: 8px; display: none; }
   .lesson-en.show { display: block; }
+  .lesson-en .en-text { font-style: italic; }
+  .lesson-pron { font-size: 14px; color: var(--gold); margin-top: 8px; font-weight: 500; }
+  .lesson-pron::before { content: "🔤 "; }
   .lesson-romaji { font-size: 13px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
   .lesson-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .srs-buttons { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+
   .btn { padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; border: none; }
   .btn-primary { background: var(--accent); color: white; }
   .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
   .btn-success { background: var(--success); color: white; }
   .btn-danger { background: var(--danger); color: white; }
+  .btn-warning { background: var(--warning); color: white; }
   .btn-small { padding: 6px 12px; font-size: 13px; }
+  .btn-srs-hard { background: var(--danger); color: white; }
+  .btn-srs-soso { background: var(--warning); color: white; }
+  .btn-srs-good { background: var(--success); color: white; }
+  .btn-srs-easy { background: var(--purple); color: white; }
+
   .quiz-card { background: var(--card); border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-bottom: 16px; }
   .quiz-question { font-size: 17px; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
   .quiz-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
@@ -66,14 +104,64 @@
   .quiz-option.wrong { border-color: var(--danger); background: var(--danger); color: white; }
   .quiz-option.disabled { cursor: not-allowed; }
   .quiz-option.disabled:hover { transform: none; }
+
   .quiz-explanation { background: var(--bg); padding: 14px; border-radius: 8px; margin-top: 12px; font-size: 14px; color: var(--text-sub); line-height: 1.5; display: none; }
   .quiz-explanation.show { display: block; }
   .quiz-explanation strong { color: var(--text); }
+
   .lang-quiz-input { width: 100%; padding: 12px; font-size: 16px; border: 2px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); margin-bottom: 12px; }
+
+  /* 빈칸 채우기 */
+  .cloze-text { font-size: 17px; line-height: 1.8; margin-bottom: 16px; padding: 16px; background: var(--bg); border-radius: 8px; }
+  .cloze-blank { display: inline-block; min-width: 80px; padding: 2px 8px; border: none; border-bottom: 2px solid var(--accent); background: transparent; color: var(--text); font-size: 17px; text-align: center; font-weight: 600; }
+  .cloze-blank:focus { outline: none; border-bottom-color: var(--success); }
+  .cloze-blank.correct { color: var(--success); border-bottom-color: var(--success); }
+  .cloze-blank.wrong { color: var(--danger); border-bottom-color: var(--danger); }
+
+  /* 발음 평가 */
+  .pronunciation-card { background: linear-gradient(135deg, rgba(56,161,105,0.1), rgba(99,179,237,0.1)); border-left: 4px solid var(--success); padding: 16px; border-radius: 8px; margin-top: 12px; }
+  .mic-button { width: 60px; height: 60px; border-radius: 50%; border: none; background: var(--danger); color: white; font-size: 24px; cursor: pointer; box-shadow: var(--shadow-hover); transition: all 0.2s ease; }
+  .mic-button:hover { transform: scale(1.1); }
+  .mic-button.recording { background: var(--success); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .recognized-text { margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 8px; font-size: 14px; min-height: 40px; }
+
+  /* 비밀번호 화면 */
+  .lock-screen { text-align: center; padding: 60px 20px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); }
+  .lock-screen .lock-icon { font-size: 64px; margin-bottom: 16px; }
+  .lock-screen h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .lock-screen p { color: var(--text-muted); margin-bottom: 24px; }
+  .pwd-input { width: 200px; padding: 14px; font-size: 24px; text-align: center; letter-spacing: 12px; border: 2px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); }
+  .pwd-input:focus { outline: none; border-color: var(--accent); }
+
+  /* 프로젝트 콘텐츠 */
+  .project-section { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-bottom: 16px; }
+  .project-section-title { font-size: 17px; font-weight: 700; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 8px; }
+  .project-content { white-space: pre-line; line-height: 1.7; color: var(--text-sub); }
+  .project-checklist-item { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .project-checklist-item:last-child { border-bottom: none; }
+  .project-checklist-item input[type="checkbox"] { margin-top: 4px; }
+  .project-checklist-item label { flex: 1; cursor: pointer; line-height: 1.5; }
+  .project-checklist-item.checked label { text-decoration: line-through; color: var(--text-muted); }
+
+  /* 계산기 */
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 500px) { .calc-grid { grid-template-columns: 1fr; } }
+  .calc-field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+  .calc-field input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); font-size: 15px; }
+  .calc-result { background: linear-gradient(135deg, var(--accent), var(--purple)); color: white; padding: 20px; border-radius: 12px; margin-top: 16px; }
+  .calc-result-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 14px; }
+  .calc-result-row:last-child { border-bottom: none; }
+  .calc-result-row.highlight { font-size: 20px; font-weight: 700; }
+
+  .subcategory-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+  .subcategory-tab { padding: 8px 14px; background: var(--card); border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 13px; color: var(--text-sub); white-space: nowrap; }
+  .subcategory-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
   .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
   .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
   .mode-toggle { display: flex; gap: 4px; margin-bottom: 16px; background: var(--card); padding: 4px; border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap; }
-  .mode-btn { flex: 1; min-width: 80px; padding: 8px; cursor: pointer; background: transparent; border: none; color: var(--text-sub); font-size: 13px; border-radius: 6px; }
+  .mode-btn { flex: 1; min-width: 70px; padding: 8px; cursor: pointer; background: transparent; border: none; color: var(--text-sub); font-size: 12px; border-radius: 6px; }
   .mode-btn.active { background: var(--accent); color: white; }
   .progress-bar { width: 100%; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin: 8px 0; }
   .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; }
@@ -83,7 +171,12 @@
   .toast.show { opacity: 1; transform: translateX(0); }
   .toast.success { border-color: var(--success); }
   .toast.error { border-color: var(--danger); }
+  .toast.coin { border-color: var(--gold); background: linear-gradient(135deg, var(--card), rgba(246,173,85,0.1)); }
   .mode-info { background: var(--bg); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; color: var(--text-sub); }
+  .level-bar { background: var(--bg); padding: 12px 16px; border-radius: 10px; margin-bottom: 16px; border: 1px solid var(--border); }
+  .level-bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; }
+  .level-bar-progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .level-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--accent)); transition: width 0.5s ease; }
 </style>
 </head>
 <body>
@@ -100,16 +193,35 @@
         <a href="study.html" class="active">📚 자기 발전</a>
       </div>
     </div>
-    <button class="icon-btn" id="theme-toggle">🌙 다크</button>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <span class="coin-badge" id="coin-badge">🪙 0 코인</span>
+      <span class="combo-badge" id="combo-badge" style="display:none;">🔥 콤보 0</span>
+      <button class="icon-btn" id="theme-toggle">🌙 다크</button>
+    </div>
   </header>
+
+  <div class="tip-banner" id="tip-banner" onclick="nextTip()">
+    <div class="tip-title" id="tip-title">💡 빠른 습득 노하우</div>
+    <div class="tip-content" id="tip-content">로딩 중...</div>
+    <div class="tip-nav" id="tip-nav">1 / 10 (탭하여 다음)</div>
+  </div>
+
+  <div class="level-bar">
+    <div class="level-bar-header">
+      <span><strong id="level-display">레벨 1 · 새싹</strong></span>
+      <span id="level-progress-text" style="color:var(--text-muted);">0 / 100 코인</span>
+    </div>
+    <div class="level-bar-progress"><div class="level-bar-fill" id="level-fill" style="width:0%"></div></div>
+  </div>
 
   <div class="stats-grid" id="stats-grid"></div>
 
   <div class="tabs">
     <button class="tab active" data-tab="english">🌏 영어</button>
     <button class="tab" data-tab="japanese">🇯🇵 일본어</button>
-    <button class="tab" data-tab="piping">🔧 배관기능사</button>
+    <button class="tab" data-tab="piping">🔧 배관</button>
     <button class="tab" data-tab="safety">⛑️ 산업안전</button>
+    <button class="tab locked" data-tab="project">🔐 개인프로젝트</button>
     <button class="tab" data-tab="backup">💾 백업</button>
   </div>
 
@@ -117,6 +229,7 @@
     <div class="mode-toggle">
       <button class="mode-btn active" data-mode-english="learn">📖 학습</button>
       <button class="mode-btn" data-mode-english="quiz_easy">🎯 4지선다</button>
+      <button class="mode-btn" data-mode-english="cloze">🧩 빈칸채우기</button>
       <button class="mode-btn" data-mode-english="quiz_hard">✍️ 입력</button>
       <button class="mode-btn" data-mode-english="review">🔄 복습</button>
     </div>
@@ -133,6 +246,7 @@
   </div>
 
   <div id="tab-piping" class="tab-content" style="display:none;">
+    <div id="piping-value-card"></div>
     <div class="mode-toggle">
       <button class="mode-btn active" data-mode-piping="today">📝 오늘의 문제</button>
       <button class="mode-btn" data-mode-piping="review">🔄 복습</button>
@@ -141,6 +255,7 @@
   </div>
 
   <div id="tab-safety" class="tab-content" style="display:none;">
+    <div id="safety-value-card"></div>
     <div class="mode-toggle">
       <button class="mode-btn active" data-mode-safety="today">📝 오늘의 문제</button>
       <button class="mode-btn" data-mode-safety="review">🔄 복습</button>
@@ -148,17 +263,21 @@
     <div id="safety-content"></div>
   </div>
 
+  <div id="tab-project" class="tab-content" style="display:none;">
+    <div id="project-content"></div>
+  </div>
+
   <div id="tab-backup" class="tab-content" style="display:none;">
     <div class="card">
       <div class="card-title">💾 학습 기록 백업</div>
       <p style="color:var(--text-sub); font-size:14px; margin-bottom:16px;">
-        브라우저에 자동 저장되지만, PC 변경 시 JSON으로 다운로드 → 구글 드라이브에 보관 가능합니다.
+        브라우저에 자동 저장됩니다. PC 변경 시 JSON 다운로드 → 구글 드라이브 보관 가능
       </p>
       <div class="backup-section">
-        <button class="btn btn-primary" id="btn-download">📥 JSON 다운로드</button>
-        <button class="btn btn-secondary" id="btn-upload-trigger">📤 JSON 복원</button>
+        <button class="btn btn-primary" id="btn-download">📥 다운로드</button>
+        <button class="btn btn-secondary" id="btn-upload-trigger">📤 복원</button>
         <input type="file" id="file-upload" accept="application/json">
-        <button class="btn btn-danger" id="btn-reset">🗑️ 전체 초기화</button>
+        <button class="btn btn-danger" id="btn-reset">🗑️ 초기화</button>
       </div>
     </div>
     <div class="card">
@@ -172,10 +291,132 @@
 <div class="toast" id="toast"></div>
 
 <script>
-let englishData = [], japaneseData = [], pipingData = [], safetyData = [];
-const state = { activeTab: 'english', englishMode: 'learn', japaneseMode: 'learn', pipingMode: 'today', safetyMode: 'today' };
-const STORAGE_KEY = 'sk_study_data_v2';
+let englishData = [], japaneseData = [], pipingData = [], safetyData = [], projectData = {};
+const state = {
+  activeTab: 'english',
+  englishMode: 'learn',
+  japaneseMode: 'learn',
+  pipingMode: 'today',
+  safetyMode: 'today',
+  tipIndex: 0,
+  projectAuthed: false,
+  projectSubcat: '사전공부',
+  combo: 0
+};
+const STORAGE_KEY = 'sk_study_data_v4';
+const PROJECT_PWD = '0307';
 
+// ============ 학습법 노하우 (10가지) ============
+const STUDY_TIPS = [
+  { title: "💡 SRS - 간격 반복 학습", content: "기억은 잊기 직전에 복습할 때 가장 강화됩니다. 1→3→7→14→30→60일 간격으로 시스템이 자동 복습 일정을 만들어줍니다. '쉬움/보통/어려움' 정직하게 누르세요." },
+  { title: "💡 능동적 회상 (Active Recall)", content: "그냥 읽기보다 '답을 떠올린 후 확인'이 5배 효과적. 한글 보고 영어 추측 → 정답 확인 순서로 진행하세요." },
+  { title: "💡 빈칸 채우기 (Cloze Deletion)", content: "문장 일부를 가리고 채우면 일반 학습보다 2배 빨리 외워집니다. 영어 탭 '🧩 빈칸채우기' 모드 활용하세요." },
+  { title: "💡 콤보 보너스 - 연속 정답", content: "연속 정답 시 코인 보너스 2배! 5연속 → x2, 10연속 → x3. 한 번 틀리면 콤보 리셋이라 긴장감 ↑" },
+  { title: "💡 짧고 자주 (Pomodoro)", content: "하루 1시간 < 매일 10분. 출근길 5분, 점심 5분, 자기 전 5분으로 나누면 효과 3배." },
+  { title: "💡 큰소리 발음 (Output)", content: "눈으로만 보지 말고 입으로 발음. 운동기억(motor memory)이 함께 형성되어 더 오래 기억됩니다. 콩글리시 발음으로 부담 없이!" },
+  { title: "💡 문장 통째 외우기", content: "단어 따로 외우지 마세요. 문장을 통째로 외우면 문법, 어순, 발음이 한 번에 해결됩니다." },
+  { title: "💡 잠자기 직전 5분", content: "수면 중 뇌가 단기기억을 장기기억으로 정리. 자기 직전 5분 복습이 가장 효율 높습니다. 카톡 알람 오면 5분만!" },
+  { title: "💡 시험일 카운트다운", content: "마감 효과를 활용하세요. 'D-XX' 카운트다운이 동기부여에 강력합니다." },
+  { title: "💡 한 가지에 집중", content: "오늘 영어 내일 일본어로 섞지 말고, 한 분야 일주일 집중 → 다음 분야로. 컨텍스트 스위칭 비용이 큽니다." }
+];
+
+// ============ 자격증 가치 정보 ============
+const CERT_INFO = {
+  piping: {
+    name: "배관기능사", salary_bonus: "월 5~15만원",
+    use_case: "산업기능요원 가산점, 시설관리 취업, 자격수당, 건설현장 일당 +2만원",
+    exam_date: "2026-08-15", pass_rate: "약 60%", study_hours_needed: "약 80시간"
+  },
+  safety: {
+    name: "산업안전보건기사", salary_bonus: "월 10~30만원",
+    use_case: "기업 안전관리자 의무 선임, 인사평가 가산점, 안전 컨설팅",
+    exam_date: "2026-10-19", pass_rate: "약 30%", study_hours_needed: "약 200시간"
+  }
+};
+
+// ============ SRS 알고리즘 ============
+const SRS_INTERVALS = { hard: 1, soso: 3, good: 7, easy: 14 };
+
+function calculateNextReview(currentInterval, difficulty) {
+  let newInterval;
+  if (difficulty === 'hard') newInterval = 1;
+  else if (!currentInterval || currentInterval < SRS_INTERVALS[difficulty]) newInterval = SRS_INTERVALS[difficulty];
+  else newInterval = Math.min(currentInterval * 2, 180);
+  const nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + newInterval);
+  return { next_review: nextDate.toISOString().split('T')[0], interval: newInterval };
+}
+
+// ============ 코인 + 콤보 시스템 ============
+const COIN_RULES = { learn_card: 5, quiz_correct: 10, quiz_wrong: 2, master: 30, daily_streak: 20, combo_bonus: 5 };
+
+function addCoins(amount, reason = "") {
+  const data = loadStorage();
+  if (!data.coins) data.coins = { total: 0, today: 0, history: [] };
+  if (!data.coins.last_date || data.coins.last_date !== todayStr()) {
+    data.coins.today = 0;
+    data.coins.last_date = todayStr();
+  }
+  data.coins.total += amount;
+  data.coins.today += amount;
+  saveStorage(data);
+  updateCoinBadge();
+  if (amount >= 10) showToast(`🪙 +${amount} 코인 ${reason}`, 'coin');
+}
+
+function incrementCombo() {
+  state.combo += 1;
+  let bonus = 0;
+  if (state.combo >= 10) bonus = COIN_RULES.combo_bonus * 3;
+  else if (state.combo >= 5) bonus = COIN_RULES.combo_bonus * 2;
+  else if (state.combo >= 3) bonus = COIN_RULES.combo_bonus;
+  if (bonus > 0) addCoins(bonus, `(${state.combo}연속!)`);
+  updateComboBadge();
+}
+
+function resetCombo() {
+  if (state.combo >= 3) showToast(`콤보 ${state.combo} 종료`, 'error');
+  state.combo = 0;
+  updateComboBadge();
+}
+
+function updateComboBadge() {
+  const badge = document.getElementById('combo-badge');
+  if (state.combo >= 3) {
+    badge.style.display = 'inline-flex';
+    badge.textContent = `🔥 콤보 ${state.combo}`;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function getLevel(totalCoins) {
+  const levels = [
+    { min: 0, max: 100, name: "🌱 새싹", level: 1 },
+    { min: 100, max: 250, name: "🌿 잎", level: 2 },
+    { min: 250, max: 500, name: "🌳 나무", level: 3 },
+    { min: 500, max: 1000, name: "🌲 큰 나무", level: 4 },
+    { min: 1000, max: 2000, name: "⭐ 별", level: 5 },
+    { min: 2000, max: 4000, name: "🌟 슈퍼스타", level: 6 },
+    { min: 4000, max: 8000, name: "💎 다이아", level: 7 },
+    { min: 8000, max: Infinity, name: "👑 마스터", level: 8 }
+  ];
+  return levels.find(l => totalCoins >= l.min && totalCoins < l.max);
+}
+
+function updateCoinBadge() {
+  const data = loadStorage();
+  const coins = data.coins || { total: 0, today: 0 };
+  document.getElementById('coin-badge').innerHTML = `🪙 ${coins.total} <span style="opacity:0.8;font-weight:400;">(+${coins.today})</span>`;
+  const level = getLevel(coins.total);
+  document.getElementById('level-display').textContent = `Lv.${level.level} · ${level.name}`;
+  const progress = ((coins.total - level.min) / (level.max - level.min)) * 100;
+  document.getElementById('level-fill').style.width = Math.min(progress, 100) + '%';
+  document.getElementById('level-progress-text').textContent =
+    level.max === Infinity ? '최고 레벨!' : `${coins.total} / ${level.max} 코인`;
+}
+
+// ============ 테마 ============
 function initTheme() {
   const saved = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
@@ -193,39 +434,51 @@ function updateThemeButton() {
   document.getElementById('theme-toggle').textContent = t === 'dark' ? '☀️ 라이트' : '🌙 다크';
 }
 
+// ============ 저장소 ============
 function loadStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      const v1 = localStorage.getItem('sk_study_data_v1');
-      if (v1) {
-        const oldData = JSON.parse(v1);
-        const newData = defaultStorage();
-        if (oldData.english) newData.english = oldData.english;
-        if (oldData.piping) newData.piping = oldData.piping;
-        if (oldData.streak) newData.streak = oldData.streak;
-        saveStorage(newData);
-        return newData;
+      // 마이그레이션 v3 → v4
+      const v3 = localStorage.getItem('sk_study_data_v3');
+      const v2 = localStorage.getItem('sk_study_data_v2');
+      const source = v3 || v2;
+      if (source) {
+        const old = JSON.parse(source);
+        const nd = defaultStorage();
+        ['english', 'japanese', 'piping', 'safety'].forEach(c => {
+          if (old[c]) nd[c] = {...nd[c], ...old[c]};
+        });
+        if (old.streak) nd.streak = old.streak;
+        if (old.coins) nd.coins = old.coins;
+        saveStorage(nd);
+        return nd;
       }
       return defaultStorage();
     }
     const data = JSON.parse(raw);
-    if (!data.japanese) data.japanese = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
-    if (!data.safety) data.safety = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
+    ['english', 'japanese', 'piping', 'safety'].forEach(c => {
+      if (!data[c]) data[c] = { studied: {}, wrong: [], mastered: [], srs: {}, total_quizzes: 0, total_correct: 0 };
+      if (!data[c].srs) data[c].srs = {};
+    });
+    if (!data.coins) data.coins = { total: 0, today: 0, last_date: null };
+    if (!data.project_checklist) data.project_checklist = {};
     return data;
   } catch (e) { return defaultStorage(); }
 }
+
 function saveStorage(data) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   catch (e) { showToast('저장 실패', 'error'); }
 }
+
 function defaultStorage() {
+  const cat = () => ({ studied: {}, wrong: [], mastered: [], srs: {}, total_quizzes: 0, total_correct: 0 });
   return {
-    english: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
-    japanese: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
-    piping: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
-    safety: { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 },
-    streak: { last_date: null, count: 0 }
+    english: cat(), japanese: cat(), piping: cat(), safety: cat(),
+    streak: { last_date: null, count: 0 },
+    coins: { total: 0, today: 0, last_date: null, history: [] },
+    project_checklist: {}
   };
 }
 
@@ -242,7 +495,10 @@ function updateStreak() {
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   })();
   if (data.streak.last_date === today) return data.streak.count;
-  if (data.streak.last_date === yesterday) data.streak.count += 1;
+  if (data.streak.last_date === yesterday) {
+    data.streak.count += 1;
+    addCoins(COIN_RULES.daily_streak, '(연속 학습 보너스!)');
+  }
   else if (data.streak.last_date !== today) data.streak.count = 1;
   data.streak.last_date = today;
   saveStorage(data);
@@ -255,12 +511,12 @@ function pickTodaysItems(category, items, count = 5) {
   if (data[category].studied[today]) {
     return data[category].studied[today].map(id => items.find(i => i.id === id)).filter(Boolean);
   }
-  const wrong = data[category].wrong;
+  const srs = data[category].srs;
   const mastered = data[category].mastered;
-  const wrongItems = items.filter(i => wrong.includes(i.id));
-  const newItems = items.filter(i => !wrong.includes(i.id) && !mastered.includes(i.id));
+  const dueItems = items.filter(i => srs[i.id] && srs[i.id].next_review <= today && !mastered.includes(i.id));
+  const newItems = items.filter(i => !srs[i.id] && !mastered.includes(i.id));
   let selected = [];
-  selected = selected.concat(shuffle([...wrongItems]).slice(0, Math.min(2, wrongItems.length)));
+  selected = selected.concat(shuffle([...dueItems]).slice(0, Math.min(3, dueItems.length)));
   const need = count - selected.length;
   if (need > 0) selected = selected.concat(shuffle([...newItems]).slice(0, need));
   if (selected.length < count) {
@@ -292,30 +548,68 @@ function renderStats() {
   const data = loadStorage();
   const streak = updateStreak();
   const today = todayStr();
-  const todayCount = (data.english.studied[today]||[]).length + (data.japanese.studied[today]||[]).length + (data.piping.studied[today]||[]).length + (data.safety.studied[today]||[]).length;
-  const totalCount = Object.values(data.english.studied).flat().length + Object.values(data.japanese.studied).flat().length + Object.values(data.piping.studied).flat().length + Object.values(data.safety.studied).flat().length;
-  const wrongCount = data.english.wrong.length + data.japanese.wrong.length + data.piping.wrong.length + data.safety.wrong.length;
+  const todayCount = ['english', 'japanese', 'piping', 'safety'].reduce((s, c) => s + (data[c].studied[today] || []).length, 0);
+  const totalCount = ['english', 'japanese', 'piping', 'safety'].reduce((s, c) => s + Object.values(data[c].studied).flat().length, 0);
+  let reviewDue = 0;
+  ['english', 'japanese', 'piping', 'safety'].forEach(c => {
+    Object.entries(data[c].srs || {}).forEach(([id, srs]) => {
+      if (srs.next_review <= today && !data[c].mastered.includes(id)) reviewDue++;
+    });
+  });
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card"><div class="stat-value">🔥 ${streak}</div><div class="stat-label">연속 학습일</div></div>
     <div class="stat-card"><div class="stat-value">${todayCount}</div><div class="stat-label">오늘 학습</div></div>
     <div class="stat-card"><div class="stat-value">${totalCount}</div><div class="stat-label">누적 학습</div></div>
-    <div class="stat-card"><div class="stat-value">${wrongCount}</div><div class="stat-label">복습 대기</div></div>
+    <div class="stat-card"><div class="stat-value">${reviewDue}</div><div class="stat-label">복습 대기</div></div>
+  `;
+  updateCoinBadge();
+}
+
+function renderCertValueCard(category) {
+  const info = CERT_INFO[category];
+  if (!info) return '';
+  const today = new Date();
+  const examDate = new Date(info.exam_date);
+  const daysLeft = Math.max(0, Math.ceil((examDate - today) / (1000 * 60 * 60 * 24)));
+  return `
+    <div class="cert-value-card">
+      <div class="cv-title">💰 ${info.name} 자격증 가치</div>
+      <div class="cv-amount">${info.salary_bonus} 수당 가능</div>
+      <div class="cv-desc">📌 ${info.use_case}<br>📊 합격률 ${info.pass_rate} · 약 ${info.study_hours_needed} 학습 필요</div>
+      <div class="cv-countdown">⏰ 다음 시험: <strong>${info.exam_date}</strong> · <strong>D-${daysLeft}일</strong> 남음</div>
+    </div>
   `;
 }
 
-// 영어
+function showTip(idx) {
+  const tip = STUDY_TIPS[idx];
+  document.getElementById('tip-title').textContent = tip.title;
+  document.getElementById('tip-content').textContent = tip.content;
+  document.getElementById('tip-nav').textContent = `${idx + 1} / ${STUDY_TIPS.length} (탭하여 다음)`;
+}
+function nextTip() {
+  state.tipIndex = (state.tipIndex + 1) % STUDY_TIPS.length;
+  showTip(state.tipIndex);
+}
+
+// ============ 영어 ============
 function renderEnglish() {
   const container = document.getElementById('english-content');
   const data = loadStorage();
   if (state.englishMode === 'learn') {
     const items = pickTodaysItems('english', englishData, 5);
     if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>학습할 문장이 없습니다</div>'; return; }
-    container.innerHTML = `<div class="mode-info">📖 한글 → 영어 추측 → 정답 확인 → 발음 듣기</div>${items.map((item, idx) => renderEnglishCard(item, idx + 1, false)).join('')}`;
+    container.innerHTML = `<div class="mode-info">📖 한글 → 영어 추측 → 정답 확인 → 콩글리시 발음 보기 → SRS 평가</div>${items.map((item, idx) => renderEnglishCard(item, idx + 1, false, data)).join('')}`;
   }
   else if (state.englishMode === 'quiz_easy') {
     const items = pickTodaysItems('english', englishData, 5);
     if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>퀴즈가 없습니다</div>'; return; }
-    container.innerHTML = `<div class="mode-info">🎯 한글 보고 영어 4개 중 선택 (초보자 추천)</div>${items.map((item, idx) => renderLangQuizEasy('english', item, idx + 1, englishData, 'en', 'en-US')).join('')}`;
+    container.innerHTML = `<div class="mode-info">🎯 4지선다 - 정답 시 콤보 +1, 오답 시 콤보 리셋</div>${items.map((item, idx) => renderLangQuizEasy('english', item, idx + 1, englishData, 'en', 'en-US')).join('')}`;
+  }
+  else if (state.englishMode === 'cloze') {
+    const items = pickTodaysItems('english', englishData, 5);
+    if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>퀴즈가 없습니다</div>'; return; }
+    container.innerHTML = `<div class="mode-info">🧩 빈칸 채우기 - 단어 일부가 빠져 있어요. 채워보세요!</div>${items.map((item, idx) => renderClozeQuiz(item, idx + 1)).join('')}`;
   }
   else if (state.englishMode === 'quiz_hard') {
     const items = pickTodaysItems('english', englishData, 5);
@@ -323,30 +617,143 @@ function renderEnglish() {
     container.innerHTML = `<div class="mode-info">✍️ 한글 보고 영어로 직접 입력 (대소문자/구두점 무시)</div>${items.map((item, idx) => renderEnglishQuizHard(item, idx + 1)).join('')}`;
   }
   else if (state.englishMode === 'review') {
-    const wrongIds = data.english.wrong;
-    if (wrongIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문장이 없습니다</div>'; return; }
-    const items = wrongIds.map(id => englishData.find(i => i.id === id)).filter(Boolean);
-    container.innerHTML = `<div class="mode-info">🔄 이전에 틀린 문장 복습</div>${items.map((item, idx) => renderEnglishCard(item, idx + 1, true)).join('')}`;
+    const today = todayStr();
+    const dueIds = Object.entries(data.english.srs || {})
+      .filter(([id, srs]) => srs.next_review <= today && !data.english.mastered.includes(id))
+      .map(([id]) => id);
+    if (dueIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>오늘 복습할 항목이 없습니다</div>'; return; }
+    const items = dueIds.map(id => englishData.find(i => i.id === id)).filter(Boolean);
+    container.innerHTML = `<div class="mode-info">🔄 SRS 복습일 도래 ${items.length}개</div>${items.map((item, idx) => renderEnglishCard(item, idx + 1, true, data)).join('')}`;
   }
 }
 
-function renderEnglishCard(item, num, isReview) {
+function renderEnglishCard(item, num, isReview, data) {
+  const srsInfo = data.english.srs[item.id];
+  const srsBadge = srsInfo ? `<span class="srs-badge">SRS Lv.${srsInfo.interval || 1}</span>` : '';
   return `
-    <div class="lesson-card ${isReview ? 'wrong-marked' : ''}">
-      <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+    <div class="lesson-card ${isReview ? 'review-due' : ''}">
+      <span class="lesson-num ${isReview ? 'review' : ''}">${isReview ? '복습' : '#'+num}</span>
       <span class="lesson-cat">${item.cat}</span>
+      ${srsBadge}
       <div class="lesson-ko">${escapeHtml(item.ko)}</div>
-      <div class="lesson-en" id="en-${item.id}">${escapeHtml(item.en)}</div>
+      <div class="lesson-en" id="en-${item.id}">
+        <div class="en-text">${escapeHtml(item.en)}</div>
+        ${item.kr_pron ? `<div class="lesson-pron">${escapeHtml(item.kr_pron)}</div>` : ''}
+      </div>
       <div class="lesson-actions">
-        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('en-${item.id}')">👁️ 영어 보기</button>
+        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('en-${item.id}'); addCoins(${COIN_RULES.learn_card}, '')">👁️ 영어 보기</button>
         <button class="btn btn-primary btn-small" onclick="speak(${JSON.stringify(item.en)}, 'en-US')">🔊 발음</button>
-        ${isReview ? `<button class="btn btn-success btn-small" onclick="markMastered('english', '${item.id}')">✅ 외웠어요</button>` : ''}
+      </div>
+      <div class="srs-buttons">
+        <span style="font-size:12px;color:var(--text-muted);align-self:center;">SRS 평가:</span>
+        <button class="btn btn-srs-hard btn-small" onclick="rateSRS('english', '${item.id}', 'hard')">😣 어려움</button>
+        <button class="btn btn-srs-soso btn-small" onclick="rateSRS('english', '${item.id}', 'soso')">😐 보통</button>
+        <button class="btn btn-srs-good btn-small" onclick="rateSRS('english', '${item.id}', 'good')">😊 쉬움</button>
+        <button class="btn btn-srs-easy btn-small" onclick="rateSRS('english', '${item.id}', 'easy')">🤩 외웠어요</button>
       </div>
     </div>`;
 }
 
 function toggleAnswer(id) {
   document.getElementById(id).classList.toggle('show');
+}
+
+function rateSRS(category, itemId, difficulty) {
+  const data = loadStorage();
+  const currentInterval = data[category].srs[itemId]?.interval || 0;
+  const next = calculateNextReview(currentInterval, difficulty);
+  data[category].srs[itemId] = next;
+  if (difficulty === 'easy' && !data[category].mastered.includes(itemId)) {
+    data[category].mastered.push(itemId);
+    addCoins(COIN_RULES.master, '(마스터!)');
+  } else {
+    addCoins(COIN_RULES.learn_card, '');
+  }
+  saveStorage(data);
+  showToast(`다음 복습: ${next.next_review} (${next.interval}일 후)`, 'success');
+  renderStats();
+  if (category === 'english') renderEnglish();
+  else if (category === 'japanese') renderJapanese();
+}
+
+// ============ 빈칸 채우기 모드 (Cloze Deletion) ============
+function makeClozeText(sentence) {
+  // 문장에서 핵심 단어 1~2개를 빈칸으로
+  const words = sentence.split(' ');
+  if (words.length < 3) return { html: '', answers: [] };
+  // 3글자 이상이고 문장부호 없는 단어들 중에서 선택
+  const candidates = words.map((w, i) => ({ word: w, idx: i, clean: w.replace(/[.,!?'"]/g, '') }))
+    .filter(x => x.clean.length >= 3);
+  if (candidates.length === 0) return { html: '', answers: [] };
+  const blankCount = Math.min(2, Math.max(1, Math.floor(candidates.length / 3)));
+  const blanks = shuffle([...candidates]).slice(0, blankCount).map(c => c.idx);
+  const answers = blanks.map(idx => words[idx].replace(/[.,!?'"]/g, '').toLowerCase());
+  const html = words.map((w, i) => {
+    if (blanks.includes(i)) {
+      const punct = w.match(/[.,!?'"]+$/)?.[0] || '';
+      const blankIdx = blanks.indexOf(i);
+      return `<input class="cloze-blank" data-idx="${blankIdx}" placeholder="?" />${punct}`;
+    }
+    return escapeHtml(w);
+  }).join(' ');
+  return { html, answers };
+}
+
+function renderClozeQuiz(item, num) {
+  const cloze = makeClozeText(item.en);
+  if (!cloze.html) {
+    return `<div class="quiz-card"><span class="lesson-num">#${num}</span><div class="lesson-cat">${item.cat}</div><div class="quiz-question">${escapeHtml(item.ko)}</div><div class="cloze-text">${escapeHtml(item.en)}</div><p style="color:var(--text-muted);font-size:13px;">이 문장은 너무 짧아서 빈칸이 만들어지지 않았어요</p></div>`;
+  }
+  return `
+    <div class="quiz-card" data-item-id="${item.id}" data-answers='${JSON.stringify(cloze.answers).replace(/'/g, "&apos;")}'>
+      <span class="lesson-num">#${num}</span>
+      <span class="lesson-cat">${item.cat}</span>
+      <div class="quiz-question">${escapeHtml(item.ko)}</div>
+      <div class="cloze-text">${cloze.html}</div>
+      ${item.kr_pron ? `<div style="font-size:13px;color:var(--gold);margin-bottom:12px;">🔤 ${escapeHtml(item.kr_pron)}</div>` : ''}
+      <div class="lesson-actions">
+        <button class="btn btn-primary btn-small" onclick="checkCloze('${item.id}', this)">✓ 확인</button>
+        <button class="btn btn-secondary btn-small" onclick="speak(${JSON.stringify(item.en)}, 'en-US')">🔊 발음</button>
+      </div>
+      <div class="quiz-explanation" id="cloze-result-${item.id}"></div>
+    </div>`;
+}
+
+function checkCloze(itemId, btn) {
+  const card = btn.closest('.quiz-card');
+  const item = englishData.find(i => i.id === itemId);
+  const answers = JSON.parse(card.dataset.answers);
+  const inputs = card.querySelectorAll('.cloze-blank');
+  let allCorrect = true;
+  inputs.forEach((inp, i) => {
+    const ans = inp.value.trim().toLowerCase().replace(/[.,!?'"]/g, '');
+    if (ans === answers[i]) {
+      inp.classList.add('correct');
+    } else {
+      inp.classList.add('wrong');
+      inp.value = answers[i];
+      allCorrect = false;
+    }
+  });
+  const data = loadStorage();
+  data.english.total_quizzes += 1;
+  const resultEl = document.getElementById('cloze-result-' + itemId);
+  if (allCorrect) {
+    data.english.total_correct += 1;
+    resultEl.innerHTML = `<strong style="color:var(--success);">✅ 정답!</strong><br>${escapeHtml(item.en)}`;
+    const cur = data.english.srs[itemId]?.interval || 0;
+    data.english.srs[itemId] = calculateNextReview(cur, 'soso');
+    addCoins(COIN_RULES.quiz_correct, '(정답!)');
+    incrementCombo();
+  } else {
+    resultEl.innerHTML = `<strong style="color:var(--danger);">❌ 일부 오답</strong><br>전체 정답: ${escapeHtml(item.en)}`;
+    data.english.srs[itemId] = calculateNextReview(0, 'hard');
+    addCoins(COIN_RULES.quiz_wrong, '');
+    resetCombo();
+  }
+  resultEl.classList.add('show');
+  saveStorage(data);
+  renderStats();
 }
 
 function renderEnglishQuizHard(item, num) {
@@ -375,56 +782,66 @@ function checkEnglishHard(id) {
   const isCorrect = userAnswer === correctAnswer;
   if (isCorrect) {
     data.english.total_correct += 1;
-    resultEl.innerHTML = `<strong style="color:var(--success);">✅ 정답!</strong><br>${escapeHtml(item.en)}`;
-    const idx = data.english.wrong.indexOf(id);
-    if (idx > -1) data.english.wrong.splice(idx, 1);
-    showToast('정답!', 'success');
+    resultEl.innerHTML = `<strong style="color:var(--success);">✅ 정답!</strong><br>${escapeHtml(item.en)}${item.kr_pron ? `<br><span style="color:var(--gold);">🔤 ${escapeHtml(item.kr_pron)}</span>` : ''}`;
+    addCoins(COIN_RULES.quiz_correct, '(정답!)');
+    incrementCombo();
   } else {
-    resultEl.innerHTML = `<strong style="color:var(--danger);">❌ 오답</strong><br>입력: ${escapeHtml(inputEl.value)}<br>정답: <strong>${escapeHtml(item.en)}</strong>`;
-    if (!data.english.wrong.includes(id)) data.english.wrong.push(id);
-    showToast('다시 도전!', 'error');
+    resultEl.innerHTML = `<strong style="color:var(--danger);">❌ 오답</strong><br>입력: ${escapeHtml(inputEl.value)}<br>정답: <strong>${escapeHtml(item.en)}</strong>${item.kr_pron ? `<br><span style="color:var(--gold);">🔤 ${escapeHtml(item.kr_pron)}</span>` : ''}`;
+    addCoins(COIN_RULES.quiz_wrong, '');
+    resetCombo();
   }
   resultEl.classList.add('show');
   saveStorage(data);
   renderStats();
 }
 
-// 일본어
+// ============ 일본어 ============
 function renderJapanese() {
   const container = document.getElementById('japanese-content');
   const data = loadStorage();
   if (state.japaneseMode === 'learn') {
     const items = pickTodaysItems('japanese', japaneseData, 5);
     if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>학습할 문장이 없습니다</div>'; return; }
-    container.innerHTML = `<div class="mode-info">📖 한글 → 일본어 추측 → 정답 확인 (히라가나+로마자)</div>${items.map((item, idx) => renderJapaneseCard(item, idx + 1, false)).join('')}`;
+    container.innerHTML = `<div class="mode-info">📖 한글 → 일본어 추측 → 정답 확인 (히라가나+로마자)</div>${items.map((item, idx) => renderJapaneseCard(item, idx + 1, false, data)).join('')}`;
   }
   else if (state.japaneseMode === 'quiz_easy') {
     const items = pickTodaysItems('japanese', japaneseData, 5);
     if (items.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>퀴즈가 없습니다</div>'; return; }
-    container.innerHTML = `<div class="mode-info">🎯 한글 보고 일본어 4개 중 선택</div>${items.map((item, idx) => renderLangQuizEasy('japanese', item, idx + 1, japaneseData, 'jp', 'ja-JP')).join('')}`;
+    container.innerHTML = `<div class="mode-info">🎯 4지선다 - 정답 시 콤보 +1</div>${items.map((item, idx) => renderLangQuizEasy('japanese', item, idx + 1, japaneseData, 'jp', 'ja-JP')).join('')}`;
   }
   else if (state.japaneseMode === 'review') {
-    const wrongIds = data.japanese.wrong;
-    if (wrongIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문장이 없습니다</div>'; return; }
-    const items = wrongIds.map(id => japaneseData.find(i => i.id === id)).filter(Boolean);
-    container.innerHTML = `<div class="mode-info">🔄 이전에 틀린 문장 복습</div>${items.map((item, idx) => renderJapaneseCard(item, idx + 1, true)).join('')}`;
+    const today = todayStr();
+    const dueIds = Object.entries(data.japanese.srs || {})
+      .filter(([id, srs]) => srs.next_review <= today && !data.japanese.mastered.includes(id))
+      .map(([id]) => id);
+    if (dueIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>오늘 복습할 항목이 없습니다</div>'; return; }
+    const items = dueIds.map(id => japaneseData.find(i => i.id === id)).filter(Boolean);
+    container.innerHTML = `<div class="mode-info">🔄 SRS 복습일 도래 ${items.length}개</div>${items.map((item, idx) => renderJapaneseCard(item, idx + 1, true, data)).join('')}`;
   }
 }
 
-function renderJapaneseCard(item, num, isReview) {
+function renderJapaneseCard(item, num, isReview, data) {
+  const srsInfo = data.japanese.srs[item.id];
+  const srsBadge = srsInfo ? `<span class="srs-badge">SRS Lv.${srsInfo.interval || 1}</span>` : '';
   return `
-    <div class="lesson-card ${isReview ? 'wrong-marked' : ''}">
-      <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+    <div class="lesson-card ${isReview ? 'review-due' : ''}">
+      <span class="lesson-num ${isReview ? 'review' : ''}">${isReview ? '복습' : '#'+num}</span>
       <span class="lesson-cat">${item.cat}</span>
+      ${srsBadge}
       <div class="lesson-ko">${escapeHtml(item.ko)}</div>
       <div class="lesson-en" id="jp-${item.id}">
-        ${escapeHtml(item.jp)}
+        <div class="en-text">${escapeHtml(item.jp)}</div>
         <div class="lesson-romaji">[${escapeHtml(item.romaji)}]</div>
       </div>
       <div class="lesson-actions">
-        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('jp-${item.id}')">👁️ 일본어 보기</button>
+        <button class="btn btn-secondary btn-small" onclick="toggleAnswer('jp-${item.id}'); addCoins(${COIN_RULES.learn_card}, '')">👁️ 일본어 보기</button>
         <button class="btn btn-primary btn-small" onclick="speak(${JSON.stringify(item.jp)}, 'ja-JP')">🔊 발음</button>
-        ${isReview ? `<button class="btn btn-success btn-small" onclick="markMastered('japanese', '${item.id}')">✅ 외웠어요</button>` : ''}
+      </div>
+      <div class="srs-buttons">
+        <button class="btn btn-srs-hard btn-small" onclick="rateSRS('japanese', '${item.id}', 'hard')">😣</button>
+        <button class="btn btn-srs-soso btn-small" onclick="rateSRS('japanese', '${item.id}', 'soso')">😐</button>
+        <button class="btn btn-srs-good btn-small" onclick="rateSRS('japanese', '${item.id}', 'good')">😊</button>
+        <button class="btn btn-srs-easy btn-small" onclick="rateSRS('japanese', '${item.id}', 'easy')">🤩 외웠어요</button>
       </div>
     </div>`;
 }
@@ -471,16 +888,21 @@ function answerLangEasy(category, itemId, selectedId, fieldKey) {
     else if (!isCorrect && selectedItem && optText === selectedItem[fieldKey]) opt.classList.add('wrong');
   });
   const expEl = document.getElementById('exp-' + category + '-' + itemId);
-  expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>정답: <strong>${escapeHtml(correctText)}</strong>${item.romaji ? '<br><span style="color:var(--text-muted);font-size:13px;">['+escapeHtml(item.romaji)+']</span>' : ''}`;
+  let extraText = '';
+  if (item.romaji) extraText = `<br><span style="color:var(--text-muted);font-size:13px;">[${escapeHtml(item.romaji)}]</span>`;
+  else if (item.kr_pron) extraText = `<br><span style="color:var(--gold);font-size:13px;">🔤 ${escapeHtml(item.kr_pron)}</span>`;
+  expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>정답: <strong>${escapeHtml(correctText)}</strong>${extraText}`;
   expEl.classList.add('show');
   if (isCorrect) {
     data[category].total_correct += 1;
-    const idx = data[category].wrong.indexOf(itemId);
-    if (idx > -1) data[category].wrong.splice(idx, 1);
-    showToast('정답!', 'success');
+    const cur = data[category].srs[itemId]?.interval || 0;
+    data[category].srs[itemId] = calculateNextReview(cur, 'soso');
+    addCoins(COIN_RULES.quiz_correct, '(정답!)');
+    incrementCombo();
   } else {
-    if (!data[category].wrong.includes(itemId)) data[category].wrong.push(itemId);
-    showToast('다시 도전!', 'error');
+    data[category].srs[itemId] = calculateNextReview(0, 'hard');
+    addCoins(COIN_RULES.quiz_wrong, '');
+    resetCombo();
   }
   saveStorage(data);
   renderStats();
@@ -488,11 +910,9 @@ function answerLangEasy(category, itemId, selectedId, fieldKey) {
 
 function markMastered(category, id) {
   const data = loadStorage();
-  const idx = data[category].wrong.indexOf(id);
-  if (idx > -1) data[category].wrong.splice(idx, 1);
   if (!data[category].mastered.includes(id)) data[category].mastered.push(id);
   saveStorage(data);
-  showToast('마스터 완료! 👏', 'success');
+  addCoins(COIN_RULES.master, '(마스터!)');
   if (category === 'english') renderEnglish();
   else if (category === 'japanese') renderJapanese();
   else if (category === 'piping') renderPiping();
@@ -500,9 +920,15 @@ function markMastered(category, id) {
   renderStats();
 }
 
-// 배관 & 산업안전
-function renderPiping() { renderQuizCategory('piping', pipingData, 'piping-content', state.pipingMode); }
-function renderSafety() { renderQuizCategory('safety', safetyData, 'safety-content', state.safetyMode); }
+// ============ 배관 & 산업안전 ============
+function renderPiping() {
+  document.getElementById('piping-value-card').innerHTML = renderCertValueCard('piping');
+  renderQuizCategory('piping', pipingData, 'piping-content', state.pipingMode);
+}
+function renderSafety() {
+  document.getElementById('safety-value-card').innerHTML = renderCertValueCard('safety');
+  renderQuizCategory('safety', safetyData, 'safety-content', state.safetyMode);
+}
 
 function renderQuizCategory(category, items, containerId, mode) {
   const container = document.getElementById(containerId);
@@ -512,9 +938,12 @@ function renderQuizCategory(category, items, containerId, mode) {
     if (todayItems.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">🎉</div>오늘 문제가 없습니다</div>'; return; }
     container.innerHTML = todayItems.map((item, idx) => renderCertQuiz(category, item, idx + 1, false)).join('');
   } else {
-    const wrongIds = data[category].wrong;
-    if (wrongIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>틀린 문제가 없습니다</div>'; return; }
-    const wrongItems = wrongIds.map(id => items.find(i => i.id === id)).filter(Boolean);
+    const today = todayStr();
+    const dueIds = Object.entries(data[category].srs || {})
+      .filter(([id, srs]) => srs.next_review <= today && !data[category].mastered.includes(id))
+      .map(([id]) => id);
+    if (dueIds.length === 0) { container.innerHTML = '<div class="empty-state"><div class="emoji">✨</div>오늘 복습할 문제가 없습니다</div>'; return; }
+    const wrongItems = dueIds.map(id => items.find(i => i.id === id)).filter(Boolean);
     container.innerHTML = wrongItems.map((item, idx) => renderCertQuiz(category, item, idx + 1, true)).join('');
   }
 }
@@ -526,7 +955,7 @@ function renderCertQuiz(category, item, num, isReview) {
   const catLabel = item.cat ? `<span class="lesson-cat">${item.cat}</span>` : '';
   return `
     <div class="quiz-card">
-      <span class="lesson-num ${isReview ? 'wrong' : ''}">${isReview ? '복습' : '#'+num}</span>
+      <span class="lesson-num ${isReview ? 'review' : ''}">${isReview ? '복습' : '#'+num}</span>
       ${catLabel}
       <div class="quiz-question">${escapeHtml(item.q)}</div>
       <div class="quiz-options" id="opts-${category}-${item.id}">${optionsHtml}</div>
@@ -553,18 +982,185 @@ function answerCert(category, id, selectedIdx) {
   expEl.classList.add('show');
   if (isCorrect) {
     data[category].total_correct += 1;
-    const idx = data[category].wrong.indexOf(id);
-    if (idx > -1) data[category].wrong.splice(idx, 1);
-    showToast('정답!', 'success');
+    const cur = data[category].srs[id]?.interval || 0;
+    data[category].srs[id] = calculateNextReview(cur, 'soso');
+    addCoins(COIN_RULES.quiz_correct, '(정답!)');
+    incrementCombo();
   } else {
-    if (!data[category].wrong.includes(id)) data[category].wrong.push(id);
-    showToast('다시 풀어보세요', 'error');
+    data[category].srs[id] = calculateNextReview(0, 'hard');
+    addCoins(COIN_RULES.quiz_wrong, '');
+    resetCombo();
   }
   saveStorage(data);
   renderStats();
 }
 
-// 백업
+// ============ 🔐 개인 프로젝트 (비밀번호 보호) ============
+function renderProject() {
+  const container = document.getElementById('project-content');
+  if (!state.projectAuthed) {
+    container.innerHTML = `
+      <div class="lock-screen">
+        <div class="lock-icon">🔐</div>
+        <h2>개인 프로젝트</h2>
+        <p>비밀번호 4자리를 입력하세요</p>
+        <input type="password" inputmode="numeric" maxlength="4" class="pwd-input" id="pwd-input" placeholder="••••">
+        <div style="margin-top:20px;">
+          <button class="btn btn-primary" onclick="checkProjectPwd()">잠금 해제</button>
+        </div>
+        <p style="margin-top:30px;font-size:13px;color:var(--text-muted);">힌트: 4자리 숫자</p>
+      </div>`;
+    setTimeout(() => {
+      const inp = document.getElementById('pwd-input');
+      if (inp) {
+        inp.focus();
+        inp.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') checkProjectPwd();
+        });
+      }
+    }, 100);
+    return;
+  }
+  // 인증 후 콘텐츠 표시
+  const subcats = Object.keys(projectData);
+  const tabsHtml = subcats.map(sc =>
+    `<div class="subcategory-tab ${sc === state.projectSubcat ? 'active' : ''}" onclick="selectProjectSubcat('${sc}')">${getSubcatLabel(sc)}</div>`
+  ).join('');
+  const items = projectData[state.projectSubcat] || [];
+  const data = loadStorage();
+  const itemsHtml = items.map(item => renderProjectItem(item, data)).join('');
+  container.innerHTML = `
+    <div class="subcategory-tabs">${tabsHtml}</div>
+    <div style="margin-top:16px;">${itemsHtml}</div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn btn-secondary btn-small" onclick="lockProject()">🔒 잠그기</button>
+    </div>`;
+}
+
+function getSubcatLabel(key) {
+  const map = {
+    "사전공부": "1. 사전공부",
+    "경매": "2. 경매·공판장",
+    "품질선별": "3. 품질·판매전략",
+    "시뮬레이션": "4. 시뮬레이션"
+  };
+  return map[key] || key;
+}
+
+function checkProjectPwd() {
+  const inp = document.getElementById('pwd-input');
+  if (!inp) return;
+  if (inp.value === PROJECT_PWD) {
+    state.projectAuthed = true;
+    sessionStorage.setItem('project_authed', '1');
+    showToast('🔓 잠금 해제됨', 'success');
+    renderProject();
+  } else {
+    showToast('비밀번호 오류', 'error');
+    inp.value = '';
+    inp.focus();
+  }
+}
+
+function lockProject() {
+  state.projectAuthed = false;
+  sessionStorage.removeItem('project_authed');
+  showToast('🔒 잠금 됨', 'success');
+  renderProject();
+}
+
+function selectProjectSubcat(sc) {
+  state.projectSubcat = sc;
+  renderProject();
+}
+
+function renderProjectItem(item, data) {
+  if (item.type === 'info') {
+    return `
+      <div class="project-section">
+        <div class="project-section-title">${escapeHtml(item.title)}</div>
+        <div class="project-content">${escapeHtml(item.content)}</div>
+      </div>`;
+  }
+  if (item.type === 'checklist') {
+    const checks = data.project_checklist[item.id] || [];
+    const itemsHtml = item.items.map((txt, i) => `
+      <div class="project-checklist-item ${checks.includes(i) ? 'checked' : ''}">
+        <input type="checkbox" id="${item.id}-${i}" ${checks.includes(i) ? 'checked' : ''} onchange="toggleProjectCheck('${item.id}', ${i})">
+        <label for="${item.id}-${i}">${escapeHtml(txt)}</label>
+      </div>`).join('');
+    const done = checks.length;
+    const total = item.items.length;
+    const pct = Math.round((done / total) * 100);
+    return `
+      <div class="project-section">
+        <div class="project-section-title">${escapeHtml(item.title)}</div>
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-muted);margin-bottom:4px;">
+            <span>진행률</span><span>${done} / ${total} (${pct}%)</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+        ${itemsHtml}
+      </div>`;
+  }
+  if (item.type === 'calculator') {
+    const fieldsHtml = item.fields.map(f => `
+      <div class="calc-field">
+        <label>${escapeHtml(f.label)}</label>
+        <input type="number" id="calc-${item.id}-${f.key}" value="${f.default}" oninput="calcProfit('${item.id}')">
+      </div>`).join('');
+    return `
+      <div class="project-section">
+        <div class="project-section-title">${escapeHtml(item.title)}</div>
+        ${item.subtitle ? `<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">${escapeHtml(item.subtitle)}</p>` : ''}
+        <div class="calc-grid">${fieldsHtml}</div>
+        <div id="calc-result-${item.id}" class="calc-result"></div>
+      </div>`;
+  }
+  return '';
+}
+
+function toggleProjectCheck(itemId, idx) {
+  const data = loadStorage();
+  if (!data.project_checklist[itemId]) data.project_checklist[itemId] = [];
+  const checks = data.project_checklist[itemId];
+  const at = checks.indexOf(idx);
+  if (at > -1) checks.splice(at, 1);
+  else checks.push(idx);
+  saveStorage(data);
+  renderProject();
+}
+
+function calcProfit(itemId) {
+  const buyPrice = parseFloat(document.getElementById(`calc-${itemId}-buy_price`)?.value) || 0;
+  const sellPrice = parseFloat(document.getElementById(`calc-${itemId}-sell_price`)?.value) || 0;
+  const packaging = parseFloat(document.getElementById(`calc-${itemId}-packaging`)?.value) || 0;
+  const shipping = parseFloat(document.getElementById(`calc-${itemId}-shipping`)?.value) || 0;
+  const platformFee = parseFloat(document.getElementById(`calc-${itemId}-platform_fee`)?.value) || 0;
+  const volume = parseFloat(document.getElementById(`calc-${itemId}-monthly_volume`)?.value) || 0;
+  const fixedCost = parseFloat(document.getElementById(`calc-${itemId}-fixed_cost`)?.value) || 0;
+  // 계산
+  const totalCostPerKg = buyPrice + packaging + shipping;
+  const feePerKg = sellPrice * (platformFee / 100);
+  const profitPerKg = sellPrice - totalCostPerKg - feePerKg;
+  const marginPct = sellPrice > 0 ? (profitPerKg / sellPrice * 100) : 0;
+  const monthlyRevenue = sellPrice * volume;
+  const monthlyProfit = (profitPerKg * volume) - fixedCost;
+  const breakEvenVolume = profitPerKg > 0 ? Math.ceil(fixedCost / profitPerKg) : 0;
+  const resultEl = document.getElementById(`calc-result-${itemId}`);
+  resultEl.innerHTML = `
+    <div class="calc-result-row"><span>kg당 총원가</span><span>${totalCostPerKg.toLocaleString()}원</span></div>
+    <div class="calc-result-row"><span>kg당 수수료</span><span>${feePerKg.toLocaleString()}원</span></div>
+    <div class="calc-result-row"><span>kg당 순이익</span><span style="color:${profitPerKg > 0 ? '#fbd38d' : '#fc8181'}">${profitPerKg.toLocaleString()}원</span></div>
+    <div class="calc-result-row"><span>마진율</span><span>${marginPct.toFixed(1)}%</span></div>
+    <div class="calc-result-row"><span>월 매출</span><span>${monthlyRevenue.toLocaleString()}원</span></div>
+    <div class="calc-result-row"><span>월 고정비</span><span>${fixedCost.toLocaleString()}원</span></div>
+    <div class="calc-result-row highlight"><span>월 순이익</span><span>${monthlyProfit.toLocaleString()}원</span></div>
+    <div class="calc-result-row"><span>손익분기점</span><span>월 ${breakEvenVolume}kg 판매</span></div>`;
+}
+
+// ============ 백업 ============
 function downloadBackup() {
   const data = loadStorage();
   data._exported_at = new Date().toISOString();
@@ -582,8 +1178,13 @@ function uploadBackup(file) {
     try {
       const data = JSON.parse(e.target.result);
       if (!data.english) throw new Error('유효하지 않은 백업');
-      if (!data.japanese) data.japanese = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
-      if (!data.safety) data.safety = { studied: {}, wrong: [], mastered: [], total_quizzes: 0, total_correct: 0 };
+      const cat = () => ({ studied: {}, wrong: [], mastered: [], srs: {}, total_quizzes: 0, total_correct: 0 });
+      ['english', 'japanese', 'piping', 'safety'].forEach(c => {
+        if (!data[c]) data[c] = cat();
+        if (!data[c].srs) data[c].srs = {};
+      });
+      if (!data.coins) data.coins = { total: 0, today: 0, last_date: null };
+      if (!data.project_checklist) data.project_checklist = {};
       saveStorage(data);
       showToast('복원 완료', 'success');
       renderStats(); renderBackupProgress();
@@ -592,7 +1193,7 @@ function uploadBackup(file) {
   reader.readAsText(file);
 }
 function resetAll() {
-  if (!confirm('모든 학습 기록을 삭제할까요?\n되돌릴 수 없습니다.')) return;
+  if (!confirm('모든 학습 기록과 코인을 삭제할까요?\n되돌릴 수 없습니다.')) return;
   localStorage.removeItem(STORAGE_KEY);
   showToast('초기화 완료', 'success');
   renderStats(); renderBackupProgress();
@@ -609,24 +1210,30 @@ function renderBackupProgress() {
   ];
   let html = '';
   items.forEach(it => {
-    const cat = data[it.key];
-    const m = cat.mastered.length;
-    const w = cat.wrong.length;
+    const c = data[it.key];
+    const m = c.mastered.length;
+    const srsCount = Object.keys(c.srs || {}).length;
     const pct = it.total > 0 ? Math.round((m / it.total) * 100) : 0;
     html += `
       <div style="margin-bottom:16px;">
         <strong>${it.label}</strong>
         <div style="font-size:13px;color:var(--text-muted);margin:4px 0;">
-          마스터 ${m}개 / 전체 ${it.total}개 · 복습 ${w}개
+          마스터 ${m}개 / 전체 ${it.total}개 · SRS 추적 ${srsCount}개
         </div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         <div style="font-size:12px;color:var(--text-muted);text-align:right;">${pct}%</div>
       </div>`;
   });
-  html += `<div style="padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-sub);">
-    <strong>💡 저장 위치:</strong> 브라우저 localStorage<br>
-    다른 PC에서 이어가려면: JSON 다운로드 → 구글 드라이브 → 다른 곳에서 복원
-  </div>`;
+  const coins = data.coins || { total: 0 };
+  const level = getLevel(coins.total);
+  html += `
+    <div style="padding:14px;background:linear-gradient(135deg, rgba(246,173,85,0.1), rgba(49,130,206,0.1));border-radius:8px;margin-bottom:12px;">
+      <strong>🪙 누적 ${coins.total} 코인</strong> · <strong>Lv.${level.level} ${level.name}</strong>
+    </div>
+    <div style="padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-sub);">
+      <strong>💡 저장 위치:</strong> 브라우저 localStorage<br>
+      다른 PC에서 이어가려면: 다운로드 → 구글 드라이브 → 복원
+    </div>`;
   document.getElementById('progress-detail').innerHTML = html;
 }
 
@@ -643,6 +1250,7 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// 이벤트
 document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 
 document.querySelectorAll('.tabs .tab').forEach(t => {
@@ -653,6 +1261,7 @@ document.querySelectorAll('.tabs .tab').forEach(t => {
     document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
     document.getElementById('tab-' + t.dataset.tab).style.display = '';
     if (t.dataset.tab === 'backup') renderBackupProgress();
+    if (t.dataset.tab === 'project') renderProject();
   });
 });
 
@@ -698,19 +1307,24 @@ document.getElementById('btn-reset').addEventListener('click', resetAll);
 
 async function init() {
   initTheme();
+  showTip(0);
+  // 세션 인증 복원
+  if (sessionStorage.getItem('project_authed') === '1') state.projectAuthed = true;
   try {
-    const [engRes, jpRes, pipRes, safRes] = await Promise.all([
+    const [engRes, jpRes, pipRes, safRes, projRes] = await Promise.all([
       fetch('english.json'),
       fetch('japanese.json'),
       fetch('piping.json'),
-      fetch('safety.json')
+      fetch('safety.json'),
+      fetch('project.json')
     ]);
     englishData = await engRes.json();
     japaneseData = await jpRes.json();
     pipingData = await pipRes.json();
     safetyData = await safRes.json();
+    projectData = await projRes.json();
   } catch (e) {
-    showToast('데이터 로드 실패', 'error');
+    showToast('데이터 로드 실패: ' + e.message, 'error');
     return;
   }
   renderStats();
@@ -718,6 +1332,9 @@ async function init() {
   renderJapanese();
   renderPiping();
   renderSafety();
+  setInterval(() => {
+    if (state.activeTab !== 'backup' && state.activeTab !== 'project') nextTip();
+  }, 10000);
 }
 
 init();
