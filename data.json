@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-06-30T11:45:22.658914+09:00",
-  "updated_at_display": "2026-06-30 11:45:22 KST",
+  "updated_at": "2026-06-30T11:46:07.572155+09:00",
+  "updated_at_display": "2026-06-30 11:46:07 KST",
   "script_version": "v8.0 - 2026-06-25",
   "weather": {
     "location": "서울",
@@ -149,13 +149,13 @@
   "indices": [
     {
       "name": "코스피",
-      "value": "8,454.92",
-      "change": "▲0.72%"
+      "value": "8,457.16",
+      "change": "▲0.74%"
     },
     {
       "name": "코스닥",
-      "value": "912.97",
-      "change": "▼0.83%"
+      "value": "913.28",
+      "change": "▼0.79%"
     }
   ],
   "global_indices": [
@@ -190,19 +190,19 @@
       {
         "code": "281820",
         "name": "케이씨텍",
-        "change": "▲22.33%"
+        "change": "▲22.77%"
       }
     ],
     "down": [
       {
         "code": "002880",
         "name": "디와이에이",
-        "change": "▲16.98%"
+        "change": "▲16.77%"
       },
       {
         "code": "037710",
         "name": "광주신세계",
-        "change": "▲12.50%"
+        "change": "▲12.90%"
       },
       {
         "code": "760011",
