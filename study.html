@@ -831,6 +831,7 @@ function renderJapaneseCard(item, num, isReview, data) {
       <div class="lesson-ko">${escapeHtml(item.ko)}</div>
       <div class="lesson-en" id="jp-${item.id}">
         <div class="en-text">${escapeHtml(item.jp)}</div>
+        ${item.kr_pron ? `<div class="lesson-pron">${escapeHtml(item.kr_pron)}</div>` : ''}
         <div class="lesson-romaji">[${escapeHtml(item.romaji)}]</div>
       </div>
       <div class="lesson-actions">
@@ -889,8 +890,9 @@ function answerLangEasy(category, itemId, selectedId, fieldKey) {
   });
   const expEl = document.getElementById('exp-' + category + '-' + itemId);
   let extraText = '';
-  if (item.romaji) extraText = `<br><span style="color:var(--text-muted);font-size:13px;">[${escapeHtml(item.romaji)}]</span>`;
-  else if (item.kr_pron) extraText = `<br><span style="color:var(--gold);font-size:13px;">🔤 ${escapeHtml(item.kr_pron)}</span>`;
+  // 한글 발음과 로마자 모두 표시 (있는 경우)
+  if (item.kr_pron) extraText += `<br><span style="color:var(--gold);font-size:13px;">🔤 ${escapeHtml(item.kr_pron)}</span>`;
+  if (item.romaji) extraText += `<br><span style="color:var(--text-muted);font-size:13px;">[${escapeHtml(item.romaji)}]</span>`;
   expEl.innerHTML = `<strong>${isCorrect ? '✅ 정답!' : '❌ 오답'}</strong><br>정답: <strong>${escapeHtml(correctText)}</strong>${extraText}`;
   expEl.classList.add('show');
   if (isCorrect) {
