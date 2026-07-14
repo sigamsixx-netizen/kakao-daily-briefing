@@ -9,8 +9,9 @@ SK아카데미 일일 이슈 브리핑 v8
 5. 버전 표시 추가 (적용 확인용)
 """
 
-SCRIPT_VERSION = "v8.0 - 2026-06-25"
+SCRIPT_VERSION = "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)"
 
+import base64
 import json
 import os
 import sys
@@ -36,6 +37,97 @@ def get_credentials():
         sys.exit(1)
     return api_key, refresh_token
 
+def get_repo_env():
+    """GitHub Actions가 자동으로 심어주는 owner/repo (예: sigamsixx-netizen/kakao-daily-briefing)"""
+    return os.environ.get("GITHUB_REPOSITORY", "")
+
+def notify_ntfy(title, message, priority="default"):
+    """ntfy.sh로 즉시 휴대폰 푸시알림 전송. NTFY_TOPIC 미설정 시 조용히 건너뜀 (선택사항)."""
+    topic = os.environ.get("NTFY_TOPIC")
+    if not topic:
+        return
+    try:
+        requests.post(
+            f"https://ntfy.sh/{topic}",
+            data=message.encode("utf-8"),
+            headers={
+                "Title": title.encode("utf-8"),
+                "Priority": priority,   # default/high/urgent
+                "Tags": "loudspeaker",
+            },
+            timeout=10
+        )
+    except Exception as e:
+        log(f"WARN: ntfy 알림 실패 - {e}")
+
+def notify_via_github_issue(title, body):
+    """GitHub Issue를 생성해 알림 (기본 GITHUB_TOKEN 사용 - 별도 발급 불필요, 워크플로우 permissions만 필요)"""
+    gh_token = os.environ.get("GITHUB_TOKEN")
+    repo = get_repo_env()
+    if not gh_token or not repo:
+        log("WARN: GITHUB_TOKEN/저장소 정보 없음 - 이슈 알림 생략")
+        return
+    try:
+        res = requests.post(
+            f"https://api.github.com/repos/{repo}/issues",
+            headers={"Authorization": f"Bearer {gh_token}", "Accept": "application/vnd.github+json"},
+            json={"title": title, "body": body},
+            timeout=10
+        )
+        if res.status_code == 201:
+            log("INFO: GitHub Issue 알림 생성 완료 (이메일/앱 알림 발송됨)")
+        else:
+            log(f"WARN: GitHub Issue 생성 실패 - {res.status_code}: {res.text}")
+    except Exception as e:
+        log(f"WARN: GitHub Issue 알림 중 오류 - {e}")
+
+def alert_failure(title, detail):
+    """실패를 두 채널(GitHub Issue + ntfy)로 동시에 알림"""
+    notify_via_github_issue(title, detail)
+    notify_ntfy(title, detail, priority="urgent")
+
+def update_kakao_secret(new_refresh_token):
+    """새로 발급된 refresh_token을 GitHub Secrets(KAKAO_REFRESH_TOKEN)에 자동 저장.
+    GH_PAT(Secrets 쓰기 권한 PAT)이 설정돼 있어야 동작 - 없으면 로그에만 남기고 넘어감(기존 방식)."""
+    pat = os.environ.get("GH_PAT")
+    repo = get_repo_env()
+    if not pat or not repo:
+        log("=" * 60)
+        log("WARN: GH_PAT 미설정 - 자동 저장 불가. 아래 값을 수동으로 Secrets에 등록하세요:")
+        log(f"   {new_refresh_token}")
+        log("=" * 60)
+        return False
+    try:
+        from nacl import encoding, public  # pip install pynacl 필요
+        headers = {"Authorization": f"Bearer {pat}", "Accept": "application/vnd.github+json"}
+        pk_res = requests.get(
+            f"https://api.github.com/repos/{repo}/actions/secrets/public-key",
+            headers=headers, timeout=10
+        )
+        pk_res.raise_for_status()
+        pk = pk_res.json()
+        public_key = public.PublicKey(pk["key"].encode("utf-8"), encoding.Base64Encoder())
+        sealed_box = public.SealedBox(public_key)
+        encrypted = sealed_box.encrypt(new_refresh_token.encode("utf-8"))
+        encrypted_value = base64.b64encode(encrypted).decode("utf-8")
+        put_res = requests.put(
+            f"https://api.github.com/repos/{repo}/actions/secrets/KAKAO_REFRESH_TOKEN",
+            headers=headers,
+            json={"encrypted_value": encrypted_value, "key_id": pk["key_id"]},
+            timeout=10
+        )
+        if put_res.status_code in (201, 204):
+            log("INFO: 새 refresh_token 자동 저장 완료 ✅ (다음 실행부터 적용)")
+            return True
+        log(f"WARN: Secret 자동 저장 실패 - {put_res.status_code}: {put_res.text}")
+        return False
+    except ImportError:
+        log("WARN: pynacl 미설치 - 자동 저장 불가 (workflow의 pip install에 pynacl 추가 필요)")
+        return False
+    except Exception as e:
+        log(f"WARN: Secret 자동 저장 중 오류 - {e}")
+        return False
+
 def refresh_access_token(api_key, refresh_token):
     res = requests.post(
         "https://kauth.kakao.com/oauth/token",
@@ -44,14 +136,27 @@ def refresh_access_token(api_key, refresh_token):
     )
     if res.status_code != 200:
         log(f"ERROR: 토큰 갱신 실패 - {res.status_code}: {res.text}")
+        auth_url = (
+            "https://kauth.kakao.com/oauth/authorize"
+            f"?client_id={api_key}&redirect_uri=http://localhost:8080/oauth"
+            "&response_type=code&scope=talk_message"
+        )
+        alert_failure(
+            "🚨 카카오 refresh_token 만료 - 재인증 필요",
+            "일일 브리핑이 카카오 토큰 문제로 실패했습니다.\n\n"
+            f"오류: {res.status_code} {res.text}\n\n"
+            "### 재인증 방법\n"
+            f"1. 브라우저에서 열기: {auth_url}\n"
+            "2. 로그인/동의 후 리다이렉트된 주소창의 code= 값 복사\n"
+            "3. get_token.py 실행 → 새 refresh_token 발급\n"
+            "4. Settings → Secrets and variables → Actions → KAKAO_REFRESH_TOKEN 업데이트\n"
+        )
         sys.exit(1)
     new = res.json()
     log("INFO: access_token 갱신 완료")
     if "refresh_token" in new:
-        log("=" * 60)
-        log("새 refresh_token 발급됨. GitHub Secrets 업데이트 필요:")
-        log(f"   {new['refresh_token']}")
-        log("=" * 60)
+        log("INFO: 새 refresh_token 발급됨(rotation) - 자동 저장 시도")
+        update_kakao_secret(new["refresh_token"])
     return new["access_token"]
 
 def fetch_weather(lat, lon, name="서울"):
@@ -400,8 +505,10 @@ def main():
     status1, body1 = send_to_me(access_token, msg1, dashboard_url, "📊 대시보드 열기")
     if status1 == 200:
         log("[OK] 메시지 1 발송 성공")
+        notify_ntfy("📊 일일 브리핑 도착", "카톡 확인해주세요! (1/2)", priority="high")
     else:
         log(f"[FAIL] 메시지 1 실패 - {status1}: {body1}")
+        alert_failure("🚨 일일 브리핑 발송 실패 (메시지 1)", f"{status1}: {body1}")
         sys.exit(1)
     log("INFO: 5초 대기...")
     time.sleep(5)
@@ -414,6 +521,7 @@ def main():
         log("[OK] 메시지 2 발송 성공")
     else:
         log(f"[FAIL] 메시지 2 실패 - {status2}: {body2}")
+        alert_failure("🚨 일일 브리핑 발송 실패 (메시지 2)", f"{status2}: {body2}")
         sys.exit(1)
     log("=" * 60)
     log(f"=== 전체 발송 완료 ({SCRIPT_VERSION}) ===")
