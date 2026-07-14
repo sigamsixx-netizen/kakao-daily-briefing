@@ -6,6 +6,7 @@ on:
     - cron: '0 0,4,9 * * *'
 permissions:
   contents: write
+  issues: write   # 토큰 만료 등 실패 시 Issue 알림 생성을 위해 필요
 jobs:
   send:
     runs-on: ubuntu-latest
@@ -14,12 +15,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install requests
+      - run: pip install requests pynacl
       - name: Run briefing
         env:
           KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
           KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
           DASHBOARD_URL: ${{ secrets.DASHBOARD_URL }}
+          GH_PAT: ${{ secrets.GH_PAT }}                # refresh_token 자동 저장용 (없으면 로그만 남김)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    # Issue 알림 생성용 (자동 제공, 별도 등록 불필요)
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}         # 즉시 푸시알림용 (선택사항, 없으면 건너뜀)
         run: python kakao_daily_briefing_cloud.py
       - name: Commit data.json
         run: |
