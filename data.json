@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-09-17T17:59:34.533480+09:00",
-  "updated_at_display": "2026-09-17 17:59:34 KST",
+  "updated_at": "2026-09-17T18:00:47.886551+09:00",
+  "updated_at_display": "2026-09-17 18:00:47 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
   "weather": {
     "location": "서울",
     "current": {
       "icon": "⛅",
       "label": "구름 조금",
-      "temp": 24.9,
-      "humidity": 59,
-      "wind": 3.6
+      "temp": 24.6,
+      "humidity": 60,
+      "wind": 4.0
     },
     "daily": [
       {
@@ -55,9 +55,9 @@
     "current": {
       "icon": "⛅",
       "label": "구름 조금",
-      "temp": 24.9,
-      "humidity": 59,
-      "wind": 3.6
+      "temp": 24.6,
+      "humidity": 60,
+      "wind": 4.0
     },
     "daily": [
       {
@@ -103,9 +103,9 @@
     "current": {
       "icon": "⛅",
       "label": "구름 조금",
-      "temp": 22.7,
-      "humidity": 80,
-      "wind": 6.0
+      "temp": 22.4,
+      "humidity": 81,
+      "wind": 6.4
     },
     "daily": [
       {
