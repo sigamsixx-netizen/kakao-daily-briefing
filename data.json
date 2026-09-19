@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-09-19T21:00:46.755797+09:00",
-  "updated_at_display": "2026-09-19 21:00:46 KST",
+  "updated_at": "2026-09-19T21:45:21.190122+09:00",
+  "updated_at_display": "2026-09-19 21:45:21 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
   "weather": {
     "location": "서울",
     "current": {
       "icon": "☀️",
       "label": "맑음",
-      "temp": 21.6,
-      "humidity": 71,
-      "wind": 7.1
+      "temp": 21.1,
+      "humidity": 73,
+      "wind": 6.8
     },
     "daily": [
       {
@@ -26,7 +26,7 @@
         "weekday": "일",
         "icon": "☀️",
         "label": "맑음",
-        "max": 28.0,
+        "max": 27.0,
         "min": 17.0,
         "rain": 0
       },
@@ -36,7 +36,7 @@
         "icon": "☀️",
         "label": "맑음",
         "max": 29.0,
-        "min": 16.0,
+        "min": 17.0,
         "rain": 0
       },
       {
@@ -55,9 +55,9 @@
     "current": {
       "icon": "☀️",
       "label": "맑음",
-      "temp": 21.6,
-      "humidity": 71,
-      "wind": 7.1
+      "temp": 21.1,
+      "humidity": 73,
+      "wind": 6.8
     },
     "daily": [
       {
@@ -74,7 +74,7 @@
         "weekday": "일",
         "icon": "☀️",
         "label": "맑음",
-        "max": 28.0,
+        "max": 27.0,
         "min": 17.0,
         "rain": 0
       },
@@ -84,7 +84,7 @@
         "icon": "☀️",
         "label": "맑음",
         "max": 29.0,
-        "min": 16.0,
+        "min": 17.0,
         "rain": 0
       },
       {
@@ -103,9 +103,9 @@
     "current": {
       "icon": "🌤️",
       "label": "대체로 맑음",
-      "temp": 20.2,
-      "humidity": 82,
-      "wind": 8.8
+      "temp": 19.6,
+      "humidity": 85,
+      "wind": 7.0
     },
     "daily": [
       {
@@ -120,10 +120,10 @@
       {
         "date": "09/20",
         "weekday": "일",
-        "icon": "☀️",
-        "label": "맑음",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
         "max": 26.0,
-        "min": 14.0,
+        "min": 15.0,
         "rain": 0
       },
       {
