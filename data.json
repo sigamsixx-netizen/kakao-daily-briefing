@@ -1,161 +1,20 @@
 {
-  "updated_at": "2026-11-13T12:59:18.045899+09:00",
-  "updated_at_display": "2026-11-13 12:59:18 KST",
+  "updated_at": "2026-11-13T13:01:07.213553+09:00",
+  "updated_at_display": "2026-11-13 13:01:07 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
-  "weather": {
-    "location": "서울",
-    "current": {
-      "icon": "🌤️",
-      "label": "대체로 맑음",
-      "temp": 12.6,
-      "humidity": 80,
-      "wind": 3.0
-    },
-    "daily": [
-      {
-        "date": "11/13",
-        "weekday": "금",
-        "icon": "☁️",
-        "label": "흐림",
-        "max": 15.0,
-        "min": 8.0,
-        "rain": 21
-      },
-      {
-        "date": "11/14",
-        "weekday": "토",
-        "icon": "🌦️",
-        "label": "이슬비",
-        "max": 12.0,
-        "min": 9.0,
-        "rain": 94
-      },
-      {
-        "date": "11/15",
-        "weekday": "일",
-        "icon": "🌤️",
-        "label": "대체로 맑음",
-        "max": 16.0,
-        "min": 7.0,
-        "rain": 10
-      },
-      {
-        "date": "11/16",
-        "weekday": "월",
-        "icon": "☁️",
-        "label": "흐림",
-        "max": 17.0,
-        "min": 7.0,
-        "rain": 4
-      }
-    ]
-  },
-  "weather_seoul": {
-    "location": "서울",
-    "current": {
-      "icon": "🌤️",
-      "label": "대체로 맑음",
-      "temp": 12.6,
-      "humidity": 80,
-      "wind": 3.0
-    },
-    "daily": [
-      {
-        "date": "11/13",
-        "weekday": "금",
-        "icon": "☁️",
-        "label": "흐림",
-        "max": 15.0,
-        "min": 8.0,
-        "rain": 21
-      },
-      {
-        "date": "11/14",
-        "weekday": "토",
-        "icon": "🌦️",
-        "label": "이슬비",
-        "max": 12.0,
-        "min": 9.0,
-        "rain": 94
-      },
-      {
-        "date": "11/15",
-        "weekday": "일",
-        "icon": "🌤️",
-        "label": "대체로 맑음",
-        "max": 16.0,
-        "min": 7.0,
-        "rain": 10
-      },
-      {
-        "date": "11/16",
-        "weekday": "월",
-        "icon": "☁️",
-        "label": "흐림",
-        "max": 17.0,
-        "min": 7.0,
-        "rain": 4
-      }
-    ]
-  },
-  "weather_bundang": {
-    "location": "분당",
-    "current": {
-      "icon": "⛅",
-      "label": "구름 조금",
-      "temp": 14.1,
-      "humidity": 78,
-      "wind": 3.0
-    },
-    "daily": [
-      {
-        "date": "11/13",
-        "weekday": "금",
-        "icon": "☁️",
-        "label": "흐림",
-        "max": 16.0,
-        "min": 6.0,
-        "rain": 42
-      },
-      {
-        "date": "11/14",
-        "weekday": "토",
-        "icon": "🌦️",
-        "label": "이슬비",
-        "max": 12.0,
-        "min": 8.0,
-        "rain": 100
-      },
-      {
-        "date": "11/15",
-        "weekday": "일",
-        "icon": "🌤️",
-        "label": "대체로 맑음",
-        "max": 16.0,
-        "min": 5.0,
-        "rain": 16
-      },
-      {
-        "date": "11/16",
-        "weekday": "월",
-        "icon": "☁️",
-        "label": "흐림",
-        "max": 16.0,
-        "min": 5.0,
-        "rain": 4
-      }
-    ]
-  },
+  "weather": null,
+  "weather_seoul": null,
+  "weather_bundang": null,
   "indices": [
     {
       "name": "코스피",
-      "value": "5,316.56",
-      "change": "▼0.49%"
+      "value": "5,301.24",
+      "change": "▼0.78%"
     },
     {
       "name": "코스닥",
-      "value": "705.24",
-      "change": "▲1.25%"
+      "value": "704.31",
+      "change": "▲1.12%"
     }
   ],
   "global_indices": [
@@ -194,10 +53,10 @@
       "HJ중공업 3분기 누적 영업익 1554억 원…조선 가동률 100% 돌파"
     ],
     "사회": [
+      "北, 인공기 가로 폭 줄였다…1948년 정권 수립 이후 처음",
+      "조현 “중국이 APEC에 北 초청할 가능성, 크지 않아”",
       "한동훈 제명 ‘조작 징계’ 공방 격화…친한계 “진상 조사해야” 당권파 “궤변”",
-      "“대륙 뚫었다”…‘하루한알’ 먹는 비만약, 중국 승인",
-      "지하철 비상정지 시킨뒤 車 훔쳐 타고간 러시아인 검거",
-      "용인 주유소 신축현장서 8m 아래로 떨어진 60대 숨져…경찰 수사"
+      "“대륙 뚫었다”…‘하루한알’ 먹는 비만약, 중국 승인"
     ],
     "국제": [
       "트럼프, 젠슨 황 사임 전 통화…“자리 지키기 위해 싸워라” 독려",
