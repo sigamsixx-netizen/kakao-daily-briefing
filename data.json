@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-14T12:57:25.402289+09:00",
-  "updated_at_display": "2026-11-14 12:57:25 KST",
+  "updated_at": "2026-11-14T13:00:47.075334+09:00",
+  "updated_at_display": "2026-11-14 13:00:47 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
   "weather": {
     "location": "서울",
@@ -9,7 +9,7 @@
       "label": "약한 이슬비",
       "temp": 10.2,
       "humidity": 92,
-      "wind": 4.7
+      "wind": 5.0
     },
     "daily": [
       {
@@ -57,7 +57,7 @@
       "label": "약한 이슬비",
       "temp": 10.2,
       "humidity": 92,
-      "wind": 4.7
+      "wind": 5.0
     },
     "daily": [
       {
@@ -105,7 +105,7 @@
       "label": "약한 이슬비",
       "temp": 10.3,
       "humidity": 95,
-      "wind": 7.4
+      "wind": 7.8
     },
     "daily": [
       {
