@@ -1,10 +1,151 @@
 {
-  "updated_at": "2026-11-14T20:09:49.386733+09:00",
-  "updated_at_display": "2026-11-14 20:09:49 KST",
+  "updated_at": "2026-11-14T21:00:48.074990+09:00",
+  "updated_at_display": "2026-11-14 21:00:48 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
-  "weather": null,
-  "weather_seoul": null,
-  "weather_bundang": null,
+  "weather": {
+    "location": "서울",
+    "current": {
+      "icon": "☁️",
+      "label": "흐림",
+      "temp": 10.6,
+      "humidity": 83,
+      "wind": 4.7
+    },
+    "daily": [
+      {
+        "date": "11/14",
+        "weekday": "토",
+        "icon": "🌦️",
+        "label": "강한 이슬비",
+        "max": 11.0,
+        "min": 9.0,
+        "rain": 100
+      },
+      {
+        "date": "11/15",
+        "weekday": "일",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 16.0,
+        "min": 8.0,
+        "rain": 24
+      },
+      {
+        "date": "11/16",
+        "weekday": "월",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 15.0,
+        "min": 6.0,
+        "rain": 2
+      },
+      {
+        "date": "11/17",
+        "weekday": "화",
+        "icon": "🌦️",
+        "label": "소나기",
+        "max": 15.0,
+        "min": 10.0,
+        "rain": 85
+      }
+    ]
+  },
+  "weather_seoul": {
+    "location": "서울",
+    "current": {
+      "icon": "☁️",
+      "label": "흐림",
+      "temp": 10.6,
+      "humidity": 83,
+      "wind": 4.7
+    },
+    "daily": [
+      {
+        "date": "11/14",
+        "weekday": "토",
+        "icon": "🌦️",
+        "label": "강한 이슬비",
+        "max": 11.0,
+        "min": 9.0,
+        "rain": 100
+      },
+      {
+        "date": "11/15",
+        "weekday": "일",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 16.0,
+        "min": 8.0,
+        "rain": 24
+      },
+      {
+        "date": "11/16",
+        "weekday": "월",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 15.0,
+        "min": 6.0,
+        "rain": 2
+      },
+      {
+        "date": "11/17",
+        "weekday": "화",
+        "icon": "🌦️",
+        "label": "소나기",
+        "max": 15.0,
+        "min": 10.0,
+        "rain": 85
+      }
+    ]
+  },
+  "weather_bundang": {
+    "location": "분당",
+    "current": {
+      "icon": "☁️",
+      "label": "흐림",
+      "temp": 10.1,
+      "humidity": 97,
+      "wind": 5.6
+    },
+    "daily": [
+      {
+        "date": "11/14",
+        "weekday": "토",
+        "icon": "🌧️",
+        "label": "약한 비",
+        "max": 11.0,
+        "min": 9.0,
+        "rain": 100
+      },
+      {
+        "date": "11/15",
+        "weekday": "일",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 16.0,
+        "min": 5.0,
+        "rain": 25
+      },
+      {
+        "date": "11/16",
+        "weekday": "월",
+        "icon": "⛅",
+        "label": "구름 조금",
+        "max": 15.0,
+        "min": 4.0,
+        "rain": 0
+      },
+      {
+        "date": "11/17",
+        "weekday": "화",
+        "icon": "🌦️",
+        "label": "강한 이슬비",
+        "max": 16.0,
+        "min": 8.0,
+        "rain": 91
+      }
+    ]
+  },
   "indices": [
     {
       "name": "코스피",
@@ -53,10 +194,10 @@
       "“아재들만 가는 곳 아니었어?”…2030이 ‘1인 사우나’에 빠진 이유 [트..."
     ],
     "사회": [
+      "“공항 라운지가 안방인가”…신발 벗고 소파에 다리 쭉 뻗은 가족",
       "아파트에 불 질러 14명 사상케 한 40대 구속…법원 “도주 우려”",
       "與 “특검법에 공소취소 없다” vs 野 “누굴 바보로 아느냐”…국힘 장외집회...",
-      "조폐공사 상품권 플랫폼 ‘착’도 뚫렸다…3083명 정보 유출",
-      "현직 부장판사, 조희대에 “앞으로의 계획·진의 밝혀달라”"
+      "조폐공사 상품권 플랫폼 ‘착’도 뚫렸다…3083명 정보 유출"
     ],
     "국제": [
       "트럼프, AI칩 中 수출규제 풀기 직전 엔비디아 ‘풀매수’",
