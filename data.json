@@ -1,10 +1,151 @@
 {
-  "updated_at": "2026-11-18T21:01:51.828824+09:00",
-  "updated_at_display": "2026-11-18 21:01:51 KST",
+  "updated_at": "2026-11-19T02:40:46.529805+09:00",
+  "updated_at_display": "2026-11-19 02:40:46 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
-  "weather": null,
-  "weather_seoul": null,
-  "weather_bundang": null,
+  "weather": {
+    "location": "서울",
+    "current": {
+      "icon": "☀️",
+      "label": "맑음",
+      "temp": -0.4,
+      "humidity": 52,
+      "wind": 7.4
+    },
+    "daily": [
+      {
+        "date": "11/19",
+        "weekday": "목",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
+        "max": 5.0,
+        "min": -1.0,
+        "rain": 0
+      },
+      {
+        "date": "11/20",
+        "weekday": "금",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
+        "max": 1.0,
+        "min": -4.0,
+        "rain": 0
+      },
+      {
+        "date": "11/21",
+        "weekday": "토",
+        "icon": "☀️",
+        "label": "맑음",
+        "max": -0.0,
+        "min": -6.0,
+        "rain": 0
+      },
+      {
+        "date": "11/22",
+        "weekday": "일",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 4.0,
+        "min": -4.0,
+        "rain": 0
+      }
+    ]
+  },
+  "weather_seoul": {
+    "location": "서울",
+    "current": {
+      "icon": "☀️",
+      "label": "맑음",
+      "temp": -0.4,
+      "humidity": 52,
+      "wind": 7.4
+    },
+    "daily": [
+      {
+        "date": "11/19",
+        "weekday": "목",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
+        "max": 5.0,
+        "min": -1.0,
+        "rain": 0
+      },
+      {
+        "date": "11/20",
+        "weekday": "금",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
+        "max": 1.0,
+        "min": -4.0,
+        "rain": 0
+      },
+      {
+        "date": "11/21",
+        "weekday": "토",
+        "icon": "☀️",
+        "label": "맑음",
+        "max": -0.0,
+        "min": -6.0,
+        "rain": 0
+      },
+      {
+        "date": "11/22",
+        "weekday": "일",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 4.0,
+        "min": -4.0,
+        "rain": 0
+      }
+    ]
+  },
+  "weather_bundang": {
+    "location": "분당",
+    "current": {
+      "icon": "☀️",
+      "label": "맑음",
+      "temp": -1.7,
+      "humidity": 74,
+      "wind": 7.4
+    },
+    "daily": [
+      {
+        "date": "11/19",
+        "weekday": "목",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
+        "max": 4.0,
+        "min": -3.0,
+        "rain": 2
+      },
+      {
+        "date": "11/20",
+        "weekday": "금",
+        "icon": "🌤️",
+        "label": "대체로 맑음",
+        "max": 1.0,
+        "min": -6.0,
+        "rain": 2
+      },
+      {
+        "date": "11/21",
+        "weekday": "토",
+        "icon": "☀️",
+        "label": "맑음",
+        "max": 0.0,
+        "min": -8.0,
+        "rain": 0
+      },
+      {
+        "date": "11/22",
+        "weekday": "일",
+        "icon": "☁️",
+        "label": "흐림",
+        "max": 4.0,
+        "min": -7.0,
+        "rain": 0
+      }
+    ]
+  },
   "indices": [
     {
       "name": "코스피",
@@ -20,18 +161,18 @@
   "global_indices": [
     {
       "name": "다우존스",
-      "value": "50,759.42",
-      "change": "▼1.64%"
+      "value": "50,340.57",
+      "change": "▼0.83%"
     },
     {
       "name": "나스닥",
-      "value": "24,328.38",
-      "change": "▼0.74%"
+      "value": "24,428.43",
+      "change": "▲0.41%"
     },
     {
       "name": "S&P 500",
-      "value": "7,340.53",
-      "change": "▼1.03%"
+      "value": "7,336.92",
+      "change": "▼0.05%"
     }
   ],
   "movers": {
