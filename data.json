@@ -1,22 +1,22 @@
 {
-  "updated_at": "2026-11-25T18:01:39.596824+09:00",
-  "updated_at_display": "2026-11-25 18:01:39 KST",
+  "updated_at": "2026-11-25T21:01:22.294627+09:00",
+  "updated_at_display": "2026-11-25 21:01:22 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
   "weather": {
     "location": "서울",
     "current": {
-      "icon": "🌤️",
-      "label": "대체로 맑음",
-      "temp": 4.8,
-      "humidity": 73,
-      "wind": 4.5
+      "icon": "⛅",
+      "label": "구름 조금",
+      "temp": 4.9,
+      "humidity": 78,
+      "wind": 6.2
     },
     "daily": [
       {
         "date": "11/25",
         "weekday": "수",
-        "icon": "🌤️",
-        "label": "대체로 맑음",
+        "icon": "⛅",
+        "label": "구름 조금",
         "max": 6.0,
         "min": -4.0,
         "rain": 0
@@ -26,9 +26,9 @@
         "weekday": "목",
         "icon": "⛅",
         "label": "구름 조금",
-        "max": 14.0,
+        "max": 15.0,
         "min": 6.0,
-        "rain": 10
+        "rain": 4
       },
       {
         "date": "11/27",
@@ -36,8 +36,8 @@
         "icon": "⛅",
         "label": "구름 조금",
         "max": 15.0,
-        "min": 8.0,
-        "rain": 42
+        "min": 9.0,
+        "rain": 36
       },
       {
         "date": "11/28",
@@ -46,25 +46,25 @@
         "label": "구름 조금",
         "max": 9.0,
         "min": -0.0,
-        "rain": 4
+        "rain": 6
       }
     ]
   },
   "weather_seoul": {
     "location": "서울",
     "current": {
-      "icon": "🌤️",
-      "label": "대체로 맑음",
-      "temp": 4.8,
-      "humidity": 73,
-      "wind": 4.5
+      "icon": "⛅",
+      "label": "구름 조금",
+      "temp": 4.9,
+      "humidity": 78,
+      "wind": 6.2
     },
     "daily": [
       {
         "date": "11/25",
         "weekday": "수",
-        "icon": "🌤️",
-        "label": "대체로 맑음",
+        "icon": "⛅",
+        "label": "구름 조금",
         "max": 6.0,
         "min": -4.0,
         "rain": 0
@@ -74,9 +74,9 @@
         "weekday": "목",
         "icon": "⛅",
         "label": "구름 조금",
-        "max": 14.0,
+        "max": 15.0,
         "min": 6.0,
-        "rain": 10
+        "rain": 4
       },
       {
         "date": "11/27",
@@ -84,8 +84,8 @@
         "icon": "⛅",
         "label": "구름 조금",
         "max": 15.0,
-        "min": 8.0,
-        "rain": 42
+        "min": 9.0,
+        "rain": 36
       },
       {
         "date": "11/28",
@@ -94,25 +94,25 @@
         "label": "구름 조금",
         "max": 9.0,
         "min": -0.0,
-        "rain": 4
+        "rain": 6
       }
     ]
   },
   "weather_bundang": {
     "location": "분당",
     "current": {
-      "icon": "🌤️",
-      "label": "대체로 맑음",
-      "temp": 3.2,
-      "humidity": 85,
-      "wind": 9.0
+      "icon": "⛅",
+      "label": "구름 조금",
+      "temp": 3.3,
+      "humidity": 87,
+      "wind": 10.6
     },
     "daily": [
       {
         "date": "11/25",
         "weekday": "수",
-        "icon": "🌤️",
-        "label": "대체로 맑음",
+        "icon": "⛅",
+        "label": "구름 조금",
         "max": 5.0,
         "min": -7.0,
         "rain": 0
@@ -124,7 +124,7 @@
         "label": "대체로 맑음",
         "max": 14.0,
         "min": 4.0,
-        "rain": 4
+        "rain": 2
       },
       {
         "date": "11/27",
@@ -133,7 +133,7 @@
         "label": "흐림",
         "max": 15.0,
         "min": 8.0,
-        "rain": 48
+        "rain": 45
       },
       {
         "date": "11/28",
@@ -142,7 +142,7 @@
         "label": "약한 이슬비",
         "max": 8.0,
         "min": -0.0,
-        "rain": 16
+        "rain": 19
       }
     ]
   },
