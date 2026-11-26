@@ -1,50 +1,20 @@
 {
-  "updated_at": "2026-11-26T14:52:45.500940+09:00",
-  "updated_at_display": "2026-11-26 14:52:45 KST",
+  "updated_at": "2026-11-26T18:01:52.561097+09:00",
+  "updated_at_display": "2026-11-26 18:01:52 KST",
   "script_version": "v9.0 - 2026-07-14 (자동 토큰갱신저장 + 실패알림)",
-  "weather": {
-    "location": "서울",
-    "current": {
-      "icon": "☀️",
-      "label": "맑음",
-      "temp": 0,
-      "humidity": 0,
-      "wind": 0
-    },
-    "daily": []
-  },
-  "weather_seoul": {
-    "location": "서울",
-    "current": {
-      "icon": "☀️",
-      "label": "맑음",
-      "temp": 0,
-      "humidity": 0,
-      "wind": 0
-    },
-    "daily": []
-  },
-  "weather_bundang": {
-    "location": "분당",
-    "current": {
-      "icon": "☀️",
-      "label": "맑음",
-      "temp": 0,
-      "humidity": 0,
-      "wind": 0
-    },
-    "daily": []
-  },
+  "weather": null,
+  "weather_seoul": null,
+  "weather_bundang": null,
   "indices": [
     {
       "name": "코스피",
-      "value": "4,757.04",
-      "change": "▲1.27%"
+      "value": "4,711.21",
+      "change": "▲0.29%"
     },
     {
       "name": "코스닥",
-      "value": "663.82",
-      "change": "▲2.03%"
+      "value": "655.71",
+      "change": "▲0.78%"
     }
   ],
   "global_indices": [
